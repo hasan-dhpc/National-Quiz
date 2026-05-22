@@ -132,7 +132,6 @@
             line-height: 1.5;
         }
 
-        /* 🎨 PREMIUM RED TOAST NOTIFICATION */
         .toast-notification {
             position: fixed;
             top: -70px;
@@ -359,7 +358,6 @@
         <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
         
         <div id="summary-area" class="summary-card"></div>
-
         <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px;"></p>
     </div>
 
@@ -478,7 +476,6 @@
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
 
-        // 🎯 OPTION 1 TRIGGER: Email only verification engine
         const userFound = allowedUsers.find(u => u.email.toLowerCase() === emailVal);
 
         if (!userFound) {
@@ -489,7 +486,6 @@
             return;
         }
 
-        // 👑 VIP EXCEPTION CONTROL: Noor Hasan bypass active
         if (emailVal === "noor@gmail.com") {
             verifiedUser = userFound;
             errorBox.style.display = 'none';
@@ -498,7 +494,6 @@
             return; 
         }
 
-        // ⚡ Invisible check layout triggered seamlessly (No loader messages)
         verifyBtn.disabled = true;
 
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
@@ -506,7 +501,6 @@
         .then(resData => {
             verifyBtn.disabled = false;
             if (resData.exists) {
-                // 🚫 Clean short English duplicate control box
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
@@ -613,7 +607,6 @@
 
     function submitAnswer() {
         if (selectedOptionIdx === null) {
-            // 🎨 Tarika 1: Red Premium Sliding Toast active
             showToastNotification();
             return;
         }
@@ -656,7 +649,6 @@
                 document.getElementById('status-icon').className = 'disqualified-icon';
                 document.getElementById('status-icon').innerText = '🚫';
                 
-                // 🎨 Option 3 Message Set
                 document.getElementById('completion-title').innerText = "You are done !!";
                 document.getElementById('completion-title').style.color = "var(--error)";
                 
@@ -689,6 +681,7 @@
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
         
+        // 🏁 Absolute Last Thankful Page Generation Logic
         if(remarksValue === "Clean Attempt") {
             document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
             
@@ -708,7 +701,6 @@
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
             statusLabel.innerText = "✓ Response safely locked into Admin's Google Sheet!";
         } else {
-            // 🎨 Option 3 Static Clean Block Result Output
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
@@ -726,4 +718,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
