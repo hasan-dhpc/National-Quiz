@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ur">
 <head>
@@ -145,7 +146,6 @@
             line-height: 1.6;
         }
 
-        /* 🎨 PREMIUM RED TOAST - NOW FULLY IN URDU STYLE */
         .toast-notification {
             position: fixed;
             top: -70px;
@@ -319,85 +319,66 @@
 <body>
 
     <div id="premium-toast" class="toast-notification">⚠️ مہربانی فرما کر آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
+
     <div class="container">
-    
-    <div id="screen-login">
-        <div class="urdu-title">مسابقہ فقه اکیڈمی</div>
-        <h2>Quiz Entry</h2>
-        <p class="subtitle">شریک ہونے کے لیے اپنا رجسٹرڈ نام اور درست ای میل درج کریں۔</p>
-        
-        <div class="error-box" id="login-error"></div>
-        
-        <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" id="input-name" placeholder="E.g. Noor Hasan">
+        <div id="screen-login">
+            <div class="urdu-title">مسابقہ فقه اکیڈمی</div>
+            <h2>Quiz Entry</h2>
+            <p class="subtitle">شریک ہونے کے لیے اپنا رجسٹرڈ نام اور درست ای میل درج کریں۔</p>
+            <div class="error-box" id="login-error"></div>
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="input-name" placeholder="E.g. Noor Hasan">
+            </div>
+            <div class="input-group">
+                <label>Gmail ID</label>
+                <input type="email" id="input-email" placeholder="E.g. noor@gmail.com">
+            </div>
+            <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
-        
-        <div class="input-group">
-            <label>Gmail ID</label>
-            <input type="email" id="input-email" placeholder="E.g. noor@gmail.com">
+        <div id="screen-directions" style="display: none;">
+            <div class="urdu-title" style="font-size: 24px; margin-bottom: 5px;">ہدایات و ضوابط</div>
+            <h2>Important Directions</h2>
+            <p class="subtitle">Quiz shuru karne se pahle deeni o fariqi niyam dhyan se padhein.</p>
+            <div class="instructions-list">
+                <li>اس فقہی مسابقہ میں کل <b>۱۰ (دس) سوالات</b> پوچھے جائیں گے۔</li>
+                <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
+                <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا یا کوئی دوسری ایپ کھولی، تو آپ خود بخود خارج (Disqualify) ہو جائیں گے۔</li>
+                <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
+            </div>
+            <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
         </div>
-        
-        <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
+
+        <div id="screen-quiz" style="display: none;">
+            <div class="quiz-header">
+                <span id="ques-counter" style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Question 1 of 10</span>
+                <div class="timer" id="timer-badge">⏱️ <span id="time-left">30</span>s</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="quiz-progress"></div>
+            </div>
+            <div class="question-text" id="question-text">Loading question...</div>
+            <div class="options-grid" id="options-container"></div>
+            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit Answer</button>
+        </div>
+
+        <div id="screen-completion" style="display: none; text-align: center;">
+            <div id="status-icon" class="success-icon">🎉</div>
+            <h2 id="completion-title">Quiz Submitted!</h2>
+            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
+            <div id="summary-area" class="summary-card"></div>
+            <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 600;"></p>
+        </div>
     </div>
-
-    <div id="screen-directions" style="display: none;">
-        <div class="urdu-title" style="font-size: 24px; margin-bottom: 5px;">ہدایات و ضوابط</div>
-        <h2>Important Directions</h2>
-        <p class="subtitle">Quiz shuru karne se pahle deeni o fariqi niyam dhyan se padhein.</p>
-        
-        <div class="instructions-list">
-            <li>اس فقہی مسابقہ میں کل <b>۱۰ (دس) سوالات</b> پوچھے جائیں گے۔</li>
-            <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
-            <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا یا کوئی دوسری ایپ کھولی، تو آپ خود بخود خارج (Disqualify) ہو جائیں گے۔</li>
-            <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
-        </div>
-        
-        <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
-    </div>
-
-    <div id="screen-quiz" style="display: none;">
-        <div class="quiz-header">
-            <span id="ques-counter" style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Question 1 of 10</span>
-            <div class="timer" id="timer-badge">⏱️ <span id="time-left">30</span>s</div>
-        </div>
-        
-        <div class="progress-container">
-            <div class="progress-bar" id="quiz-progress"></div>
-        </div>
-
-        <div class="question-text" id="question-text">Loading question...</div>
-        
-        <div class="options-grid" id="options-container"></div>
-        
-        <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit Answer</button>
-    </div>
-
-    <div id="screen-completion" style="display: none; text-align: center;">
-        <div id="status-icon" class="success-icon">🎉</div>
-        <h2 id="completion-title">Quiz Submitted!</h2>
-        <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
-        
-        <div id="summary-area" class="summary-card"></div>
-        <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 600;"></p>
-    </div>
-
-</div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn5ImJ6XV9Z_pnrjKJtvzAlgW6gVdyVovEZaIv7P7QaEWWY4xWAfKMqGYHZ8zGsTuV/exec";
+    // 🔗 DYNAMIC DEPLOYMENT LINK INTEGRATION SUCCESSFUL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec";
 
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
-    
     warningSound.volume = 0.6;
     buzzerSound.volume = 0.6;
-
-    const allowedUsers = [
-        { name: "Noor Hasan", email: "noor@gmail.com" },
-        { name: "Zaid Khan", email: "zaid@gmail.com" },
-        { name: "Amit Kumar", email: "amit@gmail.com" }
-    ];
 
     const originalQuestions = [
         {
@@ -416,7 +397,7 @@
             correctAnswer: "۷.۵ تولہ"
         },
         {
-            question: "وضو میں چہرہ دھونا شرعی اعتبار سے کیا ہے Lay?",
+            question: "وضو میں چہرہ دھونا شرعی اعتبار سے کیا ہے؟",
             options: ["سنت", "فرض", "واجب", "مستحب"],
             correctAnswer: "فرض"
         },
@@ -451,16 +432,14 @@
             correctAnswer: "واجب"
         }
     ];
-
-    let quizQuestions = []; 
-    let verifiedUser = null;
+        let quizQuestions = []; 
+    let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
     let timeLeft = 30;
     let selectedOptionIdx = null;
     let finalScore = 0;
     let isQuizOver = false; 
-    
     let totalAttempted = 0;
     let totalTimeouts = 0;
 
@@ -493,23 +472,21 @@
     }
 
     function validateLogin() {
+        const nameVal = document.getElementById('input-name').value.trim();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
 
-        const userFound = allowedUsers.find(u => u.email.toLowerCase() === emailVal);
-
-        if (!userFound) {
+        if(!nameVal || !emailVal) {
             errorBox.style.color = 'var(--error)';
-            errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
-            // 📝 URDU REGISTERED WARNING LOGIC
-            errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br>Yeh Email ID National Quiz ke liye registered nahi hai.<br>Kripya apna sahi registered email use karein ya admin se rabta (contact) karein.`;
+            errorBox.innerHTML = `⚠️ Kripya apna Naam aur Email donon sahi se daalein.`;
             return;
         }
 
+        // 👑 ADMIN BYPASS FOR TESTING
         if (emailVal === "noor@gmail.com") {
-            verifiedUser = userFound;
+            verifiedUser = { name: nameVal, email: emailVal };
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -518,18 +495,24 @@
 
         verifyBtn.disabled = true;
 
+        // 🔄 SHEET LIVE ENQUIRY: Hits doGet to test registration and duplicate states
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
         .then(res => res.json())
         .then(resData => {
             verifyBtn.disabled = false;
-            if (resData.exists) {
+            
+            if (!resData.isRegistered) {
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
-                // 📝 URDU RE-ATTEMPT WARNING LOGIC
+                errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br>Yeh Email ID National Quiz ke liye registered nahi hai.<br>Kripya apna sahi registered email use karein ya admin se rabta karein.`;
+            } else if (resData.exists) {
+                errorBox.style.color = 'var(--error)';
+                errorBox.style.background = 'rgba(234,67,53,0.1)';
+                errorBox.style.display = 'block';
                 errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>Aap is nishist (session) mein pehle hi shamil ho chuke hain.`;
             } else {
-                verifiedUser = userFound;
+                verifiedUser = { name: nameVal, email: emailVal };
                 errorBox.style.display = 'none';
                 document.getElementById('screen-login').style.display = 'none';
                 document.getElementById('screen-directions').style.display = 'block';
@@ -538,7 +521,7 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
-            verifiedUser = userFound;
+            verifiedUser = { name: nameVal, email: emailVal };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
         });
@@ -547,22 +530,18 @@
     function startQuiz() {
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
-        
         prepareShuffledQuiz();
-        
         currentQuesIdx = 0;
         finalScore = 0;
         totalAttempted = 0;
         totalTimeouts = 0;
         isQuizOver = false;
-        
         loadQuestion();
         setupAntiCheating();
     }
 
     function loadQuestion() {
         if(isQuizOver) return;
-        
         clearInterval(timerInterval);
         warningSound.pause();
         warningSound.currentTime = 0;
@@ -598,7 +577,7 @@
 
             if (timeLeft === 5) {
                 warningSound.currentTime = 0;
-                warningSound.play().catch(e => console.log("Waiting for user interaction"));
+                warningSound.play().catch(e => console.log("Sound integration secure"));
             }
 
             if (timeLeft <= 8) {
@@ -607,15 +586,11 @@
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                
                 warningSound.pause(); 
                 buzzerSound.currentTime = 0;
-                buzzerSound.play().catch(e => console.log("Buzzer blocked"));
+                buzzerSound.play().catch(e => console.log("Buzzer security fired"));
                 
-                if (navigator.vibrate) {
-                    navigator.vibrate(300); 
-                }
-                
+                if (navigator.vibrate) { navigator.vibrate(300); }
                 totalTimeouts++; 
                 saveResponseAndNext(false); 
             }
@@ -637,7 +612,6 @@
         }
         clearInterval(timerInterval);
         warningSound.pause(); 
-        
         totalAttempted++; 
         
         const activeQ = quizQuestions[currentQuesIdx];
@@ -646,7 +620,6 @@
         if (selectedValue === activeQ.correctAnswer) {
             finalScore++;
         }
-        
         saveResponseAndNext(true);
     }
 
@@ -676,19 +649,17 @@
                 document.getElementById('status-icon').className = 'disqualified-icon';
                 document.getElementById('status-icon').innerText = '🚫';
                 
-                // 📝 OPTION 3: FULL URDU DISQUALIFICATION
-                document.getElementById('completion-title').innerText = "You are done !!";
+                document.getElementById('completion-title').innerText = "Nishist Khatam! (نشست ختم)";
                 document.getElementById('completion-title').style.color = "var(--error)";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya kisi aur app par jaane ki wajah se is Quiz Arena se disqualify kar diya gaya hai.`;
+                document.getElementById('thank-you-msg').innerText = `Maazirat, ${displayName}! Aapko tab-switching ya kisi aur app par jaane ki wajah se is Quiz Arena se kharij (disqualify) kar diya gaya hai.`;
                 
                 document.getElementById('summary-area').innerHTML = `
-                    <b>Halat (Status):</b> TERMINATED<br>
-                    <b>Wajah (Reason):</b> Security Lockout due to App/Tab switching detected.<br>
-                    <b>Karwayi (Action):</b> Attempt log locked and transmitted to main portal.
+                    <b>Halat (Status):</b> Mauqoof (موقوف)<br>
+                    <b>Wajah (Reason):</b> Tab-switching ya cheating activity detect hui hai.<br>
+                    <b>Karwayi (Action):</b> Aapka imtihan lock karke main portal par bhej diya gaya hai.
                 `;
-                
                 sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
             }
         });
@@ -710,7 +681,6 @@
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
         
-        // 📝 URDU SUCCESS SCREEN
         if(remarksValue === "Clean Attempt") {
             document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
             
@@ -730,23 +700,19 @@
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
             statusLabel.innerText = "✓ Jawab mehfooz tarike se Google Sheet par bhej diya gaya hai.";
         } else {
-            // 📝 OPTION 3: URDU STATIC CLEAN STATUS BAR
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin Sheet.";
+            statusLabel.innerText = "⚠️ Karwayi mukammal. Aapka bayaan Admin Sheet par bhej diya gaya hai.";
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         }).catch(err => console.error(err));
     }
 </script>
 </body>
-        </html>
-    
+</html>
