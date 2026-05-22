@@ -60,11 +60,11 @@
 
         .urdu-title {
             font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
-            font-size: 28px;
-            line-height: 2.2;
+            font-size: 24px;
+            line-height: 2.4;
             text-align: center;
             color: var(--accent);
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             text-shadow: 0 2px 10px rgba(253, 203, 110, 0.2);
         }
 
@@ -316,6 +316,25 @@
     </style>
 </head>
 <body>
+
+    <div id="premium-toast" class="toast-notification">⚠️ مہربانی فرما کر آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
+
+    <div class="container">
+        <div id="screen-login">
+            <div class="urdu-title">سنتِ ابراہیمی قومی علمی مسابقہ</div>
+            <p class="subtitle" style="margin-top: -15px;">شریک ہونے کے لیے اپنا رجسٹرڈ نام اور درست ای میل درج کریں۔</p>
+            <div class="error-box" id="login-error"></div>
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="input-name" placeholder="E.g. Noor Hasan">
+            </div>
+            <div class="input-group">
+                <label>Gmail ID</label>
+                <input type="email" id="input-email" placeholder="E.g. noor@gmail.com">
+            </div>
+            <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
+        </div>
+        
 
     <div id="premium-toast" class="toast-notification">⚠️ مہربانی فرما کر آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
 
