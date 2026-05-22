@@ -282,7 +282,7 @@
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
             <li>Sawal ka jawab sahi hai ya galat, yeh aapko turant nahi bataya jayega.</li>
-            <li>Aakhiri 5 seconds mein tick-tick warning sound bajegi.</li>
+            <li>Aakhiri 10 seconds mein tick-tick warning sound bajegi.</li>
             <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
         </div>
         
@@ -318,10 +318,14 @@
 <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
 
-    // Dynamic Sound Effects Using Web Links
-    const tickSound = new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"); // Light beep for ticking
-    const buzzerSound = new Audio("https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg"); // Loud alarm for time out
-    tickSound.volume = 0.4; // Sound thoda medium rkhne keliye
+    // 🔊 Audio Setup (Short and precise sounds)
+    // 1. Tick sound for countdown (bahut chota 0.1s audio clip)
+    const tickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"); 
+    // 2. Short buzzer sound for 0 second (sirf 1 second ka digital beep)
+    const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
+    
+    tickSound.volume = 0.5;
+    buzzerSound.volume = 0.6;
 
     const allowedUsers = [
         { name: "Noor Hasan", email: "noor@gmail.com" },
@@ -446,10 +450,10 @@
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
-            // 🔊 Play sound warning for last 5 seconds
-            if (timeLeft <= 5 && timeLeft > 0) {
+            // 🔊 10 second ya usse kam par Tick-Tick Warning bajegi
+            if (timeLeft <= 10 && timeLeft > 0) {
                 tickSound.currentTime = 0;
-                tickSound.play().catch(e => console.log("Audio play blocked until user interaction"));
+                tickSound.play().catch(e => console.log("Audio waiting for touch"));
             }
 
             if (timeLeft <= 8) {
@@ -458,8 +462,15 @@
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                // 🔊 Play buzzer sound on time out
-                buzzerSound.play().catch(e => console.log("Audio blocked"));
+                
+                // 🔊 0 hote hi chota buzzer bajega aur phone vibrate karega
+                buzzerSound.currentTime = 0;
+                buzzerSound.play().catch(e => console.log("Buzzer blocked"));
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate(300); // 300 millisecond ka chota shock vibration
+                }
+                
                 saveResponseAndNext(false); 
             }
         }, 1000);
