@@ -249,6 +249,13 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        
+        .disqualified-icon {
+            font-size: 60px;
+            color: var(--error);
+            margin-bottom: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -281,8 +288,8 @@
         <div class="instructions-list">
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
-            <li>Sawal ka jawab sahi hai ya galat, yeh aapko turant nahi bataya jayega.</li>
-            <li>Aakhiri 5 seconds mein custom race start warning sound bajegi.</li>
+            <li><b>Strict Rule:</b> Agar aapne quiz ke dauran tab badla ya app switch ki, toh aap automatic **disqualify** ho jayenge!</li>
+            <li>Aakhiri 5 seconds mein race start countdown warning sound bajegi.</li>
             <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
         </div>
         
@@ -307,7 +314,7 @@
     </div>
 
     <div id="screen-completion" style="display: none; text-align: center;">
-        <div class="success-icon" id="status-icon">🎉</div>
+        <div id="status-icon" class="success-icon">🎉</div>
         <h2 id="completion-title">Quiz Submitted!</h2>
         <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin: 15px 0 25px 0; line-height: 1.5;"></p>
         <p id="sheet-status" style="font-size: 14px; color: var(--accent); background: rgba(253,203,110,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(253,203,110,0.15);">Sending your results to Google Sheet...</p>
@@ -316,9 +323,9 @@
 </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
+    // 🚀 Aapka naya aur live updated Google Apps Script URL
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUiCqWT8Rw_dLVQ14bVSZ0c6aE5PX8-IuJf5WJa5NSaMaaY73FIg1ErEdNpzWB-_sT/exec";
 
-    // 🔊 GitHub Repository mein uploaded music file ka use
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
     
@@ -390,6 +397,7 @@
     let timeLeft = 30;
     let selectedOptionIdx = null;
     let finalScore = 0;
+    let isQuizOver = false; 
 
     function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim().toLowerCase();
@@ -416,10 +424,14 @@
         document.getElementById('screen-quiz').style.display = 'block';
         currentQuesIdx = 0;
         finalScore = 0;
+        isQuizOver = false;
         loadQuestion();
+        setupAntiCheating();
     }
 
     function loadQuestion() {
+        if(isQuizOver) return;
+        
         clearInterval(timerInterval);
         warningSound.pause();
         warningSound.currentTime = 0;
@@ -451,7 +463,6 @@
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
-            // 🔊 Jaise hi exactly 5 seconds bachenge, race countdown play hoga
             if (timeLeft === 5) {
                 warningSound.currentTime = 0;
                 warningSound.play().catch(e => console.log("Waiting for user interaction"));
@@ -478,6 +489,7 @@
     }
 
     function selectOption(idx, btnElement) {
+        if(isQuizOver) return;
         selectedOptionIdx = idx;
         const allBtns = document.querySelectorAll('.option-btn');
         allBtns.forEach(btn => btn.classList.remove('selected'));
@@ -501,25 +513,50 @@
     }
 
     function saveResponseAndNext(answered) {
+        if(isQuizOver) return;
         currentQuesIdx++;
         if (currentQuesIdx < quizQuestions.length) {
             loadQuestion();
         } else {
-            sendDataToGoogleSheet();
+            sendDataToGoogleSheet("Clean Attempt");
         }
     }
 
-    function sendDataToGoogleSheet() {
-        document.getElementById('screen-quiz').style.display = 'none';
-        document.getElementById('screen-completion').style.display = 'block';
-        
-        const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapne sabhi 10 sawalon ke answers kamyabi ke saath submit kar diye hain.`;
+    function setupAntiCheating() {
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && !isQuizOver) {
+                isQuizOver = true;
+                clearInterval(timerInterval);
+                warningSound.pause();
+                
+                document.getElementById('screen-quiz').style.display = 'none';
+                document.getElementById('screen-directions').style.display = 'none';
+                document.getElementById('screen-completion').style.display = 'block';
+                
+                document.getElementById('status-icon').className = 'disqualified-icon';
+                document.getElementById('status-icon').innerText = '🚫';
+                document.getElementById('completion-title').innerText = "You are done !!";
+                document.getElementById('completion-title').style.color = "var(--error)";
+                
+                const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya cheating activity ki wajah se disqualify kar diya gaya hai.`;
+                
+                // 📝 Custom remarks sent for cheating attempt
+                sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
+            }
+        });
+    }
 
+    function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
+        isQuizOver = true; 
+        
+        const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
+        
         const payload = {
             name: verifiedUser.name,
             email: verifiedUser.email,
-            score: `${finalScore} / ${quizQuestions.length}`
+            score: scoreText,
+            remarks: remarksValue 
         };
 
         fetch(GOOGLE_SCRIPT_URL, {
@@ -531,14 +568,12 @@
             body: JSON.stringify(payload)
         })
         .then(() => {
-            document.getElementById('sheet-status').style.color = "#00b894";
-            document.getElementById('sheet-status').style.background = "rgba(0,184,148,0.05)";
-            document.getElementById('sheet-status').borderColor = "rgba(0,184,148,0.2)";
-            document.getElementById('sheet-status').innerText = "✓ Score safely locked into Admin's Google Sheet!";
+            document.getElementById('sheet-status').style.color = (remarksValue === "Clean Attempt") ? "#00b894" : "var(--error)";
+            document.getElementById('sheet-status').style.background = "rgba(255,255,255,0.02)";
+            document.getElementById('sheet-status').innerText = (remarksValue === "Clean Attempt") ? "✓ Score safely locked into Admin's Google Sheet!" : "⚠️ Session terminated. Report sent to Admin Sheet.";
         })
         .catch((err) => {
             console.error(err);
-            document.getElementById('sheet-status').innerText = "Data sheet par bhej diya gaya hai. Apne Google Sheet par check karein!";
         });
     }
 </script>
