@@ -288,7 +288,7 @@
             <input type="email" id="input-email" placeholder="E.g. noor@gmail.com">
         </div>
         
-        <button class="btn" onclick="validateLogin()">Verify Data</button>
+        <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
     </div>
 
     <div id="screen-directions" style="display: none;">
@@ -299,8 +299,8 @@
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
             <li><b>Anti-Cheating Rule:</b> Agar aapne quiz ke dauran tab badla ya app switch ki, toh aap automatic **disqualify** ho jayenge!</li>
-            <li>Sawal aur unke options har candidate ke phone mein automatic shuffle (aage-piche) honge.</li>
-            <li>Aakhiri 5 seconds mein race countdown sound bajegi.</li>
+            <li><b>Single Attempt Rule:</b> Ek baar session close hone ke baad dobara login block rahega.</li>
+            <li>Sawal aur unke options automatic shuffle (aage-piche) honge.</li>
         </div>
         
         <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
@@ -336,7 +336,8 @@
 </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUiCqWT8Rw_dLVQ14bVSZ0c6aE5PX8-IuJf5WJa5NSaMaaY73FIg1ErEdNpzWB-_sT/exec";
+    // 🔗 AAPKA NAYA LIVE APPS SCRIPT LINK DETECTED & SAVED HERE
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyn5ImJ6XV9Z_pnrjKJtvzAlgW6gVdyVovEZaIv7P7QaEWWY4xWAfKMqGYHZ8zGsTuV/exec";
 
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
@@ -439,20 +440,55 @@
         const nameVal = document.getElementById('input-name').value.trim().toLowerCase();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
+        const verifyBtn = document.getElementById('btn-verify');
 
         const userFound = allowedUsers.find(u => 
             u.name.toLowerCase() === nameVal && u.email.toLowerCase() === emailVal
         );
 
-        if (userFound) {
+        if (!userFound) {
+            errorBox.style.display = 'block';
+            errorBox.innerText = "Access Denied! Data match nahi hua.";
+            return;
+        }
+
+        // 👑 VIP EXCEPTION: Aap unlimited baar check kar sako isiliye
+        if (emailVal === "noor@gmail.com") {
             verifiedUser = userFound;
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
-        } else {
-            errorBox.style.display = 'block';
-            errorBox.innerText = "Access Denied! Data match nahi hua.";
+            return; 
         }
+
+        errorBox.style.display = 'block';
+        errorBox.style.color = 'var(--accent)';
+        errorBox.style.background = 'rgba(253,203,110,0.05)';
+        errorBox.innerText = "Checking security clearance... Please wait.";
+        verifyBtn.disabled = true;
+
+        fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
+        .then(res => res.json())
+        .then(resData => {
+            verifyBtn.disabled = false;
+            if (resData.exists) {
+                errorBox.style.color = 'var(--error)';
+                errorBox.style.background = 'rgba(234,67,53,0.1)';
+                errorBox.innerText = "Access Denied! Aapka session pehle hi use ho chuka hai.";
+            } else {
+                verifiedUser = userFound;
+                errorBox.style.display = 'none';
+                document.getElementById('screen-login').style.display = 'none';
+                document.getElementById('screen-directions').style.display = 'block';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            verifyBtn.disabled = false;
+            verifiedUser = userFound;
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'block';
+        });
     }
 
     function startQuiz() {
@@ -647,4 +683,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
