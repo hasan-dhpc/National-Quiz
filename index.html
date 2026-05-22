@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ur">
 <head>
@@ -372,8 +371,8 @@
     </div>
 
 <script>
-    // 🔗 DYNAMIC DEPLOYMENT LINK INTEGRATION SUCCESSFUL
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec";
+    // 🔗 DYNAMICALLY LINKED WITH YOUR CORRECTED LIVE URL (CASE-INSENSITIVE RESOLUTION)
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5ToIBObFdJXJ4jz2eUSlHI1pic4GJ2bazjl26-eHTOftDKDh81s_sWIUfE3ZtkREnrw/exec";
 
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
@@ -446,9 +445,7 @@
     function showToastNotification() {
         const toast = document.getElementById('premium-toast');
         toast.classList.add('show');
-        setTimeout(() => {
-            toast.classList.remove('show');
-        }, 3000);
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
     }
 
     function shuffleArray(array) {
@@ -484,7 +481,7 @@
             return;
         }
 
-        // 👑 ADMIN BYPASS FOR TESTING
+        // 👑 SUPER ADMIN ACCESSIBLE BYPASS PASS FOR NOOR
         if (emailVal === "noor@gmail.com") {
             verifiedUser = { name: nameVal, email: emailVal };
             errorBox.style.display = 'none';
@@ -495,7 +492,7 @@
 
         verifyBtn.disabled = true;
 
-        // 🔄 SHEET LIVE ENQUIRY: Hits doGet to test registration and duplicate states
+        // 🔄 HIT LIVE DEPLOYMENT ENGINE: Queries your naye web app sheet database
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
         .then(res => res.json())
         .then(resData => {
@@ -521,6 +518,7 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
+            // Resilient fail-safe deployment toggle
             verifiedUser = { name: nameVal, email: emailVal };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -577,7 +575,7 @@
 
             if (timeLeft === 5) {
                 warningSound.currentTime = 0;
-                warningSound.play().catch(e => console.log("Sound integration secure"));
+                warningSound.play().catch(e => console.log("Sound ready"));
             }
 
             if (timeLeft <= 8) {
@@ -588,7 +586,7 @@
                 clearInterval(timerInterval);
                 warningSound.pause(); 
                 buzzerSound.currentTime = 0;
-                buzzerSound.play().catch(e => console.log("Buzzer security fired"));
+                buzzerSound.play().catch(e => console.log("Buzzer fired"));
                 
                 if (navigator.vibrate) { navigator.vibrate(300); }
                 totalTimeouts++; 
@@ -692,7 +690,7 @@
                 • Jawab Diye (Attempted): ${totalAttempted}<br>
                 • Khali Chode (Timeouts): ${totalTimeouts}<br>
                 • Tasdeeqi Token ID (Verification ID): <b style="color: var(--accent);">${randomToken}</b><br><br>
-                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score mehfooz hai. Final list jald hi update ki jayengi.</span>
+                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score secure hai. Final list jald hi update ki jayengi.</span>
             `;
             
             statusLabel.style.color = "#00b894";
