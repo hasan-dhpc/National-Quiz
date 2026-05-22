@@ -282,7 +282,7 @@
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
             <li>Sawal ka jawab sahi hai ya galat, yeh aapko turant nahi bataya jayega.</li>
-            <li>Aakhiri 10 seconds mein tick-tick warning sound bajegi.</li>
+            <li>Aakhiri 5 seconds mein custom race start warning sound bajegi.</li>
             <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
         </div>
         
@@ -318,13 +318,11 @@
 <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
 
-    // 🔊 Audio Setup (Short and precise sounds)
-    // 1. Tick sound for countdown (bahut chota 0.1s audio clip)
-    const tickSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav"); 
-    // 2. Short buzzer sound for 0 second (sirf 1 second ka digital beep)
+    // 🔊 Aapka naya dynamic sound effect link (Direct Pixabay MP3)
+    const warningSound = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c3be4b5e28.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
     
-    tickSound.volume = 0.5;
+    warningSound.volume = 0.6;
     buzzerSound.volume = 0.6;
 
     const allowedUsers = [
@@ -423,6 +421,10 @@
 
     function loadQuestion() {
         clearInterval(timerInterval);
+        // Naye sawal par warning sound ko safety ke liye stop kar dena
+        warningSound.pause();
+        warningSound.currentTime = 0;
+
         timeLeft = 30;
         selectedOptionIdx = null;
         document.getElementById('timer-badge').classList.remove('danger');
@@ -450,10 +452,10 @@
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
-            // 🔊 10 second ya usse kam par Tick-Tick Warning bajegi
-            if (timeLeft <= 10 && timeLeft > 0) {
-                tickSound.currentTime = 0;
-                tickSound.play().catch(e => console.log("Audio waiting for touch"));
+            // 🔊 Jaise hi exactly 5 seconds bachenge, aapka race countdown play hoga
+            if (timeLeft === 5) {
+                warningSound.currentTime = 0;
+                warningSound.play().catch(e => console.log("Waiting for user interaction"));
             }
 
             if (timeLeft <= 8) {
@@ -463,12 +465,12 @@
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 
-                // 🔊 0 hote hi chota buzzer bajega aur phone vibrate karega
+                warningSound.pause(); // Sound instantly stop karna
                 buzzerSound.currentTime = 0;
                 buzzerSound.play().catch(e => console.log("Buzzer blocked"));
                 
                 if (navigator.vibrate) {
-                    navigator.vibrate(300); // 300 millisecond ka chota shock vibration
+                    navigator.vibrate(300); // Phone vibration pulse
                 }
                 
                 saveResponseAndNext(false); 
@@ -489,6 +491,7 @@
             return;
         }
         clearInterval(timerInterval);
+        warningSound.pause(); // Answer submit hote hi warning sound chup
         
         const isCorrect = (selectedOptionIdx === quizQuestions[currentQuesIdx].correctAnswerIndex);
         if (isCorrect) {
