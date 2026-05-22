@@ -256,6 +256,17 @@
             margin-bottom: 20px;
             text-align: center;
         }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 15px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -288,9 +299,9 @@
         <div class="instructions-list">
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
-            <li><b>Strict Rule:</b> Agar aapne quiz ke dauran tab badla ya app switch ki, toh aap automatic **disqualify** ho jayenge!</li>
-            <li>Aakhiri 5 seconds mein race start countdown warning sound bajegi.</li>
-            <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
+            <li><b>Anti-Cheating Rule:</b> Agar aapne quiz ke dauran tab badla ya app switch ki, toh aap automatic **disqualify** ho jayenge!</li>
+            <li>Sawal aur unke options har candidate ke phone mein automatic shuffle (aage-piche) honge.</li>
+            <li>Aakhiri 5 seconds mein race countdown sound bajegi.</li>
         </div>
         
         <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
@@ -316,14 +327,17 @@
     <div id="screen-completion" style="display: none; text-align: center;">
         <div id="status-icon" class="success-icon">🎉</div>
         <h2 id="completion-title">Quiz Submitted!</h2>
-        <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin: 15px 0 25px 0; line-height: 1.5;"></p>
+        <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
+        
+        <div id="summary-area" class="summary-card"></div>
+
         <p id="sheet-status" style="font-size: 14px; color: var(--accent); background: rgba(253,203,110,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(253,203,110,0.15);">Sending your results to Google Sheet...</p>
     </div>
 
 </div>
 
 <script>
-    // 🚀 Aapka naya aur live updated Google Apps Script URL
+    // Live Apps Script Link with Remarks Setup
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUiCqWT8Rw_dLVQ14bVSZ0c6aE5PX8-IuJf5WJa5NSaMaaY73FIg1ErEdNpzWB-_sT/exec";
 
     const warningSound = new Audio("race.mp3"); 
@@ -338,59 +352,60 @@
         { name: "Amit Kumar", email: "amit@gmail.com" }
     ];
 
-    const quizQuestions = [
+    const originalQuestions = [
         {
             question: "Indian Constitution ka kaun sa Article 'Fundamental Duties' se deal karta hai?",
             options: ["Article 50", "Article 51A", "Article 45", "Article 32"],
-            correctAnswerIndex: 1
+            correctAnswer: "Article 51A"
         },
         {
             question: "Mashhoor shair Ghalib ka asal (real) naam kya thha?",
             options: ["Asadullah Khan", "Mirza Jan", "Wajid Ali", "Muhammad Ghalib"],
-            correctAnswerIndex: 0
+            correctAnswer: "Asadullah Khan"
         },
         {
             question: "International T20 cricket mein sabse tez shatak (century) lagane ka record kiske naam hai?",
             options: ["Chris Gayle", "Jan Nicol Loftie-Eaton", "David Miller", "Rohit Sharma"],
-            correctAnswerIndex: 1
+            correctAnswer: "Jan Nicol Loftie-Eaton"
         },
         {
             question: "Indian Polity mein State Governors ko kaun appoint (niyukt) karta hai?",
             options: ["Prime Minister", "Chief Justice of India", "President of India", "Chief Minister"],
-            correctAnswerIndex: 2
+            correctAnswer: "President of India"
         },
         {
             question: "Jaun Elia ka pehla shairi majmua (poetry collection) kaun sa thha?",
             options: ["Yaani", "Guman", "Lekin", "Shayad"],
-            correctAnswerIndex: 3
+            correctAnswer: "Shayad"
         },
         {
             question: "Constituent Assembly ne Bharat ke Samvidhan ko kab adopt (apnaya) thha?",
             options: ["26 January 1950", "15 August 1947", "26 November 1949", "30 January 1948"],
-            correctAnswerIndex: 2
+            correctAnswer: "26 November 1949"
         },
         {
             question: "IPL ke kisi ek season mein sabse zyada runs (973 runs) banane ka record kiske naam hai?",
             options: ["Shubman Gill", "Virat Kohli", "David Warner", "Chris Gayle"],
-            correctAnswerIndex: 1
+            correctAnswer: "Virat Kohli"
         },
         {
             question: "Allama Iqbal ne apni mashhoor nazm 'Shikwa' kis sheher mein pehli baar padhi thhi?",
             options: ["Lahore", "Delhi", "Sialkot", "Aligarh"],
-            correctAnswerIndex: 0
+            correctAnswer: "Lahore"
         },
         {
             question: "Supreme Court ke Judges ki retirement age kitni hoti hai?",
             options: ["60 Years", "62 Years", "65 Years", "70 Years"],
-            correctAnswerIndex: 2
+            correctAnswer: "65 Years"
         },
         {
             question: "Battle of Plassey kis saal (year) ladi gayi thhi?",
             options: ["1757", "1764", "1857", "1526"],
-            correctAnswerIndex: 0
+            correctAnswer: "1757"
         }
     ];
 
+    let quizQuestions = []; 
     let verifiedUser = null;
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -398,6 +413,30 @@
     let selectedOptionIdx = null;
     let finalScore = 0;
     let isQuizOver = false; 
+    
+    let totalAttempted = 0;
+    let totalTimeouts = 0;
+
+    // Shuffle Array Logic
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function prepareShuffledQuiz() {
+        let shuffledQues = shuffleArray([...originalQuestions]);
+        quizQuestions = shuffledQues.map(q => {
+            let shuffledOptions = shuffleArray([...q.options]);
+            return {
+                question: q.question,
+                options: shuffledOptions,
+                correctAnswer: q.correctAnswer
+            };
+        });
+    }
 
     function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim().toLowerCase();
@@ -422,9 +461,15 @@
     function startQuiz() {
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
+        
+        prepareShuffledQuiz();
+        
         currentQuesIdx = 0;
         finalScore = 0;
+        totalAttempted = 0;
+        totalTimeouts = 0;
         isQuizOver = false;
+        
         loadQuestion();
         setupAntiCheating();
     }
@@ -483,6 +528,7 @@
                     navigator.vibrate(300); 
                 }
                 
+                totalTimeouts++; 
                 saveResponseAndNext(false); 
             }
         }, 1000);
@@ -504,8 +550,13 @@
         clearInterval(timerInterval);
         warningSound.pause(); 
         
-        const isCorrect = (selectedOptionIdx === quizQuestions[currentQuesIdx].correctAnswerIndex);
-        if (isCorrect) {
+        totalAttempted++; 
+        
+        const activeQ = quizQuestions[currentQuesIdx];
+        const selectedValue = activeQ.options[selectedOptionIdx];
+        
+        // 🎯 Text Matching Engine (Works perfectly with shuffle)
+        if (selectedValue === activeQ.correctAnswer) {
             finalScore++;
         }
         
@@ -539,43 +590,4 @@
                 document.getElementById('completion-title').style.color = "var(--error)";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya cheating activity ki wajah se disqualify kar diya gaya hai.`;
-                
-                // 📝 Custom remarks sent for cheating attempt
-                sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
-            }
-        });
-    }
-
-    function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
-        isQuizOver = true; 
-        
-        const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
-        
-        const payload = {
-            name: verifiedUser.name,
-            email: verifiedUser.email,
-            score: scoreText,
-            remarks: remarksValue 
-        };
-
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(() => {
-            document.getElementById('sheet-status').style.color = (remarksValue === "Clean Attempt") ? "#00b894" : "var(--error)";
-            document.getElementById('sheet-status').style.background = "rgba(255,255,255,0.02)";
-            document.getElementById('sheet-status').innerText = (remarksValue === "Clean Attempt") ? "✓ Score safely locked into Admin's Google Sheet!" : "⚠️ Session terminated. Report sent to Admin Sheet.";
-        })
-        .catch((err) => {
-            console.error(err);
-        });
-    }
-</script>
-</body>
-</html>
+                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya cheating activity ki wajah se disqualify kar diya gaya h
