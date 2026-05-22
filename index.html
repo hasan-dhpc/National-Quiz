@@ -58,7 +58,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* 👑 PREMIUM NASTALIQ / ADABI TYPOGRAPHY STYLE */
         .urdu-title {
             font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
             font-size: 28px;
@@ -138,14 +137,15 @@
             background: rgba(234, 67, 53, 0.1);
             padding: 14px 18px;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 14.5px;
             text-align: center;
             margin-bottom: 20px;
             display: none;
             border: 1px solid rgba(234, 67, 53, 0.2);
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
+        /* 🎨 PREMIUM RED TOAST - NOW FULLY IN URDU STYLE */
         .toast-notification {
             position: fixed;
             top: -70px;
@@ -153,9 +153,10 @@
             transform: translateX(-50%);
             background: var(--error);
             color: white;
-            padding: 14px 24px;
+            padding: 14px 26px;
             border-radius: 30px;
-            font-size: 14px;
+            font-family: 'Amiri', serif;
+            font-size: 16px;
             font-weight: 600;
             box-shadow: 0 8px 30px rgba(234, 67, 53, 0.4);
             z-index: 9999;
@@ -164,13 +165,13 @@
             align-items: center;
             gap: 10px;
             white-space: nowrap;
+            direction: rtl;
         }
 
         .toast-notification.show {
             top: 25px;
         }
 
-        /* RTL Alignment for True Arabic/Urdu Script Experience */
         .instructions-list {
             text-align: right;
             direction: rtl;
@@ -307,24 +308,23 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 15px;
+            padding: 18px;
             margin: 20px 0;
             text-align: left;
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
     </style>
 </head>
 <body>
 
-    <div id="premium-toast" class="toast-notification">⚠️ Kripya aage badhne se pehle ek option select karein!</div>
-    
-<div class="container">
+    <div id="premium-toast" class="toast-notification">⚠️ مہربانی فرما کر آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
+    <div class="container">
     
     <div id="screen-login">
         <div class="urdu-title">مسابقہ فقه اکیڈمی</div>
         <h2>Quiz Entry</h2>
-        <p class="subtitle">Apna registered naam aur email daal kar login karein.</p>
+        <p class="subtitle">شریک ہونے کے لیے اپنا رجسٹرڈ نام اور درست ای میل درج کریں۔</p>
         
         <div class="error-box" id="login-error"></div>
         
@@ -379,7 +379,7 @@
         <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
         
         <div id="summary-area" class="summary-card"></div>
-        <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px;"></p>
+        <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 600;"></p>
     </div>
 
 </div>
@@ -399,7 +399,6 @@
         { name: "Amit Kumar", email: "amit@gmail.com" }
     ];
 
-    // Fiqh-Oriented Core Syllabus Configuration Engine
     const originalQuestions = [
         {
             question: "نماز میں ارکانِ فرض کی کل تعداد کتنی ہے؟",
@@ -417,7 +416,7 @@
             correctAnswer: "۷.۵ تولہ"
         },
         {
-            question: "وضو میں چہرہ دھونا شرعی اعتبار سے کیا ہے؟",
+            question: "وضو میں چہرہ دھونا شرعی اعتبار سے کیا ہے Lay?",
             options: ["سنت", "فرض", "واجب", "مستحب"],
             correctAnswer: "فرض"
         },
@@ -504,7 +503,8 @@
             errorBox.style.color = 'var(--error)';
             errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
-            errorBox.innerHTML = `<b>⚠️ Access Denied!</b><br>This Email ID is not registered for the National Quiz.<br>Kripya apna registered email use karein ya admin se rabta karein.`;
+            // 📝 URDU REGISTERED WARNING LOGIC
+            errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br>Yeh Email ID National Quiz ke liye registered nahi hai.<br>Kripya apna sahi registered email use karein ya admin se rabta (contact) karein.`;
             return;
         }
 
@@ -526,7 +526,8 @@
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
-                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>You have already attempted or attended your session.`;
+                // 📝 URDU RE-ATTEMPT WARNING LOGIC
+                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>Aap is nishist (session) mein pehle hi shamil ho chuke hain.`;
             } else {
                 verifiedUser = userFound;
                 errorBox.style.display = 'none';
@@ -584,7 +585,7 @@
         currentQ.options.forEach((option, idx) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
-            btn.style.textAlign = 'right'; // RTL option layout optimization
+            btn.style.textAlign = 'right'; 
             btn.style.direction = 'rtl';
             btn.innerText = option;
             btn.onclick = () => selectOption(idx, btn);
@@ -675,6 +676,7 @@
                 document.getElementById('status-icon').className = 'disqualified-icon';
                 document.getElementById('status-icon').innerText = '🚫';
                 
+                // 📝 OPTION 3: FULL URDU DISQUALIFICATION
                 document.getElementById('completion-title').innerText = "You are done !!";
                 document.getElementById('completion-title').style.color = "var(--error)";
                 
@@ -682,9 +684,9 @@
                 document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya kisi aur app par jaane ki wajah se is Quiz Arena se disqualify kar diya gaya hai.`;
                 
                 document.getElementById('summary-area').innerHTML = `
-                    <b>Status:</b> TERMINATED<br>
-                    <b>Reason:</b> Security Lockout due to App/Tab switching detected.<br>
-                    <b>Action:</b> Attempt log locked and transmitted to main portal.
+                    <b>Halat (Status):</b> TERMINATED<br>
+                    <b>Wajah (Reason):</b> Security Lockout due to App/Tab switching detected.<br>
+                    <b>Karwayi (Action):</b> Attempt log locked and transmitted to main portal.
                 `;
                 
                 sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
@@ -708,25 +710,27 @@
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
         
+        // 📝 URDU SUCCESS SCREEN
         if(remarksValue === "Clean Attempt") {
             document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
             
             const randomToken = "NQ-" + Math.floor(100000 + Math.random() * 900000);
             
             document.getElementById('summary-area').innerHTML = `
-                📌 <b>Submission Details:</b><br>
-                • Total Questions: 10<br>
-                • Attempted Actions: ${totalAttempted}<br>
-                • Unanswered/Timeouts: ${totalTimeouts}<br>
-                • Verification Token ID: <b style="color: var(--accent);">${randomToken}</b><br><br>
-                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score secure hai. Final lists portal par update ki jayengi.</span>
+                📌 <b>Imtihan ki Tafseelat (Submission Details):</b><br>
+                • Kul Sawalat (Total Questions): 10<br>
+                • Jawab Diye (Attempted): ${totalAttempted}<br>
+                • Khali Chode (Timeouts): ${totalTimeouts}<br>
+                • Tasdeeqi Token ID (Verification ID): <b style="color: var(--accent);">${randomToken}</b><br><br>
+                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score mehfooz hai. Final list jald hi update ki jayengi.</span>
             `;
             
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ Response safely locked into Admin's Google Sheet!";
+            statusLabel.innerText = "✓ Jawab mehfooz tarike se Google Sheet par bhej diya gaya hai.";
         } else {
+            // 📝 OPTION 3: URDU STATIC CLEAN STATUS BAR
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
@@ -744,5 +748,5 @@
     }
 </script>
 </body>
-    </html>
+        </html>
     
