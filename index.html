@@ -318,8 +318,8 @@
 <script>
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
 
-    // 🔊 Aapka naya dynamic sound effect link (Direct Pixabay MP3)
-    const warningSound = new Audio("https://cdn.pixabay.com/audio/2022/03/10/audio_c3be4b5e28.mp3"); 
+    // 🔊 GitHub Repository mein uploaded music file ka use
+    const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
     
     warningSound.volume = 0.6;
@@ -421,7 +421,6 @@
 
     function loadQuestion() {
         clearInterval(timerInterval);
-        // Naye sawal par warning sound ko safety ke liye stop kar dena
         warningSound.pause();
         warningSound.currentTime = 0;
 
@@ -452,7 +451,7 @@
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
-            // 🔊 Jaise hi exactly 5 seconds bachenge, aapka race countdown play hoga
+            // 🔊 Jaise hi exactly 5 seconds bachenge, race countdown play hoga
             if (timeLeft === 5) {
                 warningSound.currentTime = 0;
                 warningSound.play().catch(e => console.log("Waiting for user interaction"));
@@ -465,12 +464,12 @@
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 
-                warningSound.pause(); // Sound instantly stop karna
+                warningSound.pause(); 
                 buzzerSound.currentTime = 0;
                 buzzerSound.play().catch(e => console.log("Buzzer blocked"));
                 
                 if (navigator.vibrate) {
-                    navigator.vibrate(300); // Phone vibration pulse
+                    navigator.vibrate(300); 
                 }
                 
                 saveResponseAndNext(false); 
@@ -491,7 +490,7 @@
             return;
         }
         clearInterval(timerInterval);
-        warningSound.pause(); // Answer submit hote hi warning sound chup
+        warningSound.pause(); 
         
         const isCorrect = (selectedOptionIdx === quizQuestions[currentQuesIdx].correctAnswerIndex);
         if (isCorrect) {
