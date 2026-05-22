@@ -282,7 +282,7 @@
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
             <li>Sawal ka jawab sahi hai ya galat, yeh aapko turant nahi bataya jayega.</li>
-            <li>Agar 30 seconds poore ho gaye, toh sawal automatic zero marks ke sath aage badh jayega.</li>
+            <li>Aakhiri 5 seconds mein tick-tick warning sound bajegi.</li>
             <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
         </div>
         
@@ -316,19 +316,19 @@
 </div>
 
 <script>
-    // ===================================================
-    // LIVE GOOGLE SHEET DEPLOYMENT URL INTEGRATION
-    // ===================================================
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
 
-    // Allowed Users List (Yahan student data update kar sakte hain)
+    // Dynamic Sound Effects Using Web Links
+    const tickSound = new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"); // Light beep for ticking
+    const buzzerSound = new Audio("https://actions.google.com/sounds/v1/alarms/mechanical_clock_ring.ogg"); // Loud alarm for time out
+    tickSound.volume = 0.4; // Sound thoda medium rkhne keliye
+
     const allowedUsers = [
         { name: "Noor Hasan", email: "noor@gmail.com" },
         { name: "Zaid Khan", email: "zaid@gmail.com" },
         { name: "Amit Kumar", email: "amit@gmail.com" }
     ];
 
-    // 10 Premium Mix Questions (0 = Opt 1, 1 = Opt 2, 2 = Opt 3, 3 = Opt 4)
     const quizQuestions = [
         {
             question: "Indian Constitution ka kaun sa Article 'Fundamental Duties' se deal karta hai?",
@@ -446,12 +446,20 @@
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
+            // 🔊 Play sound warning for last 5 seconds
+            if (timeLeft <= 5 && timeLeft > 0) {
+                tickSound.currentTime = 0;
+                tickSound.play().catch(e => console.log("Audio play blocked until user interaction"));
+            }
+
             if (timeLeft <= 8) {
                 document.getElementById('timer-badge').classList.add('danger');
             }
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
+                // 🔊 Play buzzer sound on time out
+                buzzerSound.play().catch(e => console.log("Audio blocked"));
                 saveResponseAndNext(false); 
             }
         }, 1000);
