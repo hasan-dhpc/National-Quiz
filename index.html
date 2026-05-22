@@ -32,6 +32,8 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
 
         .container {
@@ -120,14 +122,39 @@
         .error-box {
             color: var(--error);
             background: rgba(234, 67, 53, 0.1);
-            padding: 12px 16px;
-            border-radius: 10px;
+            padding: 14px 18px;
+            border-radius: 12px;
             font-size: 14px;
             text-align: center;
             margin-bottom: 20px;
             display: none;
             border: 1px solid rgba(234, 67, 53, 0.2);
             line-height: 1.5;
+        }
+
+        /* 🎨 PREMIUM RED TOAST NOTIFICATION */
+        .toast-notification {
+            position: fixed;
+            top: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--error);
+            color: white;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(234, 67, 53, 0.4);
+            z-index: 9999;
+            transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .toast-notification.show {
+            top: 25px;
         }
 
         .instructions-list {
@@ -271,13 +298,15 @@
     </style>
 </head>
 <body>
-<div class="container">
+
+    <div id="premium-toast" class="toast-notification">⚠️ Kripya aage badhne se pehle ek option select karein!</div>
+    <div class="container">
     
     <div id="screen-login">
         <h2>Quiz Entry</h2>
         <p class="subtitle">Apna registered naam aur email daal kar login karein.</p>
         
-        <div class="error-box" id="login-error">Access Denied!</div>
+        <div class="error-box" id="login-error"></div>
         
         <div class="input-group">
             <label>Full Name</label>
@@ -416,6 +445,14 @@
     let totalAttempted = 0;
     let totalTimeouts = 0;
 
+    function showToastNotification() {
+        const toast = document.getElementById('premium-toast');
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -437,24 +474,22 @@
     }
 
     function validateLogin() {
-        const nameVal = document.getElementById('input-name').value.trim().toLowerCase();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
 
-        const userFound = allowedUsers.find(u => 
-            u.name.toLowerCase() === nameVal && u.email.toLowerCase() === emailVal
-        );
+        // 🎯 OPTION 1 TRIGGER: Email only verification engine
+        const userFound = allowedUsers.find(u => u.email.toLowerCase() === emailVal);
 
         if (!userFound) {
             errorBox.style.color = 'var(--error)';
             errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
-            errorBox.innerText = "Access Denied! Data match nahi hua.";
+            errorBox.innerHTML = `<b>⚠️ Access Denied!</b><br>This Email ID is not registered for the National Quiz.<br>Kripya apna registered email use karein ya admin se rabta karein.`;
             return;
         }
 
-        // 👑 VIP ADMIN EXCEPTION: Seedha bina check kiye enter karo testing ke liye
+        // 👑 VIP EXCEPTION CONTROL: Noor Hasan bypass active
         if (emailVal === "noor@gmail.com") {
             verifiedUser = userFound;
             errorBox.style.display = 'none';
@@ -463,7 +498,7 @@
             return; 
         }
 
-        // ⚡ Invisible check processing (No clearance message text displayed)
+        // ⚡ Invisible check layout triggered seamlessly (No loader messages)
         verifyBtn.disabled = true;
 
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
@@ -471,11 +506,11 @@
         .then(resData => {
             verifyBtn.disabled = false;
             if (resData.exists) {
-                // 🚫 Professional Urdu + English Custom Block Error Message
+                // 🚫 Clean short English duplicate control box
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
-                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>You have already attempted or attended your session.<br>(Aap pehle hi is session mein hissa le chuke hain.)`;
+                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>You have already attempted or attended your session.`;
             } else {
                 verifiedUser = userFound;
                 errorBox.style.display = 'none';
@@ -578,7 +613,8 @@
 
     function submitAnswer() {
         if (selectedOptionIdx === null) {
-            alert("Kripya aage badhne se pehle ek option select karein!");
+            // 🎨 Tarika 1: Red Premium Sliding Toast active
+            showToastNotification();
             return;
         }
         clearInterval(timerInterval);
@@ -619,11 +655,13 @@
                 
                 document.getElementById('status-icon').className = 'disqualified-icon';
                 document.getElementById('status-icon').innerText = '🚫';
+                
+                // 🎨 Option 3 Message Set
                 document.getElementById('completion-title').innerText = "You are done !!";
                 document.getElementById('completion-title').style.color = "var(--error)";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya cheating activity ki wajah se disqualify kar diya gaya hai.`;
+                document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya kisi aur app par jaane ki wajah se is Quiz Arena se disqualify kar diya gaya hai.`;
                 
                 document.getElementById('summary-area').innerHTML = `
                     <b>Status:</b> TERMINATED<br>
@@ -670,11 +708,11 @@
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
             statusLabel.innerText = "✓ Response safely locked into Admin's Google Sheet!";
         } else {
-            // ⚠️ Clean Static Disqualification Status Message (No temporary loading button style)
+            // 🎨 Option 3 Static Clean Block Result Output
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ Session terminated. Report sent to Admin Sheet.";
+            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin Sheet.";
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
