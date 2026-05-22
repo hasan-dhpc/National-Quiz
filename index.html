@@ -270,8 +270,7 @@
     </style>
 </head>
 <body>
-
-<div class="container">
+    <div class="container">
     
     <div id="screen-login">
         <h2>Quiz Entry</h2>
@@ -337,7 +336,6 @@
 </div>
 
 <script>
-    // Live Apps Script Link with Remarks Setup
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwUiCqWT8Rw_dLVQ14bVSZ0c6aE5PX8-IuJf5WJa5NSaMaaY73FIg1ErEdNpzWB-_sT/exec";
 
     const warningSound = new Audio("race.mp3"); 
@@ -417,7 +415,6 @@
     let totalAttempted = 0;
     let totalTimeouts = 0;
 
-    // Shuffle Array Logic
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -462,7 +459,6 @@
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
         
-        // 🎲 Shuffling generated on start trigger
         prepareShuffledQuiz();
         
         currentQuesIdx = 0;
@@ -591,4 +587,64 @@
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
                 document.getElementById('thank-you-msg').innerText = `Sorry ${displayName}, aapko tab-switching ya cheating activity ki wajah se disqualify kar diya gaya hai.`;
-         
+                
+                document.getElementById('summary-area').innerHTML = `
+                    <b>Status:</b> TERMINATED<br>
+                    <b>Reason:</b> Security Lockout due to App/Tab switching detected.<br>
+                    <b>Action:</b> Attempt log locked and transmitted to main portal.
+                `;
+                
+                sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
+            }
+        });
+    }
+
+    function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
+        isQuizOver = true; 
+        
+        const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
+        
+        const payload = {
+            name: verifiedUser.name,
+            email: verifiedUser.email,
+            score: scoreText,
+            remarks: remarksValue 
+        };
+
+        const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        
+        if(remarksValue === "Clean Attempt") {
+            document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
+            
+            const randomToken = "NQ-" + Math.floor(100000 + Math.random() * 900000);
+            
+            document.getElementById('summary-area').innerHTML = `
+                📌 <b>Submission Details:</b><br>
+                • Total Questions: 10<br>
+                • Attempted Actions: ${totalAttempted}<br>
+                • Unanswered/Timeouts: ${totalTimeouts}<br>
+                • Verification Token ID: <b style="color: var(--accent);">${randomToken}</b><br><br>
+                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score secure hai. Final lists portal par update ki jayengi.</span>
+            `;
+        }
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            document.getElementById('sheet-status').style.color = (remarksValue === "Clean Attempt") ? "#00b894" : "var(--error)";
+            document.getElementById('sheet-status').style.background = "rgba(255,255,255,0.02)";
+            document.getElementById('sheet-status').innerText = (remarksValue === "Clean Attempt") ? "✓ Response safely locked into Admin's Google Sheet!" : "⚠️ Session terminated. Report sent to Admin Sheet.";
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    }
+</script>
+</body>
+</html>
