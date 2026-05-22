@@ -335,7 +335,7 @@
             </div>
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
-        <div id="screen-directions" style="display: none;">
+                <div id="screen-directions" style="display: none;">
             <div class="urdu-title" style="font-size: 24px; margin-bottom: 5px;">ہدایات و ضوابط</div>
             <h2>Important Directions</h2>
             <p class="subtitle">Quiz shuru karne se pahle deeni o fariqi niyam dhyan se padhein.</p>
@@ -363,15 +363,16 @@
 
         <div id="screen-completion" style="display: none; text-align: center;">
             <div id="status-icon" class="success-icon">🎉</div>
-            <h2 id="completion-title">Quiz Submitted!</h2>
-            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin-top: 15px; line-height: 1.5;"></p>
-            <div id="summary-area" class="summary-card"></div>
-            <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 600;"></p>
+            <h2 id="completion-title" style="font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; font-size: 26px;">نشست ختم!</h2>
+            <p id="session-subtitle" style="color: var(--error); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: -5px; margin-bottom: 20px; display: none;">Session Terminated</p>
+            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 18px; font-family: 'Amiri', serif; margin-top: 15px; line-height: 1.8; direction: rtl;"></p>
+            <div id="summary-area" class="summary-card" style="font-family: 'Amiri', serif; font-size: 18px; line-height: 2; direction: rtl; text-align: right;"></div>
+            <p id="sheet-status" style="font-size: 15px; font-family: 'Amiri', serif; padding: 12px; border-radius: 8px; font-weight: 600; direction: rtl;"></p>
         </div>
     </div>
 
 <script>
-    // 🔗 DYNAMICALLY LINKED WITH YOUR CORRECTED LIVE URL (CASE-INSENSITIVE RESOLUTION)
+    // 🔗 LIVE SCRIPT CONNECTOR FOR DYNAMIC VALIDATION ON COLUMN B
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5ToIBObFdJXJ4jz2eUSlHI1pic4GJ2bazjl26-eHTOftDKDh81s_sWIUfE3ZtkREnrw/exec";
 
     const warningSound = new Audio("race.mp3"); 
@@ -481,7 +482,7 @@
             return;
         }
 
-        // 👑 SUPER ADMIN ACCESSIBLE BYPASS PASS FOR NOOR
+        // 👑 VIP SUPER ADMIN BYPASS MODE
         if (emailVal === "noor@gmail.com") {
             verifiedUser = { name: nameVal, email: emailVal };
             errorBox.style.display = 'none';
@@ -492,7 +493,7 @@
 
         verifyBtn.disabled = true;
 
-        // 🔄 HIT LIVE DEPLOYMENT ENGINE: Queries your naye web app sheet database
+        // 📊 FETCH CALL Hits your newly authorized deployed web app macro endpoint
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
         .then(res => res.json())
         .then(resData => {
@@ -518,7 +519,6 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
-            // Resilient fail-safe deployment toggle
             verifiedUser = { name: nameVal, email: emailVal };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -647,16 +647,17 @@
                 document.getElementById('status-icon').className = 'disqualified-icon';
                 document.getElementById('status-icon').innerText = '🚫';
                 
-                document.getElementById('completion-title').innerText = "Nishist Khatam! (نشست ختم)";
+                document.getElementById('completion-title').innerText = "نشست ختم!";
                 document.getElementById('completion-title').style.color = "var(--error)";
+                document.getElementById('session-subtitle').style.display = "block";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `Maazirat, ${displayName}! Aapko tab-switching ya kisi aur app par jaane ki wajah se is Quiz Arena se kharij (disqualify) kar diya gaya hai.`;
+                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو ٹیب بدلنے یا کسی دوسری ایپ پر جانے کی وجہ سے اس کوئز ایرینا سے خارج کر دیا گیا ہے۔`;
                 
                 document.getElementById('summary-area').innerHTML = `
-                    <b>Halat (Status):</b> Mauqoof (موقوف)<br>
-                    <b>Wajah (Reason):</b> Tab-switching ya cheating activity detect hui hai.<br>
-                    <b>Karwayi (Action):</b> Aapka imtihan lock karke main portal par bhej diya gaya hai.
+                    • <b>حالت:</b> موقوف<br>
+                    • <b>وجہ:</b> ٹیب کی تبدیلی یا غیر قانونی سرگرمی پائی گئی ہے۔<br>
+                    • <b>کارروائی:</b> آپ کا امتحان لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
                 `;
                 sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
             }
@@ -680,28 +681,28 @@
         const statusLabel = document.getElementById('sheet-status');
         
         if(remarksValue === "Clean Attempt") {
-            document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
+            document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا جواب کامیابی کے ساتھ نیشنل سرور پر درج ہو چکا ہے۔`;
             
             const randomToken = "NQ-" + Math.floor(100000 + Math.random() * 900000);
             
             document.getElementById('summary-area').innerHTML = `
-                📌 <b>Imtihan ki Tafseelat (Submission Details):</b><br>
-                • Kul Sawalat (Total Questions): 10<br>
-                • Jawab Diye (Attempted): ${totalAttempted}<br>
-                • Khali Chode (Timeouts): ${totalTimeouts}<br>
-                • Tasdeeqi Token ID (Verification ID): <b style="color: var(--accent);">${randomToken}</b><br><br>
-                <span style="font-size:13px; color: var(--text-muted);">*Note: National level confidentiality rules ke tehat aapka score secure hai. Final list jald hi update ki jayengi.</span>
+                📌 <b>امتحان کی تفصیلات:</b><br>
+                • کل سوالات: 10<br>
+                • جوابات دیے گئے: ${totalAttempted}<br>
+                • خالی چھوڑے گئے: ${totalTimeouts}<br>
+                • تصدیقی ٹوکن آئی ڈی: <b style="color: var(--accent);">${randomToken}</b><br><br>
+                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: قومی سطح کے رازداری کے قوانین کے تحت آپ کا اسکور محفوظ ہے۔ فائنل لسٹ جلد ہی اپڈیٹ کی جائے گی۔</span>
             `;
             
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ Jawab mehfooz tarike se Google Sheet par bhej diya gaya hai.";
+            statusLabel.innerText = "✓ جواب محفوظ طریقے سے گوگل شیٹ پر بھیج دیا گیا ہے۔";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ Karwayi mukammal. Aapka bayaan Admin Sheet par bhej diya gaya hai.";
+            statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
