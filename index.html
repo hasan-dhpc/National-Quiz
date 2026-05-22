@@ -298,7 +298,7 @@
 </head>
 <body>
 
-    <div id="premium-toast" class="toast-notification">⚠️ Kripya aage badhne se pehle ek option select karein!</div>
+    <div id="premium-toast" class="toast-notification">⚠️ Please aage badhne se pehle ek option select karein!</div>
     <div class="container">
     
     <div id="screen-login">
@@ -631,6 +631,9 @@
         if (currentQuesIdx < quizQuestions.length) {
             loadQuestion();
         } else {
+            // 🚀 SUCCESS REDIRECTION TRIGGER: Instant swap block layout
+            document.getElementById('screen-quiz').style.display = 'none';
+            document.getElementById('screen-completion').style.display = 'block';
             sendDataToGoogleSheet("Clean Attempt");
         }
     }
@@ -668,6 +671,7 @@
 
     function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
         isQuizOver = true; 
+        clearInterval(timerInterval); // Core thread timer safety shutdown
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
@@ -681,7 +685,6 @@
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
         
-        // 🏁 Absolute Last Thankful Page Generation Logic
         if(remarksValue === "Clean Attempt") {
             document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapka response kamyabi ke saath national server par darj ho chuka hai.`;
             
@@ -699,12 +702,12 @@
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ Response safely locked into Admin's Google Sheet!";
+            statusLabel.innerText = "✓ Response safely locked into Admin's Sheet!";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin Sheet.";
+            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin.";
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
@@ -718,5 +721,4 @@
     }
 </script>
 </body>
-    </html>
-    
+</html>
