@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Quiz Competition Hub</title>
+    <title>National Islamic Quiz Arena</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400..700&family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6c5ce7;
@@ -21,7 +24,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -34,6 +36,7 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            font-family: 'Urbanist', sans-serif;
         }
 
         .container {
@@ -48,11 +51,22 @@
         }
 
         h2 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
             margin-bottom: 8px;
             text-align: center;
             letter-spacing: -0.5px;
+        }
+
+        /* 👑 PREMIUM NASTALIQ / ADABI TYPOGRAPHY STYLE */
+        .urdu-title {
+            font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+            font-size: 28px;
+            line-height: 2.2;
+            text-align: center;
+            color: var(--accent);
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(253, 203, 110, 0.2);
         }
 
         .subtitle {
@@ -156,31 +170,34 @@
             top: 25px;
         }
 
+        /* RTL Alignment for True Arabic/Urdu Script Experience */
         .instructions-list {
-            text-align: left;
+            text-align: right;
+            direction: rtl;
             margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 22px;
             border-radius: 14px;
             border: 1px solid var(--border);
         }
 
         .instructions-list li {
-            margin-bottom: 14px;
-            font-size: 15px;
+            margin-bottom: 16px;
+            font-family: 'Amiri', serif;
+            font-size: 19px;
             color: #e8eaed;
-            line-height: 1.5;
+            line-height: 1.8;
             list-style-type: none;
             position: relative;
-            padding-left: 24px;
+            padding-right: 24px;
         }
 
         .instructions-list li::before {
-            content: "•";
+            content: "✦";
             color: var(--accent);
-            font-size: 20px;
+            font-size: 16px;
             position: absolute;
-            left: 5px;
+            right: 0;
             top: -2px;
         }
 
@@ -231,11 +248,13 @@
         }
 
         .question-text {
-            font-size: 20px;
-            line-height: 1.5;
+            font-family: 'Amiri', serif;
+            font-size: 22px;
+            line-height: 1.6;
             font-weight: 600;
             margin-bottom: 28px;
             color: #f8f9fa;
+            text-align: center;
         }
 
         .options-grid {
@@ -298,10 +317,12 @@
 </head>
 <body>
 
-    <div id="premium-toast" class="toast-notification">⚠️ Please aage badhne se pehle ek option select karein!</div>
-    <div class="container">
+    <div id="premium-toast" class="toast-notification">⚠️ Kripya aage badhne se pehle ek option select karein!</div>
+    
+<div class="container">
     
     <div id="screen-login">
+        <div class="urdu-title">مسابقہ فقه اکیڈمی</div>
         <h2>Quiz Entry</h2>
         <p class="subtitle">Apna registered naam aur email daal kar login karein.</p>
         
@@ -321,15 +342,15 @@
     </div>
 
     <div id="screen-directions" style="display: none;">
+        <div class="urdu-title" style="font-size: 24px; margin-bottom: 5px;">ہدایات و ضوابط</div>
         <h2>Important Directions</h2>
-        <p class="subtitle">Quiz shuru karne se pahle niyam dhyan se padhein.</p>
+        <p class="subtitle">Quiz shuru karne se pahle deeni o fariqi niyam dhyan se padhein.</p>
         
         <div class="instructions-list">
-            <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
-            <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
-            <li><b>Anti-Cheating Rule:</b> Agar aapne quiz ke dauran tab badla ya app switch ki, toh aap automatic **disqualify** ho jayenge!</li>
-            <li><b>Single Attempt Rule:</b> Ek baar session close hone ke baad dobara login block rahega.</li>
-            <li>Sawal aur unke options automatic shuffle (aage-piche) honge.</li>
+            <li>اس فقہی مسابقہ میں کل <b>۱۰ (دس) سوالات</b> پوچھے جائیں گے۔</li>
+            <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
+            <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا یا کوئی دوسری ایپ کھولی، تو آپ خود بخود خارج (Disqualify) ہو جائیں گے۔</li>
+            <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
         </div>
         
         <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
@@ -378,56 +399,57 @@
         { name: "Amit Kumar", email: "amit@gmail.com" }
     ];
 
+    // Fiqh-Oriented Core Syllabus Configuration Engine
     const originalQuestions = [
         {
-            question: "Indian Constitution ka kaun sa Article 'Fundamental Duties' se deal karta hai?",
-            options: ["Article 50", "Article 51A", "Article 45", "Article 32"],
-            correctAnswer: "Article 51A"
+            question: "نماز میں ارکانِ فرض کی کل تعداد کتنی ہے؟",
+            options: ["۴ (چار)", "۶ (چھ)", "۷ (سات)", "۵ (پانچ)"],
+            correctAnswer: "۶ (چھ)"
         },
         {
-            question: "Mashhoor shair Ghalib ka asal (real) naam kya thha?",
-            options: ["Asadullah Khan", "Mirza Jan", "Wajid Ali", "Muhammad Ghalib"],
-            correctAnswer: "Asadullah Khan"
+            question: "غسل کے کتنے فرائض مقرر ہیں؟",
+            options: ["۲ (دو)", "۳ (تین)", "۴ (چار)", "۵ (پانچ)"],
+            correctAnswer: "۳ (تین)"
         },
         {
-            question: "International T20 cricket mein sabse tez shatak (century) lagane ka record kiske naam hai?",
-            options: ["Chris Gayle", "Jan Nicol Loftie-Eaton", "David Miller", "Rohit Sharma"],
-            correctAnswer: "Jan Nicol Loftie-Eaton"
+            question: "شریعت کے مطابق زکوٰۃ کا نصاب سونے (Gold) کے لیے کتنا ہے؟",
+            options: ["۵.۷ تولہ", "۷.۵ تولہ", "۱۰ تولہ", "۸.۵ تولہ"],
+            correctAnswer: "۷.۵ تولہ"
         },
         {
-            question: "Indian Polity mein State Governors ko kaun appoint (niyukt) karta hai?",
-            options: ["Prime Minister", "Chief Justice of India", "President of India", "Chief Minister"],
-            correctAnswer: "President of India"
+            question: "وضو میں چہرہ دھونا شرعی اعتبار سے کیا ہے؟",
+            options: ["سنت", "فرض", "واجب", "مستحب"],
+            correctAnswer: "فرض"
         },
         {
-            question: "Jaun Elia ka pehla shairi majmua (poetry collection) kaun sa thha?",
-            options: ["Yaani", "Guman", "Lekin", "Shayad"],
-            correctAnswer: "Shayad"
+            question: "مالِ تجارت پر کتنے فیصد (Percentage) زکوٰۃ فرض ہوتی ہے؟",
+            options: ["۲.۵ فیصد", "۵ فیصد", "۱۰ فیصد", "۱ فیصد"],
+            correctAnswer: "۲.۵ فیصد"
         },
         {
-            question: "Constituent Assembly ne Bharat ke Samvidhan ko kab adopt (apnaya) thha?",
-            options: ["26 January 1950", "15 August 1947", "26 November 1949", "30 January 1948"],
-            correctAnswer: "26 November 1949"
+            question: "تیمم میں کل کتنے فرائض پائے جاتے ہیں؟",
+            options: ["۳ (تین)", "۲ (دو)", "۴ (چار)", "۱ (ایک)"],
+            correctAnswer: "۲ (دو)"
         },
         {
-            question: "IPL ke kisi ek season mein sabse zyada runs (973 runs) banane ka record kiske naam hai?",
-            options: ["Shubman Gill", "Virat Kohli", "David Warner", "Chris Gayle"],
-            correctAnswer: "Virat Kohli"
+            question: "فقہ کی اصطلاح میں 'واجب' کا درجہ فرض سے کیا ہوتا ہے؟",
+            options: ["برابر ہوتا ہے", "کم ہوتا ہے", "زیادہ ہوتا ہے", "اختیاری ہوتا ہے"],
+            correctAnswer: "کم ہوتا ہے"
         },
         {
-            question: "Allama Iqbal ne apni mashhoor nazm 'Shikwa' kis sheher mein pehli baar padhi thhi?",
-            options: ["Lahore", "Delhi", "Sialkot", "Aligarh"],
-            correctAnswer: "Lahore"
+            question: "مسافر کے لیے قصر نماز پڑھنے کا شرعی حکم کب لاگو ہوتا ہے؟",
+            options: ["۴۸ میل یا اس سے زائد سفر پر", "۱۰ میل کے سفر پر", "۱00 میل کے سفر پر", "۲5 میل کے سفر پر"],
+            correctAnswer: "۴۸ میل یا اس سے زائد سفر پر"
         },
         {
-            question: "Supreme Court ke Judges ki retirement age kitni hoti hai?",
-            options: ["60 Years", "62 Years", "65 Years", "70 Years"],
-            correctAnswer: "65 Years"
+            question: "رمضان کے روزے کس ہجری سال میں فرض ہوئے؟",
+            options: ["۱ ہجری", "۲ ہجری", "۳ ہجری", "۵ ہجری"],
+            correctAnswer: "۲ ہجری"
         },
         {
-            question: "Battle of Plassey kis saal (year) ladi gayi thhi?",
-            options: ["1757", "1764", "1857", "1526"],
-            correctAnswer: "1757"
+            question: "نمازِ عیدین کا شرعی حکم کیا ہے؟",
+            options: ["فرضِ عین", "واجب", "سنتِ مؤکدہ", "نفل"],
+            correctAnswer: "واجب"
         }
     ];
 
@@ -562,6 +584,8 @@
         currentQ.options.forEach((option, idx) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
+            btn.style.textAlign = 'right'; // RTL option layout optimization
+            btn.style.direction = 'rtl';
             btn.innerText = option;
             btn.onclick = () => selectOption(idx, btn);
             optionsBox.appendChild(btn);
@@ -631,7 +655,6 @@
         if (currentQuesIdx < quizQuestions.length) {
             loadQuestion();
         } else {
-            // 🚀 SUCCESS REDIRECTION TRIGGER: Instant swap block layout
             document.getElementById('screen-quiz').style.display = 'none';
             document.getElementById('screen-completion').style.display = 'block';
             sendDataToGoogleSheet("Clean Attempt");
@@ -671,7 +694,7 @@
 
     function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
         isQuizOver = true; 
-        clearInterval(timerInterval); // Core thread timer safety shutdown
+        clearInterval(timerInterval);
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
@@ -702,12 +725,12 @@
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ Response safely locked into Admin's Sheet!";
+            statusLabel.innerText = "✓ Response safely locked into Admin's Google Sheet!";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
             statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin.";
+            statusLabel.innerText = "⚠️ Disqualification report safely transmitted to Admin Sheet.";
         }
 
         fetch(GOOGLE_SCRIPT_URL, {
@@ -721,4 +744,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
