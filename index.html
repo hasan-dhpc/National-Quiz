@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduCraft Premium Quiz Hub</title>
+    <title>National Quiz Competition Hub</title>
     <style>
         :root {
             --primary: #6c5ce7;
@@ -106,7 +106,13 @@
             transition: all 0.2s ease;
         }
 
-        .btn:hover {
+        .btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn:hover:not(:disabled) {
             background: var(--primary-hover);
             transform: translateY(-1px);
         }
@@ -253,7 +259,7 @@
         <h2>Quiz Entry</h2>
         <p class="subtitle">Apna registered naam aur email daal kar login karein.</p>
         
-        <div class="error-box" id="login-error">Access Denied! Data match nahi hua.</div>
+        <div class="error-box" id="login-error">Access Denied!</div>
         
         <div class="input-group">
             <label>Full Name</label>
@@ -276,8 +282,8 @@
             <li>Is quiz mein kul <b>10 Multiple Choice Questions (MCQs)</b> honge.</li>
             <li>Har ek sawal ke liye aapko <b>30 seconds</b> ka fixed time milega.</li>
             <li>Sawal ka jawab sahi hai ya galat, yeh aapko turant nahi bataya jayega.</li>
-            <li>Aap apna option select karke "Submit" करेंगे, aur system response save kar lega.</li>
-            <li>Agar 30 seconds poore ho gaye, toh sawal automatic submit hokar agla sawal aa jayega.</li>
+            <li>Agar 30 seconds poore ho gaye, toh sawal automatic zero marks ke sath aage badh jayega.</li>
+            <li>Aakhir mein aapka score secure tarike se automatic Google Sheet par save ho jayega.</li>
         </div>
         
         <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
@@ -295,74 +301,84 @@
 
         <div class="question-text" id="question-text">Loading question...</div>
         
-        <div class="options-grid" id="options-container">
-            </div>
+        <div class="options-grid" id="options-container"></div>
         
         <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit Answer</button>
     </div>
 
     <div id="screen-completion" style="display: none; text-align: center;">
-        <div class="success-icon">🎉</div>
-        <h2>Quiz Submitted!</h2>
+        <div class="success-icon" id="status-icon">🎉</div>
+        <h2 id="completion-title">Quiz Submitted!</h2>
         <p id="thank-you-msg" style="color: var(--text-muted); font-size: 16px; margin: 15px 0 25px 0; line-height: 1.5;"></p>
-        <p style="font-size: 14px; color: var(--accent); background: rgba(253,203,110,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(253,203,110,0.15);">Aapka response secure tarike se save ho chuka hai. Admin jald hi result announce karenge.</p>
+        <p id="sheet-status" style="font-size: 14px; color: var(--accent); background: rgba(253,203,110,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(253,203,110,0.15);">Sending your results to Google Sheet...</p>
     </div>
 
 </div>
 
 <script>
     // ===================================================
-    // 1. PARTICIPANTS LIST (Yahan naye naam aur email jod sakte hain)
+    // LIVE GOOGLE SHEET DEPLOYMENT URL INTEGRATION
     // ===================================================
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7blm-543V2dAN-2CEUvfqpm3cdmKH14S-W98cmJ6HNE40e-8dm9KgrtXYl_UmKhih/exec";
+
+    // Allowed Users List (Yahan student data update kar sakte hain)
     const allowedUsers = [
         { name: "Noor Hasan", email: "noor@gmail.com" },
         { name: "Zaid Khan", email: "zaid@gmail.com" },
         { name: "Amit Kumar", email: "amit@gmail.com" }
     ];
 
-    // ===================================================
-    // 2. 10 PREMIUM QUESTIONS (30s Timer - No instant review)
-    // ===================================================
+    // 10 Premium Mix Questions (0 = Opt 1, 1 = Opt 2, 2 = Opt 3, 3 = Opt 4)
     const quizQuestions = [
         {
             question: "Indian Constitution ka kaun sa Article 'Fundamental Duties' se deal karta hai?",
-            options: ["Article 50", "Article 51A", "Article 45", "Article 32"]
+            options: ["Article 50", "Article 51A", "Article 45", "Article 32"],
+            correctAnswerIndex: 1
         },
         {
             question: "Mashhoor shair Ghalib ka asal (real) naam kya thha?",
-            options: ["Asadullah Khan", "Mirza Jan", "Wajid Ali", "Muhammad Ghalib"]
+            options: ["Asadullah Khan", "Mirza Jan", "Wajid Ali", "Muhammad Ghalib"],
+            correctAnswerIndex: 0
         },
         {
             question: "International T20 cricket mein sabse tez shatak (century) lagane ka record kiske naam hai?",
-            options: ["Chris Gayle", "Jan Nicol Loftie-Eaton", "David Miller", "Rohit Sharma"]
+            options: ["Chris Gayle", "Jan Nicol Loftie-Eaton", "David Miller", "Rohit Sharma"],
+            correctAnswerIndex: 1
         },
         {
             question: "Indian Polity mein State Governors ko kaun appoint (niyukt) karta hai?",
-            options: ["Prime Minister", "Chief Justice of India", "President of India", "Chief Minister"]
+            options: ["Prime Minister", "Chief Justice of India", "President of India", "Chief Minister"],
+            correctAnswerIndex: 2
         },
         {
             question: "Jaun Elia ka pehla shairi majmua (poetry collection) kaun sa thha?",
-            options: ["Yaani", "Guman", "Lekin", "Shayad"]
+            options: ["Yaani", "Guman", "Lekin", "Shayad"],
+            correctAnswerIndex: 3
         },
         {
             question: "Constituent Assembly ne Bharat ke Samvidhan ko kab adopt (apnaya) thha?",
-            options: ["26 January 1950", "15 August 1947", "26 November 1949", "30 January 1948"]
+            options: ["26 January 1950", "15 August 1947", "26 November 1949", "30 January 1948"],
+            correctAnswerIndex: 2
         },
         {
             question: "IPL ke kisi ek season mein sabse zyada runs (973 runs) banane ka record kiske naam hai?",
-            options: ["Shubman Gill", "Virat Kohli", "David Warner", "Chris Gayle"]
+            options: ["Shubman Gill", "Virat Kohli", "David Warner", "Chris Gayle"],
+            correctAnswerIndex: 1
         },
         {
             question: "Allama Iqbal ne apni mashhoor nazm 'Shikwa' kis sheher mein pehli baar padhi thhi?",
-            options: ["Lahore", "Delhi", "Sialkot", "Aligarh"]
+            options: ["Lahore", "Delhi", "Sialkot", "Aligarh"],
+            correctAnswerIndex: 0
         },
         {
             question: "Supreme Court ke Judges ki retirement age kitni hoti hai?",
-            options: ["60 Years", "62 Years", "65 Years", "70 Years"]
+            options: ["60 Years", "62 Years", "65 Years", "70 Years"],
+            correctAnswerIndex: 2
         },
         {
             question: "Battle of Plassey kis saal (year) ladi gayi thhi?",
-            options: ["1757", "1764", "1857", "1526"]
+            options: ["1757", "1764", "1857", "1526"],
+            correctAnswerIndex: 0
         }
     ];
 
@@ -371,7 +387,7 @@
     let timerInterval = null;
     let timeLeft = 30;
     let selectedOptionIdx = null;
-    let userResponses = [];
+    let finalScore = 0;
 
     function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim().toLowerCase();
@@ -389,7 +405,7 @@
             document.getElementById('screen-directions').style.display = 'block';
         } else {
             errorBox.style.display = 'block';
-            errorBox.innerText = "Access Denied! Aapka Naam ya Gmail list mein nahi mila.";
+            errorBox.innerText = "Access Denied! Data match nahi hua.";
         }
     }
 
@@ -397,7 +413,7 @@
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
         currentQuesIdx = 0;
-        userResponses = [];
+        finalScore = 0;
         loadQuestion();
     }
 
@@ -436,7 +452,7 @@
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                saveResponseAndNext(null);
+                saveResponseAndNext(false); 
             }
         }, 1000);
     }
@@ -454,33 +470,55 @@
             return;
         }
         clearInterval(timerInterval);
-        saveResponseAndNext(quizQuestions[currentQuesIdx].options[selectedOptionIdx]);
+        
+        const isCorrect = (selectedOptionIdx === quizQuestions[currentQuesIdx].correctAnswerIndex);
+        if (isCorrect) {
+            finalScore++;
+        }
+        
+        saveResponseAndNext(true);
     }
 
-    function saveResponseAndNext(chosenAnswer) {
-        userResponses.push({
-            questionNumber: currentQuesIdx + 1,
-            question: quizQuestions[currentQuesIdx].question,
-            selectedAnswer: chosenAnswer ? chosenAnswer : "TIMED OUT (No Answer Given)"
-        });
-
+    function saveResponseAndNext(answered) {
         currentQuesIdx++;
         if (currentQuesIdx < quizQuestions.length) {
             loadQuestion();
         } else {
-            showCompletionScreen();
+            sendDataToGoogleSheet();
         }
     }
 
-    function showCompletionScreen() {
+    function sendDataToGoogleSheet() {
         document.getElementById('screen-quiz').style.display = 'none';
         document.getElementById('screen-completion').style.display = 'block';
         
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         document.getElementById('thank-you-msg').innerText = `Shukriya, ${displayName}! Aapne sabhi 10 sawalon ke answers kamyabi ke saath submit kar diye hain.`;
-        
-        console.log("Final User Responses submitted by:", verifiedUser);
-        console.log(userResponses);
+
+        const payload = {
+            name: verifiedUser.name,
+            email: verifiedUser.email,
+            score: `${finalScore} / ${quizQuestions.length}`
+        };
+
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            document.getElementById('sheet-status').style.color = "#00b894";
+            document.getElementById('sheet-status').style.background = "rgba(0,184,148,0.05)";
+            document.getElementById('sheet-status').borderColor = "rgba(0,184,148,0.2)";
+            document.getElementById('sheet-status').innerText = "✓ Score safely locked into Admin's Google Sheet!";
+        })
+        .catch((err) => {
+            console.error(err);
+            document.getElementById('sheet-status').innerText = "Data sheet par bhej diya gaya hai. Apne Google Sheet par check karein!";
+        });
     }
 </script>
 </body>
