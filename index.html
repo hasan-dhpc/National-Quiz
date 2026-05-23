@@ -831,13 +831,11 @@
         document.addEventListener('contextmenu', event => event.preventDefault());
 
         // ==========================================
-        // 🔒 BLOCK A: SCREENSHOT ENGINES (WITH ISOLATED ADMIN VIP EXCEPTION)
+        // 🔒 BLOCK A: SCREENSHOT GESTURE (TEMPORARY BLACKOUT - ADMIN EXCEPTED)
         // ==========================================
-        
-        // 1. Gesture (Three Finger Swipe Detector)
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length >= 2 && !isQuizOver) { 
-                // 👑 ADMIN BYPASS FOR SCREENSHOT OVERLAY
+                // Admin exception: Aapko blackout nahi dikhega
                 if (verifiedUser.isAdmin === true) return; 
                 
                 document.body.classList.add('screenshot-shield-active');
@@ -845,26 +843,22 @@
             }
         }, { passive: true });
 
-        // 2. Hardware Button Click Focus Blur (Special Handler)
-        window.addEventListener("blur", () => {
-            if (!isQuizOver) {
-                // 👑 ADMIN BYPASS FOR HARDWARE POP-UP OVERLAY
-                if (verifiedUser.isAdmin === true) return; 
-
-                document.body.classList.add('screenshot-shield-active');
-                setTimeout(() => { document.body.classList.remove('screenshot-shield-active'); }, 1500);
-            }
-        });
-
 
         // ==========================================
-        // 🚨 BLOCK B: CRITICAL ANTI-CHEAT SYSTEM (STRICT FOR EVERYONE - INCLUDING ADMIN)
+        // 🚨 BLOCK B: CRITICAL ANTI-CHEAT ENGINE (100% DISQUALIFICATION FOR EVERYONE!)
         // ==========================================
         
-        // Tab switching capture engine
+        // 1. Tab Switching Capture
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && !isQuizOver) {
                 handleCriticalCheating("Tab Switching Detected");
+            }
+        });
+        
+        // 2. Split-Screen, App-Switching, Smart Sidebar & Gemini/AI Capture
+        window.addEventListener("blur", () => {
+            if (!isQuizOver) {
+                handleCriticalCheating("Split-Screen, App Switch or AI Sidebar Detected");
             }
         });
 
@@ -886,11 +880,11 @@
             document.getElementById('session-subtitle').style.display = "block";
             
             const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-            document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
+            document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین، ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
             
             document.getElementById('summary-area').innerHTML = `
                 • <b>حالت:</b> موقوف<br>
-                • <b>وجہ:</b> کوئز کے دوران ٹیب تبدیل کرنے کی غیر قانونی کوشش پائی گئی ہے۔<br>
+                • <b>وجہ:</b> کوئز کے دوران اسپلٹ اسکرین، ٹیب یا ایپ تبدیل کرنے کی غیر قانونی سرگرمی پائی گئی ہے۔<br>
                 • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
             `;
             sendDataToGoogleSheet("DQ: " + reasonLabel);
