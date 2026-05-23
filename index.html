@@ -336,6 +336,9 @@
             </div>
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
+
+
+
                 <div id="screen-directions" style="display: none;">
             <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
             <div class="instructions-list">
@@ -349,7 +352,7 @@
 
         <div id="screen-quiz" style="display: none;">
             <div class="quiz-header">
-                <span id="ques-counter" style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Question 1 of 10</span>
+                <span id="ques-counter" style="font-family: 'Amiri', serif; font-size: 16px; font-weight: 600; color: var(--text-muted);">سوال: ۱ / ۱۰</span>
                 <div class="timer" id="timer-badge">⏱️ <span id="time-left">30</span>s</div>
             </div>
             <div class="progress-container">
@@ -371,7 +374,6 @@
     </div>
 
 <script>
-    // 🔗 AUTOMATIC LIVE MATCH AND RESOLUTION SYNC WITH YOUR LATEST APPS SCRIPT WEB APP ENDPOINT
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec";
 
     const warningSound = new Audio("race.mp3"); 
@@ -421,7 +423,7 @@
             correctAnswer: "۴۸ میل یا اس سے زائد سفر پر"
         },
         {
-            question: "رمضان کے روزے کس ہجری سال میں فرض ہوئے؟",
+            question: "رمضان کے روزے کس ہjری سال میں فرض ہوئے؟",
             options: ["۱ ہجری", "۲ ہجری", "۳ ہجری", "۵ ہجری"],
             correctAnswer: "۲ ہجری"
         },
@@ -431,11 +433,10 @@
             correctAnswer: "واجب"
         }
     ];
-        
-            
-            
-        
-            let quizQuestions = []; 
+
+
+
+        let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -479,10 +480,14 @@
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
 
+        // 📊 FIXED: Hinglish loading check message turned into beautiful pure Urdu script
         if(!nameVal || !emailVal) {
             errorBox.style.color = 'var(--error)';
+            errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
-            errorBox.innerHTML = `⚠️ Kripya apna Naam aur Email donon sahi se daalein.`;
+            errorBox.style.fontFamily = "'Amiri', serif";
+            errorBox.style.fontSize = "16px";
+            errorBox.innerHTML = `<span style="display:block; direction:rtl; text-align:center;">⚠️ براہِ کرم اپنا نام اور ای میل دونوں درست درج کریں۔</span>`;
             return;
         }
 
@@ -558,7 +563,11 @@
         document.getElementById('timer-badge').classList.remove('danger');
         document.getElementById('time-left').innerText = timeLeft;
 
-        document.getElementById('ques-counter').innerText = `Question ${currentQuesIdx + 1} of ${quizQuestions.length}`;
+        // 📊 FIXED: Live Dynamic Arabic Numerals translation counter logic injection
+        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
+        const currentUrduIndex = arabicDigits[currentQuesIdx + 1] || (currentQuesIdx + 1);
+        document.getElementById('ques-counter').innerText = `سوال: ${currentUrduIndex} / ۱۰`;
+        
         const progressPercent = (currentQuesIdx / quizQuestions.length) * 100;
         document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
 
@@ -691,7 +700,6 @@
         const statusLabel = document.getElementById('sheet-status');
         
         if(remarksValue === "Clean Attempt") {
-            // 🎯 FIXED: Changed "امتحان" to "کوئز" (Quiz)
             document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا کوئز کامیابی کے ساتھ مکمل ہو چکا ہے۔`;
             
             document.getElementById('summary-area').innerHTML = `
@@ -703,7 +711,6 @@
                 <span style="font-size:14px; color: var(--text-muted);">*نوٹ: مسابقہ کے نتائج اور کامیاب امیدواروں کی فائنل لسٹ جلد ہی آفیشل پورٹل پر اپڈیٹ کی جائے گی۔</span>
             `;
             
-            // 🎯 FIXED: Changed "امتحانی ڈیٹا" to "کوئز ڈیٹا"
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
@@ -725,5 +732,6 @@
 </script>
 </body>
 </html>
+
 
 
