@@ -339,6 +339,7 @@
 
 
 
+
                 <div id="screen-directions" style="display: none;">
             <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
             <div class="instructions-list">
@@ -374,7 +375,8 @@
     </div>
 
 <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec";
+    // 🔗 LIVE BRAND NEW DISPATCHER ENDPOINT (CORS BLOCK FREE)
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9kCPu-5U5bmsjctJRGQOrEXIMxQnOyjyMs7kHAoern6Mnjggda6BWAT0K5c/exec";
 
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
@@ -403,7 +405,7 @@
             correctAnswer: "فرض"
         },
         {
-            question: "مالِ تجارت پر کتنے فیصد (Percentage) زکوٰۃ فرض ہوتی ہے؟",
+            question: "مالِ تجارت پر کتنے فیصد (Percentage) زکوٰۃ فرض होती है؟",
             options: ["۲.۵ فیصد", "۵ فیصد", "۱۰ فیصد", "۱ فیصد"],
             correctAnswer: "۲.۵ فیصد"
         },
@@ -423,7 +425,7 @@
             correctAnswer: "۴۸ میل یا اس سے زائد سفر پر"
         },
         {
-            question: "رمضان کے روزے کس ہjری سال میں فرض ہوئے؟",
+            question: "رمضان کے روزے کس ہجری سال میں فرض ہوئے؟",
             options: ["۱ ہجری", "۲ ہجری", "۳ ہجری", "۵ ہجری"],
             correctAnswer: "۲ ہجری"
         },
@@ -433,6 +435,8 @@
             correctAnswer: "واجب"
         }
     ];
+
+
 
 
 
@@ -562,7 +566,7 @@
         document.getElementById('timer-badge').classList.remove('danger');
         document.getElementById('time-left').innerText = timeLeft;
 
-        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
+        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '浅', '۱۰'];
         const currentUrduIndex = arabicDigits[currentQuesIdx + 1] || (currentQuesIdx + 1);
         document.getElementById('ques-counter').innerText = `سوال: ${currentUrduIndex} / ۱۰`;
         
@@ -720,16 +724,13 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        // 🛠️ STANDARD HIGH SECURITY CROSS-ORIGIN CONNECTION FETCH (mode: no-cors strictly removed)
+        // ⚙️ FULL CORS CONNECTION INTEGRATION - NO PARSING BLOCKS ALLOWED
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(payload)
         }).catch(err => console.error(err));
     }
 </script>
 </body>
 </html>
-
-
-
