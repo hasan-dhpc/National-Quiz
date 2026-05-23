@@ -724,7 +724,13 @@
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            mode: "no-cors",
+                    // 🛠️ FIX: mode: "no-cors" ko hata diya gaya hai taaki data sheet mein daakhil ho sake
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error(err));
+
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         }).catch(err => console.error(err));
