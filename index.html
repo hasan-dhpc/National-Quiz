@@ -68,12 +68,14 @@
             text-shadow: 0 2px 10px rgba(253, 203, 110, 0.2);
         }
 
-        .subtitle {
+        .urdu-subtitle {
+            font-family: 'Amiri', serif;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 19px;
             text-align: center;
             margin-bottom: 28px;
-            line-height: 1.4;
+            line-height: 1.8;
+            direction: rtl;
         }
 
         .input-group {
@@ -322,7 +324,7 @@
     <div class="container">
         <div id="screen-login">
             <div class="urdu-title">سنتِ ابراہیمی قومی علمی مسابقہ</div>
-            <p class="subtitle" style="margin-top: -15px;">شریک ہونے کے لیے اپنا رجسٹرڈ نام اور درست ای میل درج کریں۔</p>
+            <div class="urdu-subtitle">اپنا رجسٹرڈ ای میل اور درست نام درج کریں۔</div>
             <div class="error-box" id="login-error"></div>
             <div class="input-group">
                 <label>Full Name</label>
@@ -335,11 +337,10 @@
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
         
+        
 
                 <div id="screen-directions" style="display: none;">
-            <div class="urdu-title" style="font-size: 24px; margin-bottom: 5px;">ہدایات و ضوابط</div>
-            <h2>Important Directions</h2>
-            <p class="subtitle">Quiz shuru karne se pahle deeni o fariqi niyam dhyan se padhein.</p>
+            <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
             <div class="instructions-list">
                 <li>اس فقہی مسابقہ میں کل <b>۱۰ (دس) سوالات</b> پوچھے جائیں گے۔</li>
                 <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
