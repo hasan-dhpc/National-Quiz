@@ -439,8 +439,7 @@
 
 
 
-
-        let quizQuestions = []; 
+    let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -566,7 +565,7 @@
         document.getElementById('timer-badge').classList.remove('danger');
         document.getElementById('time-left').innerText = timeLeft;
 
-        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '浅', '۱۰'];
+        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
         const currentUrduIndex = arabicDigits[currentQuesIdx + 1] || (currentQuesIdx + 1);
         document.getElementById('ques-counter').innerText = `سوال: ${currentUrduIndex} / ۱۰`;
         
@@ -690,13 +689,13 @@
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
-        const payload = {
-            name: verifiedUser.name,
-            email: verifiedUser.email,
-            score: scoreText,
-            remarks: remarksValue,
-            token: generatedTokenGlobal
-        };
+        // 🛠️ CORS BYPASS ENGINE: FormData API injection to resolve 405 Blockage
+        const formData = new FormData();
+        formData.append("name", verifiedUser.name);
+        formData.append("email", verifiedUser.email);
+        formData.append("score", scoreText);
+        formData.append("remarks", remarksValue);
+        formData.append("token", generatedTokenGlobal);
 
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
@@ -724,13 +723,17 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        // ⚙️ FULL CORS CONNECTION INTEGRATION - NO PARSING BLOCKS ALLOWED
+        // 🔥 BULLETPROOF DATA TRANSMISSION MECHANISM (Bypasses browser pre-flight checks)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(payload)
-        }).catch(err => console.error(err));
+            mode: "no-cors", 
+            body: formData
+        })
+        .then(() => console.log("Payload sent directly to Google Sheet tab!"))
+        .catch(err => console.error("Network error:", err));
     }
 </script>
 </body>
 </html>
+
+         
