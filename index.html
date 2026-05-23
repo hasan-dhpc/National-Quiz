@@ -434,7 +434,8 @@
         
             
             
-        let quizQuestions = []; 
+        
+            let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -501,7 +502,6 @@
         .then(resData => {
             verifyBtn.disabled = false;
             
-            // 🚨 FIX 1: Not Registered Error Box Converted to Premium Urdu Script
             if (!resData.isRegistered) {
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
@@ -511,7 +511,6 @@
                 errorBox.style.lineHeight = "1.8";
                 errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">یہ ای میل آئی ڈی مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہِ کرم اپنا درست رجسٹرڈ ای میل استعمال کریں یا انتظامیہ سے رابطہ کریں۔</span>`;
             } else if (resData.exists) {
-                // 📊 FIX 2: Already Submitted / Duplication Error Message in Urdu Script
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
@@ -667,7 +666,7 @@
                 document.getElementById('summary-area').innerHTML = `
                     • <b>حالت:</b> موقوف<br>
                     • <b>وجہ:</b> ٹیب کی تبدیلی یا غیر قانونی سرگرمی پائی گئی ہے۔<br>
-                    • <b>کارروائی:</b> آپ کا امتحان لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
+                    • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
                 `;
                 sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
             }
@@ -692,21 +691,23 @@
         const statusLabel = document.getElementById('sheet-status');
         
         if(remarksValue === "Clean Attempt") {
-            document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا جواب کامیابی کے ساتھ نیشنل سرور پر درج ہو چکا ہے۔`;
+            // 🎯 FIXED: Changed "امتحان" to "کوئز" (Quiz)
+            document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا کوئز کامیابی کے ساتھ مکمل ہو چکا ہے۔`;
             
             document.getElementById('summary-area').innerHTML = `
-                📌 <b>امتحان کی تفصیلات:</b><br>
+                📌 <b>کوئز کی تفصیلات:</b><br>
                 • کل سوالات: 10<br>
                 • جوابات دیے گئے: ${totalAttempted}<br>
                 • خالی چھوڑے گئے: ${totalTimeouts}<br>
                 • تصدیقی ٹوکن آئی ڈی: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
-                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: آپ کے جوابات ہمارے پاس محفوظ ہیں۔ فائنل رزلٹ کا اعلان جلد ہی کیا جائے گا۔</span>
+                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: مسابقہ کے نتائج اور کامیاب امیدواروں کی فائنل لسٹ جلد ہی آفیشل پورٹل پر اپڈیٹ کی جائے گی۔</span>
             `;
             
+            // 🎯 FIXED: Changed "امتحانی ڈیٹا" to "کوئز ڈیٹا"
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ آپ کا جواب کامیابی کے ساتھ محفوظ کر لیا گیا ہے۔";
+            statusLabel.innerText = "✓ آپ کا کوئز ڈیٹا ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
@@ -724,4 +725,5 @@
 </script>
 </body>
 </html>
+
 
