@@ -351,8 +351,7 @@
             </div>
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
-        
-        
+
 
 
                 <div id="screen-directions" style="display: none;">
@@ -560,45 +559,6 @@
             correctAnswer: "نہیں، بالوں کا کوئی اعتبار نہیں، صرف ہڈی اور گوشت کا اعتبار ہے۔"
         }
     ];
-    
-
-    let                 document.addEventListener("visibilitychange", () => {
-            if (document.hidden && !isQuizOver) {
-                handleCriticalCheating("Tab Switching Detected");
-            }
-        });
-
-        function handleCriticalCheating(reasonLabel = "Disqualified") {
-            isQuizOver = true;
-            clearInterval(timerInterval);
-            warningSound.pause();
-            
-            document.body.classList.remove('screenshot-shield-active'); 
-            document.getElementById('screen-quiz').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'none';
-            document.getElementById('screen-completion').style.display = 'block';
-            
-            document.getElementById('status-icon').className = 'disqualified-icon';
-            document.getElementById('status-icon').innerText = '🚫';
-            
-            document.getElementById('completion-title').innerText = "نشست ختم!";
-            document.getElementById('completion-title').style.color = "var(--error)";
-            document.getElementById('session-subtitle').style.display = "block";
-            
-            const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-            document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
-            
-            document.getElementById('summary-area').innerHTML = `
-                • <b>حالت:</b> موقوف<br>
-                • <b>وجہ:</b> کوئز کے دوران ٹیب تبدیل کرنے کی غیر قانونی کوشش پائی گئی ہے۔<br>
-                • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
-            `;
-            sendDataToGoogleSheet("DQ: " + reasonLabel);
-        }
-    }
-
-
-
 
 
         let quizQuestions = []; 
@@ -709,7 +669,6 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
-            // Fallback network entry
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -831,38 +790,26 @@
     function setupAntiCheating() {
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // ==========================================
-        // 🔒 BLOCK A: SCREENSHOT GESTURE (TEMPORARY BLACKOUT - ADMIN EXCEPTED)
-        // ==========================================
+        // SCREENSHOT SHIELD GESTURE
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length >= 2 && !isQuizOver) { 
                 if (verifiedUser && verifiedUser.isAdmin === true) return; 
-                
                 document.body.classList.add('screenshot-shield-active');
                 setTimeout(() => { document.body.classList.remove('screenshot-shield-active'); }, 1500);
             }
         }, { passive: true });
 
-
-        // ==========================================
-        // 🚨 BLOCK B: CRITICAL ANTI-CHEAT ENGINE (100% DISQUALIFICATION FOR ALL STUDENTS)
-        // ==========================================
-        
-        // 1. Tab Switching Capture
+        // TAB SWITCH DETECTION
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && !isQuizOver) {
                 handleCriticalCheating("Tab Switching Detected");
             }
         });
         
-        // 2. Split-Screen, App-Switching, Smart Sidebar & Gemini/AI Capture
+        // SPLIT SCREEN, APP SWITCHING, AND SIDEBAR INTERCEPTOR
         window.addEventListener("blur", () => {
             if (!isQuizOver) {
-                // Admin Exception for hardware buttons blur overlay only
-                if (verifiedUser && verifiedUser.isAdmin === true) {
-                    // If it's a real tab switch, visibilitychange handle karega. Blur par admin ko disqualify nahi karna.
-                    return; 
-                }
+                if (verifiedUser && verifiedUser.isAdmin === true) return; 
                 handleCriticalCheating("Split-Screen, App Switch or AI Sidebar Detected");
             }
         });
