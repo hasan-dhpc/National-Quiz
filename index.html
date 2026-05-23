@@ -562,8 +562,6 @@
     ];
     
 
-
-
     let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
@@ -618,13 +616,27 @@
             return;
         }
 
-        // 👑 VIP ADMIN EXCEPTION BYPASS (In emails par koi security rule ya lock laago nahi hoga)
-        if (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com" || emailVal === "fsyed4765@gmail.com") {
+        // 👑 EXCLUSIVE SYSTEM ADMIN CONTROL (Sirf Noor bhai aur unki core team ke liye)
+        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
+        
+        // 🎫 SPECIAL STUDENT SYSTEM ACCESS (Yeh bacha direct entry le sake bina phase)
+        const isSpecialStudent = (emailVal === "fsyed4765@gmail.com");
+
+        if (isAdminEmail) {
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
             return; 
+        }
+
+        if (isSpecialStudent) {
+            // fsyed bacha hi rahega (isAdmin: false) par use direct entry mil jayegi
+            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+            errorBox.style.display = 'none';
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'block';
+            return;
         }
 
         verifyBtn.disabled = true;
@@ -778,52 +790,71 @@
     }
 
     function setupAntiCheating() {
-        // Text selection aur right click hamesha block rahega
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Agar admin (Aap) login hain, toh baaki saare anti-cheat rules bypass ho jayenge
-        if (verifiedUser.isAdmin === true) {
-            console.log("Admin Bypass Active: Rules relaxed for testing.");
-            return; 
-        }
-
-        // 🚨 STANDARD ULTRA-STRICT SECURITY RULES FOR STUDENTS
-        document.addEventListener("visibilitychange", () => {
-            if(document.hidden) handleCheatingActivity("Tab Switching Detected");
-        });
-        
-        window.addEventListener("blur", () => {
-            // Split-screen aur background switching pakadne ke liye focus loss rule
-            handleCheatingActivity("Split-Screen or App Switch");
-        });
-
-        function handleCheatingActivity(reasonLabel = "Disqualified") {
-            if (!isQuizOver) {
-                isQuizOver = true;
-                clearInterval(timerInterval);
-                warningSound.pause();
+        // 🛡️ 1. SMART AUTO-RESET SCREENSHOT SHIELD (With Admin VIP Bypass)
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length >= 2 && !isQuizOver) { 
+                if (verifiedUser.isAdmin === true) {
+                    console.log("VIP Screenshot Bypass active.");
+                    return; 
+                }
                 
-                document.getElementById('screen-quiz').style.display = 'none';
-                document.getElementById('screen-directions').style.display = 'none';
-                document.getElementById('screen-completion').style.display = 'block';
-                
-                document.getElementById('status-icon').className = 'disqualified-icon';
-                document.getElementById('status-icon').innerText = '🚫';
-                
-                document.getElementById('completion-title').innerText = "نشست ختم!";
-                document.getElementById('completion-title').style.color = "var(--error)";
-                document.getElementById('session-subtitle').style.display = "block";
-                
-                const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین یا کسی دوسری ایپ پر جانے کی وجہ سے خارج کر دیا گیا ہے۔`;
-                
-                document.getElementById('summary-area').innerHTML = `
-                    • <b>حالت:</b> موقوف<br>
-                    • <b>وجہ:</b> اسپلٹ اسکرین یا غیر قانونی سرگرمی کی کوشش کی گئی ہے۔<br>
-                    • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
-                `;
-                sendDataToGoogleSheet("DQ: " + reasonLabel);
+                document.body.classList.add('screenshot-shield-active');
+                setTimeout(() => {
+                    document.body.classList.remove('screenshot-shield-active');
+                }, 1500);
             }
+        }, { passive: true });
+
+        // 🎬 2. BLUR POP-UP SHIELD (With Admin VIP Bypass)
+        window.addEventListener("blur", () => {
+            if (!isQuizOver) {
+                if (verifiedUser.isAdmin === true) {
+                    console.log("VIP Blur Overlay Bypass active.");
+                    return; 
+                }
+
+                document.body.classList.add('screenshot-shield-active');
+                setTimeout(() => {
+                    document.body.classList.remove('screenshot-shield-active');
+                }, 1500);
+            }
+        });
+
+        // 🚨 3. TAB SWITCH SHIELD (Strict for all students, including fsyed)
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && !isQuizOver) {
+                handleCriticalCheating("Tab Switching Detected");
+            }
+        });
+
+        function handleCriticalCheating(reasonLabel = "Disqualified") {
+            isQuizOver = true;
+            clearInterval(timerInterval);
+            warningSound.pause();
+            
+            document.body.classList.remove('screenshot-shield-active'); 
+            document.getElementById('screen-quiz').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'none';
+            document.getElementById('screen-completion').style.display = 'block';
+            
+            document.getElementById('status-icon').className = 'disqualified-icon';
+            document.getElementById('status-icon').innerText = '🚫';
+            
+            document.getElementById('completion-title').innerText = "نشست ختم!";
+            document.getElementById('completion-title').style.color = "var(--error)";
+            document.getElementById('session-subtitle').style.display = "block";
+            
+            const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
+            
+            document.getElementById('summary-area').innerHTML = `
+                • <b>حالت:</b> موقوف<br>
+                • <b>وجہ:</b> کوئز کے دوران ٹیب تبدیل کرنے کی غیر قانونی کوشش پائی گئی ہے۔<br>
+                • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
+            `;
+            sendDataToGoogleSheet("DQ: " + reasonLabel);
         }
     }
 
@@ -843,7 +874,6 @@
         const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         const statusLabel = document.getElementById('sheet-status');
         
-        // 🔮 FIX: Dynamic Question Total on Summary Screen Match
         if(remarksValue === "Clean Attempt") {
             document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا کوئز کامیابی کے ساتھ مکمل ہو چکا ہے۔`;
             
@@ -872,9 +902,10 @@
             mode: "no-cors", 
             body: formData
         })
-        .then(() => console.log("Payload sent directly to Google Sheet tab!"))
-        .catch(err => console.error("Network error:", err));
+        .then(() => console.log("Payload sent directly to Google Sheet!"));
     }
 </script>
 </body>
 </html>
+
+
