@@ -480,7 +480,6 @@
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
 
-        // 📊 FIXED: Hinglish loading check message turned into beautiful pure Urdu script
         if(!nameVal || !emailVal) {
             errorBox.style.color = 'var(--error)';
             errorBox.style.background = 'rgba(234,67,53,0.1)';
@@ -563,7 +562,6 @@
         document.getElementById('timer-badge').classList.remove('danger');
         document.getElementById('time-left').innerText = timeLeft;
 
-        // 📊 FIXED: Live Dynamic Arabic Numerals translation counter logic injection
         const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰'];
         const currentUrduIndex = arabicDigits[currentQuesIdx + 1] || (currentQuesIdx + 1);
         document.getElementById('ques-counter').innerText = `سوال: ${currentUrduIndex} / ۱۰`;
@@ -722,15 +720,9 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
+        // 🛠️ STANDARD HIGH SECURITY CROSS-ORIGIN CONNECTION FETCH (mode: no-cors strictly removed)
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
-                    // 🛠️ FIX: mode: "no-cors" ko hata diya gaya hai taaki data sheet mein daakhil ho sake
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        }).catch(err => console.error(err));
-
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
         }).catch(err => console.error(err));
