@@ -432,7 +432,9 @@
         }
     ];
         
-            let quizQuestions = []; 
+            
+            
+        let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -499,16 +501,23 @@
         .then(resData => {
             verifyBtn.disabled = false;
             
+            // 🚨 FIX 1: Not Registered Error Box Converted to Premium Urdu Script
             if (!resData.isRegistered) {
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
-                errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br>Yeh Email ID National Quiz ke liye registered nahi hai.<br>Kripya apna sahi registered email use karein ya admin se rabta karein.`;
+                errorBox.style.fontFamily = "'Amiri', serif";
+                errorBox.style.fontSize = "16px";
+                errorBox.style.lineHeight = "1.8";
+                errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">یہ ای میل آئی ڈی مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہِ کرم اپنا درست رجسٹرڈ ای میل استعمال کریں یا انتظامیہ سے رابطہ کریں۔</span>`;
             } else if (resData.exists) {
+                // 📊 FIX 2: Already Submitted / Duplication Error Message in Urdu Script
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
-                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br>Aap is nishist (session) mein pehle hi shamil ho chuke hain.`;
+                errorBox.style.fontFamily = "'Amiri', serif";
+                errorBox.style.fontSize = "17px";
+                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔</span>`;
             } else {
                 verifiedUser = { name: nameVal, email: emailVal };
                 errorBox.style.display = 'none';
@@ -691,13 +700,13 @@
                 • جوابات دیے گئے: ${totalAttempted}<br>
                 • خالی چھوڑے گئے: ${totalTimeouts}<br>
                 • تصدیقی ٹوکن آئی ڈی: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
-                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: قومی سطح کے رازداری کے قوانین کے تحت آپ کا اسکور محفوظ ہے۔ فائنل لسٹ جلد ہی اپڈیٹ کی جائے گی۔</span>
+                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: آپ کے جوابات ہمارے پاس محفوظ ہیں۔ فائنل رزلٹ کا اعلان جلد ہی کیا جائے گا۔</span>
             `;
             
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ جواب محفوظ طریقے سے گوگل شیٹ پر بھیج دیا گیا ہے۔";
+            statusLabel.innerText = "✓ آپ کا جواب کامیابی کے ساتھ محفوظ کر لیا گیا ہے۔";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
@@ -715,4 +724,4 @@
 </script>
 </body>
 </html>
-            
+
