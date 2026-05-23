@@ -20,10 +20,15 @@
             --border: rgba(255, 255, 255, 0.08);
         }
 
+        /* 🔒 NEW ANTI-AI & TEXT-SELECTION SHIELD */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ */
+            user-select: none; /* Standard anti-copy syntax */
+            -webkit-touch-callout: none; /* iOS Safari long press disable */
         }
 
         body {
@@ -92,6 +97,7 @@
             letter-spacing: 0.5px;
         }
 
+        /* Input area features remain selectable for user typing comfort */
         .input-group input {
             width: 100%;
             padding: 14px 16px;
@@ -102,6 +108,9 @@
             font-size: 16px;
             outline: none;
             transition: all 0.2s ease;
+            -webkit-user-select: text;
+            -ms-user-select: text;
+            user-select: text; 
         }
 
         .input-group input:focus {
@@ -336,6 +345,7 @@
             </div>
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
+        
 
 
 
@@ -439,7 +449,8 @@
 
 
 
-    let quizQuestions = []; 
+
+        let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -653,8 +664,17 @@
     }
 
     function setupAntiCheating() {
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && !isQuizOver) {
+        // 1. Context Menu & Right-click Blocker (To prevent text scanning)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // 2. Tab Switching Blocker
+        document.addEventListener("visibilitychange", handleCheatingActivity);
+        
+        // 3. 🔒 NEW SYSTEM: Split-Screen, Floating AI Sidebar & Focus Blur Detector
+        window.addEventListener("blur", handleCheatingActivity);
+
+        function handleCheatingActivity() {
+            if (!isQuizOver) {
                 isQuizOver = true;
                 clearInterval(timerInterval);
                 warningSound.pause();
@@ -671,16 +691,16 @@
                 document.getElementById('session-subtitle').style.display = "block";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو ٹیب بدلنے یا کسی دوسری ایپ پر جانے کی وجہ سے اس کوئز ایرینا سے خارج کر دیا گیا ہے۔`;
+                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین یا کسی دوسری ایپ پر کلک کرنے کی وجہ سے خارج کر دیا گیا ہے۔`;
                 
                 document.getElementById('summary-area').innerHTML = `
                     • <b>حالت:</b> موقوف<br>
-                    • <b>وجہ:</b> ٹیب کی تبدیلی یا غیر قانونی سرگرمی پائی گئی ہے۔<br>
+                    • <b>وجہ:</b> اسپلٹ اسکرین، فلوٹنگ ونڈو یا غیر قانونی سرگرمی پائی گئی ہے۔<br>
                     • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
                 `;
-                sendDataToGoogleSheet("Disqualified due to attempt to cheating (Tab switching or app switching)");
+                sendDataToGoogleSheet("Disqualified due to split screen, floating window or focus loss");
             }
-        });
+        }
     }
 
     function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
@@ -689,7 +709,7 @@
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
-        // 🛠️ CORS BYPASS ENGINE: FormData API injection to resolve 405 Blockage
+        // Form Data package generation
         const formData = new FormData();
         formData.append("name", verifiedUser.name);
         formData.append("email", verifiedUser.email);
@@ -715,7 +735,7 @@
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ آپ کا کوئز ڈیٹا ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
+            statusLabel.innerText = "✓ آپ کا کوئز DATA ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
@@ -723,7 +743,7 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        // 🔥 BULLETPROOF DATA TRANSMISSION MECHANISM (Bypasses browser pre-flight checks)
+        // Secure CORS Bypass data transmission
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors", 
@@ -735,5 +755,6 @@
 </script>
 </body>
 </html>
+
 
          
