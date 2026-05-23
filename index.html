@@ -431,7 +431,8 @@
             correctAnswer: "واجب"
         }
     ];
-        let quizQuestions = []; 
+        
+            let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -482,8 +483,8 @@
             return;
         }
 
-        // 👑 SUPER ADMIN DUAL INTERSECT VIP PASS ACTIVE
-        if (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com") {
+        // 👑 SUPER ADMIN & SPECIAL STUDENT TEST BYPASS (fsyed4765 Opened)
+        if (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com" || emailVal === "fsyed4765@gmail.com") {
             verifiedUser = { name: nameVal, email: emailVal };
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
@@ -518,7 +519,6 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
-            // High resiliency connection fallback toggle
             verifiedUser = { name: nameVal, email: emailVal };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -715,3 +715,4 @@
 </script>
 </body>
 </html>
+            
