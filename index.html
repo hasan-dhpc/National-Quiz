@@ -709,6 +709,7 @@
         .catch(err => {
             console.error(err);
             verifyBtn.disabled = false;
+            // Fallback network entry
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -835,8 +836,7 @@
         // ==========================================
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length >= 2 && !isQuizOver) { 
-                // Admin exception: Aapko blackout nahi dikhega
-                if (verifiedUser.isAdmin === true) return; 
+                if (verifiedUser && verifiedUser.isAdmin === true) return; 
                 
                 document.body.classList.add('screenshot-shield-active');
                 setTimeout(() => { document.body.classList.remove('screenshot-shield-active'); }, 1500);
@@ -845,7 +845,7 @@
 
 
         // ==========================================
-        // 🚨 BLOCK B: CRITICAL ANTI-CHEAT ENGINE (100% DISQUALIFICATION FOR EVERYONE!)
+        // 🚨 BLOCK B: CRITICAL ANTI-CHEAT ENGINE (100% DISQUALIFICATION FOR ALL STUDENTS)
         // ==========================================
         
         // 1. Tab Switching Capture
@@ -858,6 +858,11 @@
         // 2. Split-Screen, App-Switching, Smart Sidebar & Gemini/AI Capture
         window.addEventListener("blur", () => {
             if (!isQuizOver) {
+                // Admin Exception for hardware buttons blur overlay only
+                if (verifiedUser && verifiedUser.isAdmin === true) {
+                    // If it's a real tab switch, visibilitychange handle karega. Blur par admin ko disqualify nahi karna.
+                    return; 
+                }
                 handleCriticalCheating("Split-Screen, App Switch or AI Sidebar Detected");
             }
         });
@@ -879,7 +884,7 @@
             document.getElementById('completion-title').style.color = "var(--error)";
             document.getElementById('session-subtitle').style.display = "block";
             
-            const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            const displayName = verifiedUser.name ? verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "User";
             document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین، ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
             
             document.getElementById('summary-area').innerHTML = `
@@ -898,13 +903,13 @@
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/${quizQuestions.length})`;
         
         const formData = new FormData();
-        formData.append("name", verifiedUser.name);
-        formData.append("email", verifiedUser.email);
+        formData.append("name", verifiedUser.name || "N/A");
+        formData.append("email", verifiedUser.email || "N/A");
         formData.append("score", scoreText);
         formData.append("remarks", remarksValue);
         formData.append("token", generatedTokenGlobal);
 
-        const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        const displayName = verifiedUser.name ? verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "User";
         const statusLabel = document.getElementById('sheet-status');
         
         if(remarksValue === "Clean Attempt") {
