@@ -336,9 +336,6 @@
             </div>
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
-        
-        
-
                 <div id="screen-directions" style="display: none;">
             <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
             <div class="instructions-list">
@@ -374,8 +371,8 @@
     </div>
 
 <script>
-    // 🔗 LIVE SCRIPT CONNECTOR FOR DYNAMIC VALIDATION ON COLUMN B
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5ToIBObFdJXJ4jz2eUSlHI1pic4GJ2bazjl26-eHTOftDKDh81s_sWIUfE3ZtkREnrw/exec";
+    // 🔗 LIVE SCRIPT CONNECTOR INTEGRATING YOUR BRAND NEW RE-DEPLOYED WEB APP URL 
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmdHbiZrROQgQHBpDaUGz9KTcaA_JNlKgvJmy9Yeew5-DYuW4TM9XNW1OxZ9Z76tZT/exec";
 
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
@@ -434,9 +431,7 @@
             correctAnswer: "واجب"
         }
     ];
-        
-        
-                let quizQuestions = []; 
+        let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -446,7 +441,7 @@
     let isQuizOver = false; 
     let totalAttempted = 0;
     let totalTimeouts = 0;
-    let generatedTokenGlobal = ""; // Global store for token sync
+    let generatedTokenGlobal = ""; 
 
     function showToastNotification() {
         const toast = document.getElementById('premium-toast');
@@ -537,7 +532,6 @@
         totalAttempted = 0;
         totalTimeouts = 0;
         isQuizOver = false;
-        // Pre-generate token so it matches everywhere
         generatedTokenGlobal = "NQ-" + Math.floor(100000 + Math.random() * 900000);
         loadQuestion();
         setupAntiCheating();
@@ -675,7 +669,6 @@
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
-        // 🛠️ SMART FIX: Token is now part of the data payload sent to your sheet
         const payload = {
             name: verifiedUser.name,
             email: verifiedUser.email,
@@ -710,7 +703,6 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        // Send payload via POST
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors",
