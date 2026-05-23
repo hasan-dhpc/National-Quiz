@@ -20,15 +20,21 @@
             --border: rgba(255, 255, 255, 0.08);
         }
 
-        /* 🔒 NEW ANTI-AI & TEXT-SELECTION SHIELD */
+        /* 🔒 ENHANCED ANTI-AI, ANTI-COPY & SCREENSHOT BLUR SHIELD */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-            user-select: none; /* Standard anti-copy syntax */
-            -webkit-touch-callout: none; /* iOS Safari long press disable */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* 🎬 SCREENSHOT BLACKOUT PARDA SCREEN */
+        .screenshot-shield-active .container {
+            filter: blur(40px) brightness(0.1) !important;
+            pointer-events: none !important;
         }
 
         body {
@@ -42,6 +48,7 @@
             position: relative;
             overflow-x: hidden;
             font-family: 'Urbanist', sans-serif;
+            transition: filter 0.1s ease;
         }
 
         .container {
@@ -52,7 +59,7 @@
             padding: 35px 30px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border);
-            transition: all 0.3s ease;
+            transition: filter 0.2s ease, transform 0.3s ease;
         }
 
         h2 {
@@ -97,7 +104,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Input area features remain selectable for user typing comfort */
         .input-group input {
             width: 100%;
             padding: 14px 16px;
@@ -346,6 +352,7 @@
             <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
         </div>
         
+        
 
 
 
@@ -450,7 +457,7 @@
 
 
 
-        let quizQuestions = []; 
+            let quizQuestions = []; 
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -664,16 +671,35 @@
     }
 
     function setupAntiCheating() {
-        // 1. Context Menu & Right-click Blocker (To prevent text scanning)
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // 2. Tab Switching Blocker
-        document.addEventListener("visibilitychange", handleCheatingActivity);
-        
-        // 3. 🔒 NEW SYSTEM: Split-Screen, Floating AI Sidebar & Focus Blur Detector
-        window.addEventListener("blur", handleCheatingActivity);
+        // 🎬 1. TELEMETRY GESTURE SHIELD (Teen ungliyon ka swipe trace karke blackout karna)
+        window.addEventListener('touchstart', (e) => {
+            if (e.touches.length >= 2 && !isQuizOver) { 
+                document.body.classList.add('screenshot-shield-active');
+                setTimeout(() => { handleCheatingActivity("Screenshot Intercepted via Gesture"); }, 250);
+            }
+        }, { passive: true });
 
-        function handleCheatingActivity() {
+        // Keyboard printscreen block
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'p')) {
+                e.preventDefault();
+                handleCheatingActivity("Keyboard Screenshot Attempt");
+            }
+        });
+
+        document.addEventListener("visibilitychange", () => {
+            if(document.hidden) handleCheatingActivity("Tab Switching Detected");
+        });
+        
+        window.addEventListener("blur", () => {
+            // Instant blackout shield activation upon focus shift
+            document.body.classList.add('screenshot-shield-active');
+            setTimeout(() => { handleCheatingActivity("Focus Loss / Sidebar Pop-up"); }, 350);
+        });
+
+        function handleCheatingActivity(reasonLabel = "Disqualified") {
             if (!isQuizOver) {
                 isQuizOver = true;
                 clearInterval(timerInterval);
@@ -691,14 +717,14 @@
                 document.getElementById('session-subtitle').style.display = "block";
                 
                 const displayName = verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین یا کسی دوسری ایپ پر کلک کرنے کی وجہ سے خارج کر دیا گیا ہے۔`;
+                document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین، اسکرین شاٹ یا کسی دوسری ایپ پر جانے کی وجہ سے خارج کر دیا گیا ہے۔`;
                 
                 document.getElementById('summary-area').innerHTML = `
                     • <b>حالت:</b> موقوف<br>
-                    • <b>وجہ:</b> اسپلٹ اسکرین، فلوٹنگ ونڈو یا غیر قانونی سرگرمی پائی گئی ہے۔<br>
+                    • <b>وجہ:</b> اسکرین شاٹ، اسپلٹ اسکرین یا غیر قانونی سرگرمی کی کوشش کی گئی ہے۔<br>
                     • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
                 `;
-                sendDataToGoogleSheet("Disqualified due to split screen, floating window or focus loss");
+                sendDataToGoogleSheet("DQ: " + reasonLabel);
             }
         }
     }
@@ -709,7 +735,6 @@
         
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/10)`;
         
-        // Form Data package generation
         const formData = new FormData();
         formData.append("name", verifiedUser.name);
         formData.append("email", verifiedUser.email);
@@ -743,7 +768,6 @@
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        // Secure CORS Bypass data transmission
         fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             mode: "no-cors", 
@@ -755,6 +779,3 @@
 </script>
 </body>
 </html>
-
-
-         
