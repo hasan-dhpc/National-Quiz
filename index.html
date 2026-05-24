@@ -987,20 +987,37 @@ function prepareShuffledQuiz() {
 
 
     function validateLogin() {
-        const nameVal = document.getElementById('input-name').value.trim();
-        const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
-        const errorBox = document.getElementById('login-error');
-        const verifyBtn = document.getElementById('btn-verify');
+    const nameVal = document.getElementById('input-name').value.trim();
+    const emailVal = document.getElementById('input-email').value.trim();
+    const errorBox = document.getElementById('login-error');
+    const verifyBtn = document.getElementById('btn-verify');
 
-        if(!nameVal || !emailVal) {
-            errorBox.style.color = 'var(--error)';
-            errorBox.style.background = 'rgba(234,67,53,0.1)';
-            errorBox.style.display = 'block';
-            errorBox.style.fontFamily = "'Amiri', serif";
-            errorBox.style.fontSize = "16px";
-            errorBox.innerHTML = `<span style="display:block; direction:rtl; text-align:center;">⚠️ براہِ کرم اپنا نام اور ای میل دونوں درست درج کریں۔</span>`;
-            return;
-        }
+    // ⏱️ آٹومیٹک ٹائم لاک سسٹم (11:30 AM پر لاگ ان بند)
+    const currentTime = new Date();
+    const currentHour = currentTime.getHours();
+    const currentMinute = currentTime.getMinutes();
+
+    // اگر وقت 11 بج کر 30 منٹ یا اس سے زیادہ ہو جائے
+    if (currentHour > 11 || (currentHour === 04 && currentMinute >= 40)) {
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(234,67,53,0.1)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (11:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
+        return; // لاگ ان آگے نہیں بڑھے گا
+    }
+
+    if(!nameVal || !emailVal) {
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(234,67,53,0.1)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">براہ کرم نام اور ای میل درج کریں۔</span>';
+        return;
+    }
+
 
         // 👑 ADMIN STATUS CORE CHECK (Noor bhai aur unki core team)
         const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
