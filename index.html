@@ -1015,57 +1015,38 @@ function validateLogin() {
         return;
     }
 
-                // 🔄 GOOGLE SHEET DOUBLE VERIFICATION (FIRST REGISTRATION -> THEN SUBMISSION)
+                    // 🔄 GOOGLE SHEET VERIFICATION (FAST LOGIN & SAFE SUBMISSION)
     verifyBtn.disabled = true;
 
-    // 🟢 STEP 1: Pehle check karo bacha registered hai ya nahi
+    // Login ke waqt sirf Registration sheet check hogi taaki bacha stuck na ho
     fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
     .then(res => res.json())
     .then(resData => {
-        
-        // Agar bacha registered NAHI hai, toh aage badhne hi mat do
-        if (!resData || !(resData.isRegistered === true || resData.status === "success" || resData.success === true || resData.exists === true || (Object.keys(resData).length > 0 && resData.isRegistered !== false))) {
-            verifyBtn.disabled = false;
+        verifyBtn.disabled = false;
+
+        if (resData && (resData.isRegistered === true || resData.status === "success" || resData.success === true || resData.exists === true || (Object.keys(resData).length > 0 && resData.isRegistered !== false))) {
+            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+            errorBox.style.display = 'none';
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'block';
+        } else {
             errorBox.style.color = 'var(--error)';
             errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
             errorBox.style.display = 'block';
             errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
             errorBox.style.fontSize = "16px";
+            errorBox.style.lineHeight = "1.8";
             errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⚠️ <b>لاگ ان ناامید!</b> یہ ای میل مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہ کرم درست ای میل درج کریں۔</span>';
-            return; 
         }
-
-        // 🔒 STEP 2: Agar registered hai, toh ab check karo ki pehle submit toh nahi kiya?
-        return fetch(`${SUBMISSION_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
-        .then(subRes => subRes.json())
-        .then(submissionData => {
-            verifyBtn.disabled = false;
-
-            // Agar submission sheet mein data mil gaya, toh block karo
-            if (submissionData && (submissionData.exists === true || submissionData.isRegistered === true || submissionData.status === "success" || submissionData.alreadySubmitted === true)) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
-                errorBox.style.fontSize = "16px";
-                errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🚫 <b>داخلہ ممنوع!</b> آپ اس ای میل آئی ڈی سے اپنا کوئز پہلے ہی سبمٹ کر چکے ہیں۔ دوبارہ شرکت کی اجازت نہیں ہے۔</span>';
-            } else {
-                // Agar dono check pass (Registered hai + Pehle submit nahi kiya)
-                verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-                errorBox.style.display = 'none';
-                document.getElementById('screen-login').style.display = 'none';
-                document.getElementById('screen-directions').style.display = 'block';
-            }
-        });
     })
     .catch(err => {
         verifyBtn.disabled = false;
-        console.error("Verification Error:", err);
+        console.error("Error:", err);
         errorBox.style.color = 'var(--error)';
-        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
         errorBox.style.display = 'block';
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">تکنیکی خرابی! سرور سے رابطہ نہیں ہو پا رہا۔ براہ کرم دوبارہ کوشش کریں۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">تکنیکی خرابی! براہ کرم انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</span>';
     });
+
 }
 
 
