@@ -956,7 +956,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         const verifyBtn = document.getElementById('btn-verify');
               // ⏱️ SITE TIME LIMIT SYSTEM
     const currentTime = new Date();
-    const startTime = new Date(2026, 4, 25, 10, 30, 0);  // 25 May, 11:00 AM
+    const startTime = new Date(2026, 4, 25, 01, 00, 0);  // 25 May, 11:00 AM
     const endTime = new Date(2026, 4, 25, 11, 00, 0);   // 25 May, 11:30 AM
 
     // 1. Time se pehle aane par notification
@@ -966,7 +966,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل  صبح ٹھیک 10:30 بجے کھلے گا۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل  صبح ٹھیک 01:00 بجے کھلے گا۔</span>';
         return;
     }
 
