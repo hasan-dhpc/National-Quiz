@@ -1068,22 +1068,37 @@ function prepareShuffledQuiz() {
             return;
         }
 
-        verifyBtn.disabled = true;
+            verifyBtn.disabled = true;
 
-        fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
-        .then(res => res.json())
-        .then(resData => {
-            verifyBtn.disabled = false;
-            
-            if (!resData.isRegistered) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(234,67,53,0.1)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Amiri', serif";
-                errorBox.style.fontSize = "16px";
-                errorBox.style.lineHeight = "1.8";
-                errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">یہ ای میل آئی ڈی مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہِ کرم اپنا درست رجسٹرڈ ای میل استعمال کریں یا انتظامیہ سے رابطہ کریں۔</span>`;
-            } else if (resData.exists) {
+    fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
+    .then(res => res.json())
+    .then(resData => {
+        verifyBtn.disabled = false;
+
+        // 🔒 ۱۰۰٪ سیکیور لاگ ان چیک: صرف تب ہی اندر جانے دو جب شیٹ صاف کہے کہ رجسٹریشن موجود ہے
+        if (resData && resData.isRegistered === true) {
+            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+            errorBox.style.display = 'none';
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'block';
+        } else {
+            // اگر ای میل شیٹ میں نہیں ہے، یا کوئی بھی رینڈم لفظ ہے، تو فوری بلاک کرو
+            errorBox.style.color = 'var(--error)';
+            errorBox.style.background = 'rgba(234,67,53,0.1)';
+            errorBox.style.display = 'block';
+            errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+            errorBox.style.fontSize = "16px";
+            errorBox.style.lineHeight = "1.8";
+            errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⚠️ <b>لاگ ان ناامید!</b> یہ ای میل مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہ کرم درست ای میل درج کریں۔</span>';
+        }
+    })
+    .catch(err => {
+        verifyBtn.disabled = false;
+        console.error("Error:", err);
+        errorBox.style.display = 'block';
+        errorBox.innerHTML = 'تکنیکی خرابی! براہ کرم انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔';
+    });
+
                 errorBox.style.color = 'var(--error)';
                 errorBox.style.background = 'rgba(234,67,53,0.1)';
                 errorBox.style.display = 'block';
