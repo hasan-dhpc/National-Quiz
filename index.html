@@ -954,6 +954,33 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
+              // ⏱️ SITE TIME LIMIT SYSTEM
+    const currentTime = new Date();
+    const startTime = new Date(2026, 4, 25, 10, 30, 0);  // 25 May, 11:00 AM
+    const endTime = new Date(2026, 4, 25, 11, 00, 0);   // 25 May, 11:30 AM
+
+    // 1. Time se pehle aane par notification
+    if (currentTime < startTime) {
+        errorBox.style.color = 'var(--accent)';
+        errorBox.style.background = 'rgba(212, 175, 55, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل  صبح ٹھیک 10:30 بجے کھلے گا۔</span>';
+        return;
+    }
+
+    // 2. Time khatam hone ke baad ka notification
+    if (currentTime > endTime) {
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت ختم ہو چکا ہے۔</span>';
+        return;
+    }
+          
 
         if(!nameVal || !emailVal) {
             errorBox.style.color = 'var(--error)';
