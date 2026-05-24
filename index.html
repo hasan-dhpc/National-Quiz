@@ -335,6 +335,45 @@
             font-size: 15px;
             line-height: 1.7;
         }
+                /* 👁️ AI Eyes Shield Styling */
+        .ai-eyes-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        .eye {
+            width: 55px;
+            height: 35px;
+            background: #141419;
+            border: 2px solid var(--primary);
+            border-radius: 50% 0;
+            transform: rotate(45deg);
+            position: relative;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .ai-eyes-container .eye:last-child {
+            transform: rotate(135deg);
+        }
+        .pupil {
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+            animation: eyeballMovement 4s infinite ease-in-out alternate;
+        }
+        @keyframes eyeballMovement {
+            0% { transform: translate(-3px, -3px) rotate(-45deg); }
+            50% { transform: translate(3px, 3px) rotate(-45deg); }
+            100% { transform: translate(0px, 0px) rotate(-45deg); }
+        }
+        
     </style>
 </head>
 <body>
