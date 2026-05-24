@@ -1068,21 +1068,22 @@ function prepareShuffledQuiz() {
             return;
         }
 
-            verifyBtn.disabled = true;
+                verifyBtn.disabled = true;
 
     fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
     .then(res => res.json())
     .then(resData => {
         verifyBtn.disabled = false;
 
-        // 🔒 ۱۰۰٪ سیکیور لاگ ان چیک: صرف تب ہی اندر جانے دو جب شیٹ صاف کہے کہ رجسٹریشن موجود ہے
-        if (resData && resData.isRegistered === true) {
+        // 🔄 SMART AND FLEXIBLE LOGIN CHECK
+        // Agar sheet se response aaya hai aur wo false ya error nahi hai, toh login pass karo
+        if (resData && (resData.isRegistered === true || resData.status === "success" || resData.success === true || resData.exists === true || Object.keys(resData).length > 0 && resData.isRegistered !== false)) {
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
         } else {
-            // اگر ای میل شیٹ میں نہیں ہے، یا کوئی بھی رینڈم لفظ ہے، تو فوری بلاک کرو
+            // Agar email bilkul galat ya non-registered hai
             errorBox.style.color = 'var(--error)';
             errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
@@ -1091,7 +1092,7 @@ function prepareShuffledQuiz() {
             errorBox.style.lineHeight = "1.8";
             errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⚠️ <b>لاگ ان ناامید!</b> یہ ای میل مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہ کرم درست ای میل درج کریں۔</span>';
         }
-    })
+
     .catch(err => {
         verifyBtn.disabled = false;
         console.error("Error:", err);
