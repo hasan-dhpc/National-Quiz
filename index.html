@@ -612,7 +612,7 @@ function validateLogin() {
     // ⏱️ فکسڈ ڈیٹ اور ٹائم ونڈو لاک سسٹم (25 مئی، 11:00 AM سے 11:30 AM)
     const currentTime = new Date();
     const startTime = new Date(2026, 4, 24, 20, 0, 0); 
-    const endTime = new Date(2026, 4, 24, 08, 30, 0);
+    const endTime = new Date(2026, 4, 25, 08, 30, 0);
 
     // ۱. مسابقہ سے پہلے لاگ ان روکنے کے لیے (رات کا تالا)
     if (currentTime < startTime) {
@@ -632,7 +632,7 @@ function validateLogin() {
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (11:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (8:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
         return;
     }
 
