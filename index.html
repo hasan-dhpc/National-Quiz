@@ -957,7 +957,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
 
         // ⏱️ فکسڈ ڈیٹ اور ٹائم ونڈو لاک سسٹم (25 مئی، 11:00 AM سے 11:30 AM)
         const currentTime = new Date();
-        const startTime = new Date(2026, 4, 25, 11, 0, 0); 
+        const startTime = new Date(2026, 4, 24, 24, 0, 0); 
         const endTime = new Date(2026, 4, 25, 11, 30, 0);
 
         // ۱. اگر کوئی بچہ 25 مئی صبح 11:00 بجے سے پہلے لاگ ان کرے
@@ -967,7 +967,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             errorBox.style.display = 'block';
             errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
             errorBox.style.fontSize = "16px";
-            errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل کل (25 مئی) صبح ٹھیک 11:00 بجے لاگ ان کے لیے کھلے گا۔</span>';
+            errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل کل (25 مئی) صبح ٹھیک 12:00 بجے لاگ ان کے لیے کھلے گا۔</span>';
             return;
         }
 
