@@ -992,20 +992,35 @@ function prepareShuffledQuiz() {
     const errorBox = document.getElementById('login-error');
     const verifyBtn = document.getElementById('btn-verify');
 
-    // ⏱️ آٹومیٹک ٹائم لاک سسٹم (11:30 AM پر لاگ ان بند)
+    // ⏱️ فکسڈ ڈیٹ اور ٹائم ونڈو لاک سسٹم (25 مئی، 11:00 AM سے 11:30 AM)
     const currentTime = new Date();
-    const currentHour = currentTime.getHours();
-    const currentMinute = currentTime.getMinutes();
+    
+    // مسابقہ شروع ہونے کا وقت: 25 مئی 2026، صبح 11:00 بجے
+    const startTime = new Date(2026, 4, 24, 04, 45, 0); // نوٹ: جاوا اسکرپٹ میں مئی کا مہینہ 4 لکھا جاتا ہے
+    
+    // لاگ ان بند ہونے کا وقت: 25 مئی 2026، صبح 11:30 بجے
+    const endTime = new Date(2026, 4, 24, 04, 50, 0);
 
-    // اگر وقت 11 بج کر 30 منٹ یا اس سے زیادہ ہو جائے
-    if (currentHour > 11 || (currentHour === 04 && currentMinute >= 40)) {
+    // ۱. اگر کوئی بچہ 25 مئی صبح 11 بجے سے پہلے لاگ ان کرے
+    if (currentTime < startTime) {
+        errorBox.style.color = 'var(--accent)';
+        errorBox.style.background = 'rgba(253,203,110,0.1)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل کل (25 مئی) صبح ٹھیک 11:00 بجے لاگ ان کے لیے کھلے گا۔</span>';
+        return;
+    }
+
+    // ۲. اگر وقت 25 مئی صبح 11:30 بجے سے اوپر ہو جائے
+    if (currentTime > endTime) {
         errorBox.style.color = 'var(--error)';
         errorBox.style.background = 'rgba(234,67,53,0.1)';
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
         errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (11:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
-        return; // لاگ ان آگے نہیں بڑھے گا
+        return;
     }
 
     if(!nameVal || !emailVal) {
