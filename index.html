@@ -338,7 +338,7 @@
 </head>
 <body>
 
-    <div id="premium-toast" class="toast-notification">⚠️ مہربانی فرما کر آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
+    <div id="premium-toast" class="toast-notification">⚠️ مہربانی کرے، آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
 
     <div class="container">
         <div id="screen-login">
@@ -363,8 +363,8 @@
                 <div id="screen-directions" style="display: none;">
             <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
             <div class="instructions-list">
-                <li>اس فقہی مسابقہ میں کل <b>۱۶ (سولہ) سوالات</b> پوچھے جائیں گے۔</li>
-                <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
+                <li>اس فقہی مسابقہ میں کل <b>پچاس (٥٠) سوالات</b> پوچھے جائیں گے۔</li>
+                <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>٤٠ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
                 <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا، اسکرین شاٹ لیا، یا اسپلٹ اسکرین کھولی، تو آپ خود بخود خارج ہو جائیں گے۔</li>
                 <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
             </div>
@@ -966,7 +966,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         }
 
         // 👑 ADMIN STATUS CORE CHECK (Admin ko block nahi kiya jayega)
-        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
+        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "mdashrafraza4@gmail.com");
         
         // 🚨 BROWSER LEVEL SECOND ATTEMPT LOCK (Sirf bacho ke liye)
         if (!isAdminEmail && localStorage.getItem("quiz_attempted_" + emailVal)) {
@@ -975,12 +975,12 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             errorBox.style.display = 'block';
             errorBox.style.fontFamily = "'Amiri', serif";
             errorBox.style.fontSize = "17px";
-            errorBox.innerHTML = `<b>🚫 Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔ ایک فون سے دوبارہ شرکت کی اجازت نہیں ہے۔</span>`;
+            errorBox.innerHTML = `<b>🚫 Access Denied! </b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔ ایک فون سے دوبارہ شرکت کی اجازت نہیں ہے۔</span>`;
             return;
         }
 
         // 🎫 SPECIAL STUDENT PORTAL BYPASS
-        const isSpecialStudent = (emailVal === "fsyed4765@gmail.com");
+        const isSpecialStudent = (emailVal === "tariqueatahar03@gmail.com");
 
         if (isAdminEmail) {
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
@@ -1246,7 +1246,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             statusLabel.style.color = "#00b894";
             statusLabel.style.background = "rgba(0,184,148,0.05)";
             statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ آپ کا کوئز DATA ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
+            statusLabel.innerText = "✓ آپ کا کوئز ڈاٹا ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.05)";
