@@ -1015,7 +1015,7 @@ function validateLogin() {
         return;
     }
 
-            // 🔄 GOOGLE SHEET DOUBLE VERIFICATION (FIRST REGISTRATION -> THEN SUBMISSION)
+                // 🔄 GOOGLE SHEET DOUBLE VERIFICATION (FIRST REGISTRATION -> THEN SUBMISSION)
     verifyBtn.disabled = true;
 
     // 🟢 STEP 1: Pehle check karo bacha registered hai ya nahi
@@ -1032,7 +1032,7 @@ function validateLogin() {
             errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
             errorBox.style.fontSize = "16px";
             errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⚠️ <b>لاگ ان ناامید!</b> یہ ای میل مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہ کرم درست ای میل درج کریں۔</span>';
-            return; // Code yahan ruk gaya
+            return; 
         }
 
         // 🔒 STEP 2: Agar registered hai, toh ab check karo ki pehle submit toh nahi kiya?
@@ -1066,17 +1066,6 @@ function validateLogin() {
         errorBox.style.display = 'block';
         errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">تکنیکی خرابی! سرور سے رابطہ نہیں ہو پا رہا۔ براہ کرم دوبارہ کوشش کریں۔</span>';
     });
-
-    })
-    .catch(err => {
-        verifyBtn.disabled = false;
-        console.error("Error:", err);
-        errorBox.style.color = 'var(--error)';
-        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
-        errorBox.style.display = 'block';
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">تکنیکی خرابی! سرور سے رابطہ نہیں ہو پا رہا۔ براہ کرم انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</span>';
-    });
-
 }
 
 
