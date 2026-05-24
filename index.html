@@ -357,22 +357,6 @@
             align-items: center;
             overflow: hidden;
         }
-        .ai-eyes-container .eye:last-child {
-            transform: rotate(135deg);
-        }
-        .pupil {
-            width: 14px;
-            height: 14px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent);
-            animation: eyeballMovement 4s infinite ease-in-out alternate;
-        }
-        @keyframes eyeballMovement {
-            0% { transform: translate(-3px, -3px) rotate(-45deg); }
-            50% { transform: translate(3px, 3px) rotate(-45deg); }
-            100% { transform: translate(0px, 0px) rotate(-45deg); }
-        }
         
     </style>
 </head>
@@ -382,14 +366,6 @@
 
     <div class="container">
                 <div id="screen-login">
-            <div class="ai-eyes-container">
-                <div class="eye">
-                    <div class="pupil"></div>
-                </div>
-                <div class="eye">
-                    <div class="pupil"></div>
-                </div>
-            </div>
             <div class="urdu-title">سنتِ ابراہیمی قومی علمی مسابقہ</div>
 
             <div class="urdu-subtitle">اپنا رجسٹرڈ ای میل اور درست نام درج کریں۔</div>
