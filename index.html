@@ -996,10 +996,10 @@ function prepareShuffledQuiz() {
     const currentTime = new Date();
     
     // مسابقہ شروع ہونے کا وقت: 25 مئی 2026، صبح 11:00 بجے
-    const startTime = new Date(2026, 4, 24, 04, 45, 0); // نوٹ: جاوا اسکرپٹ میں مئی کا مہینہ 4 لکھا جاتا ہے
+    const startTime = new Date(2026, 4, 24, 04, 55, 0); // نوٹ: جاوا اسکرپٹ میں مئی کا مہینہ 4 لکھا جاتا ہے
     
     // لاگ ان بند ہونے کا وقت: 25 مئی 2026، صبح 11:30 بجے
-    const endTime = new Date(2026, 4, 24, 04, 50, 0);
+    const endTime = new Date(2026, 4, 24, 05, 00, 0);
 
     // ۱. اگر کوئی بچہ 25 مئی صبح 11 بجے سے پہلے لاگ ان کرے
     if (currentTime < startTime) {
@@ -1008,7 +1008,7 @@ function prepareShuffledQuiz() {
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل کل (25 مئی) صبح ٹھیک 11:00 بجے لاگ ان کے لیے کھلے گا۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل آج (24 مئی) شام ٹھیک 04:55 بجے لاگ ان کے لیے کھلے گا۔</span>';
         return;
     }
 
@@ -1019,7 +1019,7 @@ function prepareShuffledQuiz() {
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (11:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (05:00 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
         return;
     }
 
