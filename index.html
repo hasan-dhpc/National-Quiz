@@ -288,20 +288,25 @@
         }
 
         .option-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 22px;
-            font-size: 18px;
-            color: #e8eaed;
-            cursor: pointer;
-            text-align: right;
-            transition: all 0.2s ease;
-            outline: none;
-            font-family: 'Jameel Noori Nastaleeq Regular', 'Amiri', serif;
-            line-height: 2.2;
-            direction: rtl;
-        }
+    background: #f1f5f9;    /* بٹن کا ہلکا پریمیم گرے بیک گراؤنڈ */
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    font-size: 18px;
+    color: var(--text);     /* 👈 آپشنز کا ٹیکسٹ اب بالکل کالا دیکھے گا */
+    cursor: pointer;
+    text-align: right;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: 'Jameel Noori Nastalieq', 'Jameel Noori Nastaliq', 'Noto Sans Arabic', 'Amiri', serif;
+    line-height: 2.2;
+    direction: rtl;
+}
+.option-btn:hover {
+    background: #e2e8f0;
+    border-color: var(--primary);
+}
+
         
 
         .option-btn:hover {
