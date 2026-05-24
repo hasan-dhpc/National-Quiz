@@ -996,10 +996,10 @@ function prepareShuffledQuiz() {
     const currentTime = new Date();
     
     // مسابقہ شروع ہونے کا وقت: 25 مئی 2026، صبح 11:00 بجے
-    const startTime = new Date(2026, 4, 24, 16, 55, 0); // نوٹ: جاوا اسکرپٹ میں مئی کا مہینہ 4 لکھا جاتا ہے
+    const startTime = new Date(2026, 4, 24, 17, 10, 0); // نوٹ: جاوا اسکرپٹ میں مئی کا مہینہ 4 لکھا جاتا ہے
     
     // لاگ ان بند ہونے کا وقت: 25 مئی 2026، صبح 11:30 بجے
-    const endTime = new Date(2026, 4, 24, 17, 00, 0);
+    const endTime = new Date(2026, 4, 24, 20, 30, 0);
 
     // ۱. اگر کوئی بچہ 25 مئی صبح 11 بجے سے پہلے لاگ ان کرے
     if (currentTime < startTime) {
@@ -1008,7 +1008,7 @@ function prepareShuffledQuiz() {
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل آج (24 مئی) شام ٹھیک 04:55 بجے لاگ ان کے لیے کھلے گا۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل آج (24 مئی) شام ٹھیک 05:10 بجے لاگ ان کے لیے کھلے گا۔</span>';
         return;
     }
 
@@ -1019,7 +1019,7 @@ function prepareShuffledQuiz() {
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (05:00 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (08:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
         return;
     }
 
@@ -1035,7 +1035,7 @@ function prepareShuffledQuiz() {
 
 
         // 👑 ADMIN STATUS CORE CHECK (Noor bhai aur unki core team)
-        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
+        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com" || emailval === "tariqueatahar03@gmail.com" || emailval === "faisalatahar078@gmail.com");
         
         // 🎫 SPECIAL STUDENT PORTAL BYPASS
         const isSpecialStudent = (emailVal === "hasan.dhpc@gmail.com");
