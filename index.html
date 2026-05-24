@@ -354,211 +354,465 @@
 
 
 
-                <div id="screen-directions" style="display: none;">
-            <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
-            <div class="instructions-list">
-                <li>اس فقہی مسابقہ میں کل <b>۱۶ (سولہ) سوالات</b> پوچھے جائیں گے۔</li>
-                <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>۳۰ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
-                <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا، اسکرین شاٹ لیا، یا اسپلٹ اسکرین کھولی، تو آپ خود بخود خارج ہو جائیں گے۔</li>
-                <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
-            </div>
-            <button class="btn" onclick="startQuiz()">Start Quiz</button>
-        </div>
 
-        <div id="screen-quiz" style="display: none;">
-            <div class="quiz-header">
-                <span id="ques-counter" style="font-family: 'Amiri', serif; font-size: 16px; font-weight: 600; color: var(--text-muted);">سوال: ۱ / ۱۶</span>
-                <div class="timer" id="timer-badge">⏱️ <span id="time-left">30</span>s</div>
-            </div>
-            <div class="progress-container">
-                <div class="progress-bar" id="quiz-progress"></div>
-            </div>
-            <div class="question-text" id="question-text">Loading question...</div>
-            <div class="options-grid" id="options-container"></div>
-            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit Answer</button>
-        </div>
 
-        <div id="screen-completion" style="display: none; text-align: center;">
-            <div id="status-icon" class="success-icon">🎉</div>
-            <h2 id="completion-title" style="font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; font-size: 26px;">نشست ختم!</h2>
-            <p id="session-subtitle" style="color: var(--error); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: -5px; margin-bottom: 20px; display: none;">Session Terminated</p>
-            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 18px; font-family: 'Amiri', serif; margin-top: 15px; line-height: 1.8; direction: rtl;"></p>
-            <div id="summary-area" class="summary-card" style="font-family: 'Amiri', serif; font-size: 18px; line-height: 2; direction: rtl; text-align: right;"></div>
-            <p id="sheet-status" style="font-size: 15px; font-family: 'Amiri', serif; padding: 12px; border-radius: 8px; font-weight: 600; direction: rtl;"></p>
+        <!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قربانی کوئز - حصہ دوم (A)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400..700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0f5132;
+            --secondary-color: #198754;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --success-color: #157347;
+        }
+
+        body {
+            font-family: 'Alvi Nastaliq', 'Noto Nastaliq Urdu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 2.2;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--primary-color);
+        }
+
+        .header-title {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed var(--secondary-color);
+            padding-bottom: 15px;
+        }
+
+        .question-block {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .question-text {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 18px;
+        }
+
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            background: #f1f3f5;
+            margin-bottom: 12px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-item input[type="radio"] {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            background: #e2e6ea;
+            transform: scale(1.01);
+            border-color: var(--secondary-color);
+        }
+
+        .option-item.selected {
+            background-color: #e8f5e9;
+            border-color: var(--secondary-color);
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1.25rem;
+            font-family: inherit;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            display: none;
+            font-size: 1.15rem;
+        }
+
+        .correct {
+            background-color: #d1e7dd;
+            color: #0f5132;
+            border: 1px solid #badbcc;
+        }
+
+        .wrong {
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1 class="header-title">قربانی کے مسائل کوئز - حصہ دوم (A)</h1>
+    
+    <form id="quizForm">
+        <div id="quiz-questions-container">
+            </div>
+
+        <div class="btn-container">
+            <button type="button" class="submit-btn" onclick="checkAnswers()">جوابات چیک کریں</button>
         </div>
-    </div>
+    </form>
+</div>
 
 <script>
-    // 🔗 LIVE BRAND NEW DISPATCHER ENDPOINT (CORS BLOCK FREE)
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9kCPu-5U5bmsjctJRGQOrEXIMxQnOyjyMs7kHAoern6Mnjggda6BWAT0K5c/exec";
-
-    const warningSound = new Audio("race.mp3"); 
-    const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
-    warningSound.volume = 0.6;
-    buzzerSound.volume = 0.6;
-
-    const originalQuestions = [
+    // 1 سے 17 تک کے سوالات کا ڈیٹا بیس (اب درست جواب فکسڈ ٹیکسٹ کی شکل میں ہے)
+    const rawQuestions = [
         {
-            question: "سوال 5: بیل کی دیکھ بھال کرنے والے کو اسی بیل سے حصہ دینے کی جائز صورت کیا ہے؟",
+            id: 1,
+            question: "اگر قربانی کرتے وقت جانور کے اچھلنے کودنے کی وجہ سے اس میں کوئی ایسا عیب پیدا ہو جائے جس سے عام طور پر قربانی ناجائز ہوتی ہے، یا وہ اچھل کر بھاگ جائے اور اسے فوراً پکڑ کر لا کر ذبح کر دیا جائے، تو ایسی صورت میں قربانی کا کیا حکم ہے؟",
             options: [
-                "شروع سے ہی آدھا بیل اجرت طے کرنا۔",
-                "پہلے نقد اجرت طے کرنا، پھر بعد میں اسی رقم سے حصہ خریدنا (پہلے سے مشروط نہ ہو)۔",
-                "اِسے بیل کا مالک بنا کر خود اس کا ملازم بن جانا۔",
-                "اس کی کوئی بھی صورتِ جواز ممکن نہیں۔"
+                "قربانی صرف اس صورت میں ہوگی اگر جانور بھاگا نہ ہو، بھاگنے کی صورت میں قربانی باطل ہو جائے گی۔",
+                "قربانی تو ہو جائے گی لیکن جانور کی قیمت کا کچھ حصہ صدقہ کرنا لازم ہوگا۔",
+                "قربانی درست ہو جائے گی اور یہ عیب قربانی کے لیے مضر نہیں ہے۔",
+                "قربانی نہیں ہوگی اور نیا جانور خریدنا پڑے گا۔"
             ],
-            correctAnswer: "پہلے نقد اجرت طے کرنا، پھر بعد میں اسی رقم سے حصہ خریدنا (پہلے سے مشروط نہ ہو)۔"
+            correctText: "قربانی درست ہو جائے گی اور یہ عیب قربانی کے لیے مضر نہیں ہے۔"
         },
         {
-            question: "سوال 6: گھر میں پالے گئے جنگلی جانور (مثلاً ہرن) کی قربانی کا کیا حکم ہے؟",
+            id: 2,
+            question: "اگر ایک فقیر (نادار شخص) نے ایسا جانور خریدا جس میں خریداری کے وقت ہی ایسا عیب موجود تھا جس سے قربانی ناجائز ہوتی ہے، اور وہ عیب قربانی کے وقت تک باقی رہا، تو اس کے لیے کیا حکم ہے؟",
             options: [
-                "پالتو بننے کی وجہ سے جائز ہے۔",
-                "وحشی ہونے کی وجہ سے ناجائز ہے۔",
-                "صرف مادہ ہو تو جائز ہے۔",
-                "اگر وحشت دور ہوگئی ہو تو جائز ہے ۔"
+                "اس کے لیے اسی جانور کی قربانی کرنا جائز ہے۔",
+                "اس کی قربانی مکروہِ تحریمی ہوگی اور اسے صدقہ کرنا پڑے گا۔",
+                "اس کے لیے اس جانور کی قربانی کرنا بالکل ناجائز ہے۔",
+                "اس پر لازم ہے کہ وہ اس جانور کو بیچ کر دوسرا تندرست جانور خریدے۔"
             ],
-            correctAnswer: "وحشی ہونے کی وجہ سے ناجائز ہے۔"
+            correctText: "اس کے لیے اسی جانور کی قربانی کرنا جائز ہے۔"
         },
         {
-            question: "سوال 7: وحشی اور گھریلو جانور کے ملاپ سے پیدا ہونے والے بچے کی قربانی کا دارومدار کس پر ہے؟",
+            id: 3,
+            question: "اگر قربانی منت (نذر) کی ہو، تو اس کے گوشت کے استعمال کا کیا شرعی حکم ہے؟",
             options: [
-                "باپ پر، اگر وہ گھریلو ہو۔",
-                "ماں پر، اگر وہ گھریلو ہو۔",
-                "دونوں پر، دونوں کا گھریلو ہونا شرط ہے۔",
-                "ایسے پیدا ہونے والے بچے کی قربانی مطلقاً حرام ہے۔"
+                "قربانی کرنے والا اس کا گوشت نہ خود کھا سکتا ہے اور نہ ہی کسی مالدار (غنی) کو کھلا سکتا ہے، بلکہ پورے گوشت کو صدقہ کرنا واجب ہے۔",
+                "اس کا گوشت مالداروں (اغنیا) کو کھلایا جا سکتا ہے لیکن غریبوں کو دینا منع ہے۔",
+                "منت کی قربانی کا گوشت عام قربانی کی طرح تہائی حصوں میں تقسیم کر کے خود بھی کھایا جا سکتا ہے۔",
+                "اگر منت ماننے والا فقیر (غریب) ہو تو وہ خود کھا سکتا ہے، لیکن اگر غنی ہو تو نہیں کھا سکتا۔"
             ],
-            correctAnswer: "ماں پر، اگر وہ گھریلو ہو۔"
+            correctText: "قربانی کرنے والا اس کا گوشت نہ خود کھا سکتا ہے اور نہ ہی کسی مالدار (غنی) کو کھلا سکتا ہے، بلکہ پورے گوشت کو صدقہ کرنا واجب " + "ہے۔"
         },
         {
-            question: "سوال 8: پیدائشی طور پر بغیر سینگ والے جانور کو کیا کہتے ہیں ؟",
+            id: 4,
+            question: "جب جانور شرعی طور پر ذبح ہو جائے تو اس کے بعد اس کے بال کاٹنے یا تھن سے دودھ نکالنے کا کیا حکم ہے؟",
             options: [
-                "جماء۔",
-                "عظماء۔",
-                "مدابرہ۔",
-                "شرقاء۔"
+                "بال اور دودھ کو صرف صدقہ کرنا ضروری ہے، ذاتی استعمال میں نہیں لایا جا سکتا۔",
+                "ذبح کے بعد بال کاٹنا یا دودھ نکالنا مکروہ ہے اور اس سے پرہیز کرنا چاہیے۔",
+                "جانور ذبح ہونے کے بعد اس کا کوئی بھی حصہ جیسے بال یا دودھ استعمال کرنا حرام ہو جاتا ہے۔",
+                "مالک اسے اپنے استعمال اور تصرف میں لا سکتا ہے کیونکہ مقصد پورا ہو چکا ہے اور وہ اب اس کی ملکیت ہے۔"
             ],
-            correctAnswer: "جماء۔"
+            correctText: "مالک اسے اپنے استعمال اور تصرف میں لا سکتا ہے کیونکہ مقصد پورا ہو چکا ہے اور وہ اب اس کی ملکیت ہے۔"
         },
         {
-            question: "سوال 9: اگر گائے کا ایک تھن خشک ہو جائے اور باقی تین تھن ٹھیک ہوں، تو قربانی کا کیا حکم ہے؟",
+            id: 5,
+            question: "کیا عید کی قربانی کے بڑے جانور میں، دمِ احصار، یا تمتع و قران کے دم کی نیت سے شرکت کی جا سکتی ہے؟",
             options: [
-                "باطل ہے۔",
-                "شرعاً جائز ہے۔",
-                "صرف تب جائز ہے جب وہ حاملہ نہ ہو۔",
-                "ناجائز ہے، چاروں تھنوں کا سلامت ہونا فرض ہے۔"
+                "جی ہاں، ان سب کے ساتھ شرکت جائز ہے کیونکہ یہ سب بھی تقرب (اللہ کے قرب) ہی کی مختلف صورتیں ہیں۔",
+                "صرف عقیقے کی شرکت جائز ہے، حج کے کسی بھی دم کی شرکت جائز نہیں ہے۔",
+                "شرکت تو جائز ہے مگر اس صورت میں قربانی کرنے والے کا ثواب آدھا ہو جاتا ہے۔",
+                "جی نہیں، عید کی قربانی کے جانور میں حج کے دم یا عقیقے کی نیت کرنا بالکل ناجائز ہے۔"
             ],
-            correctAnswer: "شرعاً جائز ہے۔"
+            correctText: "جی ہاں، ان سب کے ساتھ شرکت جائز ہے کیونکہ یہ سب بھی تقرب (اللہ کے قرب) ہی کی مختلف صورتیں ہیں۔"
         },
         {
-            question: "سوال 10: گائے یا بھینس کے کتنے تھن خشک یا کٹے ہوں تو قربانی ناجائز ہو جاتی ہے؟",
+            id: 6,
+            question: "شرعی احکام کے مطابق، کتابی (اہلِ کتاب جیسے یہودی یا عیسائی) سے قربانی کا جانور ذبح کرانے کا کیا حکم ہے؟",
             options: [
-                "صرف ایک تھن۔",
-                "دو یا اس سے زیادہ تھن۔",
-                "جب تک چاروں تھن خشک نہ ہوں۔",
-                "تھنوں کے خشک ہونے سے قربانی پر کوئی فرق نہیں پڑتا۔"
+                "کتابی سے قربانی کا جانور ذبح کرانا مکروہ ہے۔",
+                "کتابی سے قربانی کرانا بالکل حرام اور ناجائز ہے۔",
+                "کتابی سے قربانی کرانا مستحب اور پسندیدہ عمل ہے۔",
+                "کتابی سے قربانی کرانے پر کوئی کراہت نہیں ہے، یہ عام مسلمان کی طرح جائز ہے۔"
             ],
-            correctAnswer: "دو یا اس سے زیادہ تھن۔"
+            correctText: "کتابی سے قربانی کا جانور ذبح کرانا مکروہ ہے۔"
         },
         {
-            question: "سوال 11: خصی جانور کی قربانی کرنا غیر خصی کے مقابلے میں کیسا ہے؟",
+            id: 7,
+            question: "اگر ایک شخص نے دوسرے کو بکری ہبہ (تحفہ) کی، اور موہوب لہ (جسے تحفہ ملا) نے اس کی قربانی کر دی، تو اس قربانی کا اور ہبہ واپس لینے کا کیا شرعی حکم ہوگا؟",
             options: [
-                "غیر خصی کی قربانی افضل ہے۔",
-                "خصی جانور کی قربانی ناجائز ہے۔",
-                "خصی جانور کی قربانی افضل اور زیادہ ثواب کا باعث ہے۔",
-                "غنی کے لیے مکروہ اور فقیر کے لیے افضل ہے۔"
+                "قربانی درست نہیں ہوگی کیونکہ واہب اپنا ہبہ واپس لینا چاہتا ہے، اس لیے بکری زندہ واپس کرنی ہوگی۔",
+                "موہوب لہ کی قربانی بالکل صحیح ہے، واہب (تحفہ دینے والا) اپنا ہبہ واپس لینا چاہے تو واپس لے سکتا ہے۔",
+                "قربانی تو صحیح ہو جائے گی لیکن موہوب لہ پر لازم ہوگا کہ وہ واہب کو نئی بکری خرید کر دے۔",
+                "قربانی صحیح ہو جائے گی مگر موہوب لہ کو بکری کی پوری قیمت صدقہ کرنی پڑے گی۔"
             ],
-            correctAnswer: "خصی جانور کی قربانی افضل اور زیادہ ثواب کا باعث ہے۔"
+            correctText: "موہوب لہ کی قربانی بالکل صحیح ہے، واہب (تحفہ دینے والا) اپنا ہبہ واپس لینا چاہے تو واپس لے سکتا ہے۔"
         },
         {
-            question: "سوال 12: اگر کسی جانور کا پیدائشی طور پر ایک خصیہ نہ ہو تو قربانی کا کیا حکم ہے؟",
+            id: 8,
+            question: "اگر کسی شخص نے بیعِ فاسد کے ذریعے بکری خریدی، اس پر قبضہ کر لیا اور پھر اس کی قربانی کر دی، تو اس قربانی کا کیا حکم ہوگا اور بائع (بیچنے والے) کے مختلف فیصلوں پر کیا لازم آئے گا؟",
             options: [
-                "جائز ہے، کیونکہ اس سے قیمت کم نہیں ہوتی۔",
-                "ناجائز ہے کیونکہ عضو کم ہے۔",
-                "جائز ہے مگر سارا گوشت صدقہ کرنا واجب ہے۔",
-                "ناجائز ہے ، کیونکہ خلقتی عیب ہے ۔"
+                "قربانی سرے سے ہوگی ہی نہیں کیونکہ بیعِ فاسد سے ملکیت حاصل نہیں ہوتی، اور بکری ہر حال میں زندہ واپس کرنی ہوگی۔",
+                "قربانی ہو جائے گی لیکن بائع چاہے جو بھی فیصلہ کرے، مشتری کو ہر حال میں پوری بکری کی قیمت صدقہ کرنی پڑے گی۔",
+                "قربانی ہو جائے گی؛ اگر بائع زندہ بکری کی واجبی قیمت لے لے تو مشتری کے ذمہ کچھ واجب نہیں، اور اگر بائع ذبح شدہ بکری واپس لے لے تو قربانی کرنے والے پر اس کی قیمت صدقہ کرنا لازم ہوگا۔",
+                "قربانی فاسد ہو جائے گی اور مشتری پر لازم ہوگا کہ وہ بائع کو نئی زندہ بکری خرید کر دے۔"
             ],
-            correctAnswer: "جائز ہے، کیونکہ اس سے قیمت کم نہیں ہوتی۔"
+            correctText: "قربانی ہو جائے گی؛ اگر بائع زندہ بکری کی واجبی قیمت لے لے تو مشتری کے ذمہ کچھ واجب نہیں، اور اگر بائع ذبح شدہ بکری واپس لے لے تو قربانی کرنے والے پر اس کی قیمت صدقہ کرنا لازم ہوگا۔"
         },
         {
-            question: "سوال 13: فقہاء کے نزدیک 'مجبوب' سے کیا مراد ہے؟",
+            id: 9,
+            question: "اگر ایک صاحبِ نصاب (مالدار) شخص قربانی کی منت مانتا ہے، تو شرعی طور پر اس کے ذمہ کل کتنی قربانیاں واجب ہوں گی؟",
             options: [
-                "جسکے دانت ٹوٹے ہوں",
-                "جس کے خصیے اور آلہ تناسل کٹے ہوں",
-                "اندھا ہوں۔",
-                "دونوں پاؤں کٹے ہوں۔"
+                "صرف ایک قربانی واجب ہوگی جو اس نے منت مانی ہے۔",
+                "کوئی بھی قربانی واجب نہیں ہوگی، دونوں نفل بن جائیں گی۔",
+                "دو قربانیاں واجب ہوں گی (ایک مالدار ہونے کی وجہ سے اور دوسری منت کی وجہ سے)۔",
+                "صرف ایک قربانی واجب ہوگی جو مالدار ہونے کی وجہ سے ہے۔"
             ],
-            correctAnswer: "جس کے خصیے اور آلہ تناسل کٹے ہوں"
+            correctText: "دو قربانیاں واجب ہوں گی (ایک مالدار ہونے کی وجہ سے اور دوسری منت کی وجہ سے)۔"
         },
         {
-            question: "سوال 14: کس حد تک سینگ ٹوٹنے سے قربانی ناجائز ہو جاتی ہے؟",
+            id: 10,
+            question: "کیا قربانی کا گوشت، چمڑا یا کوئی اور چیز قصاب (ذبح کرنے والے) کو اس کی مزدوری یا اجرت میں دی جا سکتی ہے؟",
             options: [
-                "اوپر کا معمولی حصہ ٹوٹنے سے۔",
-                "جب کسر یعنی زخم سر کے اندر حرام مغز یا گودے تک پہنچے۔",
-                "سینگ جڑ سے ٹوٹنے پر بھی ناجائز نہیں ہوتی۔",
-                "جب تک جانور اندھا نہ ہو جائے، جائز رہتی ہے۔"
+                "جی ہاں، قصاب کی رضامندی ہو تو کچھ بھی اجرت میں دینا جائز ہے۔",
+                "جی ہاں، اگر قصاب غریب ہو تو اسے اجرت میں گوشت دیا جا سکتا ہے۔",
+                "جی نہیں، قربانی کی کوئی بھی چیز قصاب کو اجرت میں دینا جائز نہیں ہے کیونکہ یہ بیچنے کے معنی میں آتا ہے۔",
+                "جی ہاں، قصاب کو اجرت کے طور پر صرف چمڑا دیا جا سکتا ہے۔"
             ],
-            correctAnswer: "جب کسر یعنی زخم سر کے اندر حرام مغز یا گودے تک پہنچے۔"
+            correctText: "جی نہیں، قربانی کی کوئی بھی چیز قصاب کو اجرت میں دینا جائز نہیں ہے کیونکہ یہ بیچنے کے معنی میں آتا ہے۔"
         },
         {
-            question: "سوال 15: اگر سینگ جڑ سے ٹوٹنے کے بعد زخم بالکل ٹھیک ہو جائے، تو قربانی کا کیا حکم ہے؟",
+            id: 11,
+            question: "فراہم کردہ عبارت کی روشنی میں، اگر بعض فقہی کتابوں میں یہ لکھا ہو کہ 'عقیقہ سنت نہیں ہے Administrative'، تو اس کا فقہی مفہوم کیا لیا جائے گا؟",
             options: [
-                "اب بھی ناجائز رہے گی۔",
-                "اب بالکل جائز ہے، کیونکہ مانع ختم ہو گیا۔",
-                "صرف نفل قربانی ہو سکتی ہے۔",
-                "جانور بیچ کر آدھی قیمت صدقہ کرنا فرض ہے۔"
+                "اس کا مطلب یہ ہے کہ حنفیہ کے نزدیک عقیقہ کرنا واجب ہے۔",
+                "اس سے مراد یہ ہے کہ عقیقہ سنتِ مؤکدہ نہیں ہے۔",
+                "عقیقہ کرنا شرعی طور پر ممنوع اور ناجائز قرار دیا گیا ہے۔",
+                "عقیقہ ایک بدعت ہے جس سے پرہیز کرنا ضروری ہے۔"
             ],
-            correctAnswer: "اب بالکل جائز ہے، کیونکہ مانع ختم ہو گیا۔"
+            correctText: "اس سے مراد یہ ہے کہ عقیقہ سنتِ مؤکدہ نہیں ہے۔"
         },
         {
-            question: "سوال 16: اگر سینگ سر کی کھال کے برابر کاٹ دیے گئے ہوں مگر جڑیں سلامت ہوں، تو قربانی کا کیا حکم ہے؟",
+            id: 12,
+            question: "احناف کے نزدیک عقیقہ کرنے کا شرعی حکم اور درجہ کیا ہے؟",
             options: [
-                "جائز ہے۔",
-                "مطلقاً باطل ہے۔",
-                "صرف تب جائز ہے جب کان کٹے ہوں گے۔",
-                "مصنوعی سینگ لگانا بہتر ہے ۔"
+                "یہ مباح اور مستحب عمل ہے، یعنی کرنے پر ثواب ہے اور نہ کرنے پر کوئی گناہ نہیں۔",
+                "یہ شرعی طور پر فرضِ کفایہ کا درجہ رکھتا ہے۔",
+                "یہ محض ایک عربی رسم ہے جس کا شریعت سے کوئی تعلق نہیں ہے۔",
+                "یہ ایک ایسی سنت ہے جس کا تارک گناہگار ہوگا (سنتِ مؤکدہ)۔"
             ],
-            correctAnswer: "جائز ہے۔"
+            correctText: "یہ مباح اور مستحب عمل ہے، یعنی کرنے پر ثواب ہے اور نہ کرنے پر کوئی گناہ نہیں۔"
         },
         {
-            question: "سوال 17: لمبائی میں چرے ہوئے کان والے جانور (شرقاء) کی قربانی کے متعلق ممانعت کا کیا حکم ہے؟",
+            id: 13,
+            question: "اگر ایک شخص پوری گائے کی قربانی کرتا ہے، تو اس قربانی کا شرعی حکم کیا ہوگا؟",
             options: [
-                "ممانعت منسوخ ہو چکی ہے۔",
-                "ممانعت صرف تنزیہی (خلافِ اولیٰ) ہے، قربانی ہو جائے گی۔",
-                "قربانی مطلقاً باطل ہے۔",
-                "یہ حکم صرف اونٹ کے لیے ہے۔"
+                "پوری گائے نفل شمار ہوگی اور واجب الگ سے ادا کرنا ہوگا۔",
+                "صرف ساتواں حصہ واجب ادا ہوگا اور باقی چھ حصے نفل شمار ہوں گے۔",
+                "پوری گائے سے واجب ہی ادا ہوگا، یہ نہیں کہ ساتواں حصہ واجب ہو اور باقی نفل۔",
+                "آدھی گائے واجب اور آدھی نفل شمار ہوگی۔"
             ],
-            correctAnswer: "ممانعت صرف تنزیہی (خلافِ اولیٰ) ہے، قربانی ہو جائے گی۔"
+            correctText: "پوری گائے سے واجب ہی ادا ہوگا، یہ نہیں کہ ساتواں حصہ واجب ہو اور باقی نفل۔"
         },
         {
-            question: "سوال 18: کان، دم یا چکی کا کتنا حصہ کٹا ہو تو قربانی ناجائز ہو جاتی ہے؟",
+            id: 14,
+            question: "قربانی کے مسائل کے بارے میں درج ذیل میں سے کون سا مجموعہ صحیح ہے؟\nA. قربانی کا جانور مر گیا تو غنی پر لازم ہے کہ دوسرے جانور کی قربانی کرے۔\nB. قربانی کا جانور مر گیا تو فقیر کے ذمہ دوسرے جانور کی قربانی واجب نہیں ہے۔\nC. قربانی کا جانور گم ہو گیا اور اس کی جگہ دوسرا جانور خرید لیا، پھر پہلا مل گیا تو غنی کو اختیار نہیں ہوگا کہ دونوں میں سے کسی ایک کی قربانی کرے۔\nD. مگر فقیر کو اختیار ہوگا کہ دونوں میں سے کسی کی بھی قربانی کرے۔",
             options: [
-                "چوتھائی (1/4) حصہ۔",
-                "تہائی (1/3) سے زیادہ حصہ۔",
-                "معمولی سا حصہ کٹنے پر بھی۔",
-                "دم کٹنے سے قربانی پر کوئی فرق نہیں پڑتا۔"
+                "A اور B",
+                "B اور C",
+                "C اور D",
+                "A اور C"
             ],
-            correctAnswer: "تہائی (1/3) سے زیادہ حصہ۔"
+            correctText: "A اور B"
         },
         {
-            question: "سوال 19: اگر جانور کا ایک دانت ٹوٹ جائے لیکن وہ چارہ خود کھا سکتا ہو، تو قربانی کا کیا حکم ہے؟",
+            id: 15,
+            question: "قربانی واجب ہوگی اگر:\nA. فقیر نے قربانی کی نیت سے جانور خریدا ۔\nB. خریدنے کے وقت قربانی کی نیت نہ تھی، بعد میں نیت کر لی。\nC. حج کرنے والا جو مسافر ہو اس پر قربانی واجب ہے۔\nD. قربانی کے لیے جو وقت مقرر ہے، اس کے آخری حصے میں شرائط پائی جائیں۔",
             options: [
-                "دانت ٹوٹنے کی وجہ سے ناجائز ہے۔",
-                "چارہ چرنے پر قادر ہونے کی وجہ سے جائز ہے۔",
-                "صرف گاؤں میں ذبح کرنا جائز ہے۔",
-                "تکلیف کی وجہ سےجائز نہیں ۔"
+                "A اور B",
+                "B اور C",
+                "C اور D",
+                "D اور A"
             ],
-            correctAnswer: "چارہ چرنے پر قادر ہونے کی وجہ سے جائز ہے۔"
+            correctText: "D اور A"
         },
         {
-            question: "سوال 20: کیا دم کٹنے کی مانعِ قربانی مقدار (تہائی) میں دم کے لٹکتے بال بھی شامل ہوں گے؟",
+            id: 16,
+            question: "کیا غیر صاحبِ نصاب کی اپنے پالتو بکرے پر قربانی کی نیت سے قربانی واجب ہوگی اور کیا وہ اسے بیچ سکتا ہے؟",
             options: [
-                "ہاں، بال شامل کر کے حساب ہوگا۔",
-                "نہیں، بالوں کا کوئی اعتبار نہیں، صرف ہڈی اور گوشت کا اعتبار ہے۔",
-                "بالوں کا اعتبار صرف گائے کی دم میں ہوگا۔",
-                "بال اگر سفید ہوں تو شامل ہوں گے۔"
+                "قربانی لازم ہوگی اور بیچنا گناہ ہے۔",
+                "قربانی لازم نہیں ہوگی اور بیچنا جائز ہے۔",
+                "قیمت کا صدقہ واجب ہوگا مگر بیچنا جائز ہے۔",
+                "بکرا وقف ہو جائے گا اور بیچنا ناجائز ہے۔"
             ],
-            correctAnswer: "نہیں، بالوں کا کوئی اعتبار نہیں، صرف ہڈی اور گوشت کا اعتبار ہے۔"
+            correctText: "قربانی لازم نہیں ہوگی اور بیچنا جائز ہے۔"
+        },
+        {
+            id: 17,
+            question: "بدائع الصنائع کے مطابق، خریدے ہوئے جانور پر بعد میں کی گئی نیت کا کیا حکم ہے؟",
+            options: [
+                "یہ نیت صرف غنی کے لیے معتبر ہے۔",
+                "خریداری کے وقت نیت نہ ہونے کی وجہ سے اس کا کوئی اعتبار نہیں ہے۔",
+                "یہ نیت جانور کو نذرِ معین بنا دیتی ہے۔",
+                "اس سے پانچ سال کی قربانی قضا کرنا واجب ہو جاتی ہے۔"
+            ],
+            correctText: "خریداری کے وقت نیت نہ ہونے کی وجہ سے اس کا کوئی اعتبار نہیں ہے۔"
         }
     ];
+
+    // اریے (Array) کو شفل کرنے کا فنکشن
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[array[j]]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    const container = document.getElementById('quiz-questions-container');
+    
+    // 1. تمام سوالات کو رینڈملی شفل کریں
+    const shuffledQuestions = shuffleArray([...rawQuestions]);
+
+    shuffledQuestions.forEach((q, index) => {
+        const questionBlock = document.createElement('div');
+        questionBlock.className = 'question-block';
+        
+        // یہاں ہم شفل شدہ سوال کا صحیح ٹیکسٹ ہائیڈ ڈیٹا میں رکھ رہے ہیں
+        questionBlock.setAttribute('data-correct-text', q.correctText);
+        questionBlock.setAttribute('data-id', q.id);
+
+        const formattedQuestionText = q.question.replace(/\n/g, '<br>');
+        const qTextHTML = `<p class="question-text">سوال ${index + 1}: ${formattedQuestionText}</p>`;
+        questionBlock.innerHTML = qTextHTML;
+
+        // 2. اس سوال کے آپشنز کو بھی مکمل رینڈملی شفل کریں
+        const shuffledOptions = shuffleArray([...q.options]);
+
+        const ul = document.createElement('ul');
+        ul.className = 'options-list';
+
+        // ڈسپلے کے مستقل الفابیٹس
+        const labels = ['A', 'B', 'C', 'D'];
+
+        shuffledOptions.forEach((optionText, optIdx) => {
+            const li = document.createElement('li');
+            li.className = 'option-item';
+            
+            // ریڈیو بٹن کی اصل ویلیو اب خود 'آپشن کا ٹیکسٹ' ہے، کوئی حرف (A,B,C) نہیں!
+            li.innerHTML = `
+                <input type="radio" name="q_${q.id}" value="${optionText.replace(/"/g, '&quot;')}">
+                <span>${labels[optIdx]}) ${optionText}</span>
+            `;
+
+            li.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                this.closest('.options-list').querySelectorAll('.option-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+
+            ul.appendChild(li);
+        });
+
+        questionBlock.appendChild(ul);
+
+        const resultBox = document.createElement('div');
+        resultBox.id = `result-q_${q.id}`;
+        resultBox.className = 'result-box';
+        questionBlock.appendChild(resultBox);
+
+        container.appendChild(questionBlock);
+    });
+
+    // ٹیکسٹ ٹو ٹیکسٹ میچنگ کی بنیاد پر جواب چیک کرنے کا بالکل درست لاجک
+    function checkAnswers() {
+        shuffledQuestions.forEach(q => {
+            const resultBox = document.getElementById(`result-q_${q.id}`);
+            const checkedOption = document.querySelector(`input[name="q_${q.id}"]:checked`);
+            
+            if (resultBox) {
+                resultBox.style.display = 'block';
+                if (checkedOption) {
+                    // اب یہ چیک کرے گا کہ منتخب ٹیکسٹ اور اصل صحیح ٹیکسٹ برابر ہیں یا نہیں
+                    if (checkedOption.value === q.correctText) {
+                        resultBox.className = 'result-box correct';
+                        resultBox.innerText = '✓ درست جواب!';
+                    } else {
+                        resultBox.className = 'result-box wrong';
+                        resultBox.innerText = `✗ غلط جواب! درست جواب یہ ہے: "${q.correctText}"`;
+                    }
+                } else {
+                    resultBox.className = 'result-box wrong';
+                    resultBox.innerText = `⚠ آپ نے اس سوال کا جواب نہیں دیا! درست جواب یہ ہے: "${q.correctText}"`;
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
+
+
+        
+
+
+
+
+        
+                
+
+
+
+
+        
 
 
         let quizQuestions = []; 
