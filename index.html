@@ -269,15 +269,16 @@
         }
 
 .question-text {
-    font-family: 'Jameel Noori Nastaleeq Regular', 'Amiri', serif;
-    font-size: 20px;
-    line-height: 2.4;
+    font-family: 'Jameel Noori Nastalieq', 'Jameel Noori Nastaliq', 'Noto Sans Arabic', 'Amiri', serif;
+    font-size: 20px;        /* پڑھنے میں بالکل آسان سائز */
+    line-height: 2.4;       /* جمیل نوری کے شوشے کٹنے سے بچانے کے لیے */
     font-weight: 450;
     margin-bottom: 25px;
-    color: #f8f9fa;
-    text-align: right; /* 👈 اس لائن کو بدلنا ہے */
+    color: var(--text);     /* 👈 اب یہ سفید پر گہرا کالا دیکھے گا */
+    text-align: right;
     direction: rtl;
 }
+
 
         .options-grid {
             display: flex;
