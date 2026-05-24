@@ -603,82 +603,110 @@
             };
         });
     }
+function validateLogin() {
+    const nameVal = document.getElementById('input-name').value.trim();
+    const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
+    const errorBox = document.getElementById('login-error');
+    const verifyBtn = document.getElementById('btn-verify');
 
-    function validateLogin() {
-        const nameVal = document.getElementById('input-name').value.trim();
-        const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
-        const errorBox = document.getElementById('login-error');
-        const verifyBtn = document.getElementById('btn-verify');
+    // ⏱️ فکسڈ ڈیٹ اور ٹائم ونڈو لاک سسٹم (25 مئی، 11:00 AM سے 11:30 AM)
+    const currentTime = new Date();
+    const startTime = new Date(2026, 4, 24, 20, 0, 0); 
+    const endTime = new Date(2026, 4, 24, 08, 30, 0);
 
-        if(!nameVal || !emailVal) {
-            errorBox.style.color = 'var(--error)';
-            errorBox.style.background = 'rgba(234,67,53,0.1)';
-            errorBox.style.display = 'block';
-            errorBox.style.fontFamily = "'Amiri', serif";
-            errorBox.style.fontSize = "16px";
-            errorBox.innerHTML = `<span style="display:block; direction:rtl; text-align:center;">⚠️ براہِ کرم اپنا نام اور ای میل دونوں درست درج کریں۔</span>`;
-            return;
-        }
-
-        // 👑 ADMIN STATUS CORE CHECK (Noor bhai aur unki core team)
-        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
-        
-        // 🎫 SPECIAL STUDENT PORTAL BYPASS
-        const isSpecialStudent = (emailVal === "fsyed4765@gmail.com");
-
-        if (isAdminEmail) {
-            verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
-            errorBox.style.display = 'none';
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'block';
-            return; 
-        }
-
-        if (isSpecialStudent) {
-            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-            errorBox.style.display = 'none';
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'block';
-            return;
-        }
-
-        verifyBtn.disabled = true;
-
-        fetch(`${https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec}?email=${encodeURIComponent(emailVal)}`)
-        .then(res => res.json())
-        .then(resData => {
-            verifyBtn.disabled = false;
-            
-            if (!resData.isRegistered) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(234,67,53,0.1)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Amiri', serif";
-                errorBox.style.fontSize = "16px";
-                errorBox.style.lineHeight = "1.8";
-                errorBox.innerHTML = `<b>⚠️ Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">یہ ای میل آئی ڈی مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہِ کرم اپنا درست رجسٹرڈ ای میل استعمال کریں یا انتظامیہ سے رابطہ کریں۔</span>`;
-            } else if (resData.exists) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(234,67,53,0.1)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Amiri', serif";
-                errorBox.style.fontSize = "17px";
-                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔</span>`;
-            } else {
-                verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-                errorBox.style.display = 'none';
-                document.getElementById('screen-login').style.display = 'none';
-                document.getElementById('screen-directions').style.display = 'block';
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            verifyBtn.disabled = false;
-            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'block';
-        });
+    // ۱. مسابقہ سے پہلے لاگ ان روکنے کے لیے (رات کا تالا)
+    if (currentTime < startTime) {
+        errorBox.style.color = 'var(--accent)';
+        errorBox.style.background = 'rgba(212, 175, 55, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل کل (24 مئی) صبح ٹھیک 08:00 بجے لاگ ان کے لیے کھلے گا۔</span>';
+        return;
     }
+
+    // ۲. مسابقتی وقت ختم ہونے کے بعد کا تالا
+    if (currentTime > endTime) {
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت (11:30 بجے) ختم ہو چکا ہے۔ اب نئے سبمیشنز بند ہیں۔</span>';
+        return;
+    }
+
+    // ۳. خالی فیلڈز چیک کرنا
+    if(!nameVal || !emailVal) {
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.style.fontFamily = "'Amiri', serif";
+        errorBox.style.fontSize = "16px";
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">براہ کرم نام اور ای میل درج کریں۔</span>';
+        return;
+    }
+
+    // 👑 ADMIN STATUS CORE CHECK
+    const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
+    
+    // 🎫 SPECIAL STUDENT PORTAL BYPASS
+    const isSpecialStudent = (emailVal === "fsyed4765@gmail.com");
+
+    if (isAdminEmail) {
+        verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
+        errorBox.style.display = 'none';
+        document.getElementById('screen-login').style.display = 'none';
+        document.getElementById('screen-directions').style.display = 'block';
+        return; 
+    }
+
+    if (isSpecialStudent) {
+        verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+        errorBox.style.display = 'none';
+        document.getElementById('screen-login').style.display = 'none';
+        document.getElementById('screen-directions').style.display = 'block';
+        return;
+    }
+
+    // 🔄 GOOGLE SHEET VERIFICATION
+    verifyBtn.disabled = true;
+
+    fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
+    .then(res => res.json())
+    .then(resData => {
+        verifyBtn.disabled = false;
+
+        // صرف تب ہی داخلہ ملے گا جب گوگل شیٹ کامیابی کا سگنل دے گی
+        if (resData && (resData.isRegistered === true || resData.status === "success" || resData.success === true || resData.exists === true || (Object.keys(resData).length > 0 && resData.isRegistered !== false))) {
+            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+            errorBox.style.display = 'none';
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-directions').style.display = 'block';
+        } else {
+            // اگر ڈیٹا شیٹ میں میچ نہ ہو
+            errorBox.style.color = 'var(--error)';
+            errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
+            errorBox.style.display = 'block';
+            errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
+            errorBox.style.fontSize = "16px";
+            errorBox.style.lineHeight = "1.8";
+            errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⚠️ <b>لاگ ان ناامید!</b> یہ ای میل مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہ کرم درست ای میل درج کریں۔</span>';
+        }
+    })
+    .catch(err => {
+        // 🔒 کنکشن فیل ہونے پر اب داخلہ نہیں ملے گا، بلکہ ایرر شو ہوگا!
+        verifyBtn.disabled = false;
+        console.error("Error:", err);
+        errorBox.style.color = 'var(--error)';
+        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
+        errorBox.style.display = 'block';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">تکنیکی خرابی! گوگل شیٹ سے رابطہ نہیں ہو پا رہا۔ براہ کرم انٹرنیٹ چیک کر کے دوبارہ کوشش کریں۔</span>';
+    });
+}
+
+
+    
 
     function startQuiz() {
         document.getElementById('screen-directions').style.display = 'none';
