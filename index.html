@@ -949,7 +949,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             };
         });
     }
-   function validateLogin() {
+      function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
@@ -965,9 +965,20 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             return;
         }
 
-        // 👑 ADMIN STATUS CORE CHECK (Noor bhai aur unki core team)
+        // 👑 ADMIN STATUS CORE CHECK (Admin ko block nahi kiya jayega)
         const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "muhammadnoorhasan412@gmail.com");
         
+        // 🚨 BROWSER LEVEL SECOND ATTEMPT LOCK (Sirf bacho ke liye)
+        if (!isAdminEmail && localStorage.getItem("quiz_attempted_" + emailVal)) {
+            errorBox.style.color = 'var(--error)';
+            errorBox.style.background = 'rgba(234,67,53,0.1)';
+            errorBox.style.display = 'block';
+            errorBox.style.fontFamily = "'Amiri', serif";
+            errorBox.style.fontSize = "17px";
+            errorBox.innerHTML = `<b>🚫 Access Denied! (داخلہ ممنوع)</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔ ایک فون سے دوبارہ شرکت کی اجازت نہیں ہے۔</span>`;
+            return;
+        }
+
         // 🎫 SPECIAL STUDENT PORTAL BYPASS
         const isSpecialStudent = (emailVal === "fsyed4765@gmail.com");
 
@@ -1027,9 +1038,15 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
 
 
 
+
     
 
-    function startQuiz() {
+        function startQuiz() {
+        // 🔒 Jaise hi quiz shuru ho, browser me lock laga do (Agar admin na ho)
+        if (verifiedUser && verifiedUser.isAdmin !== true) {
+            localStorage.setItem("quiz_attempted_" + verifiedUser.email, "true");
+        }
+
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
         prepareShuffledQuiz();
@@ -1042,6 +1059,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         loadQuestion();
         setupAntiCheating();
     }
+
 
     function loadQuestion() {
         if(isQuizOver) return;
