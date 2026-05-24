@@ -944,16 +944,34 @@ const originalQuestions = [
     }
 
     function prepareShuffledQuiz() {
-        let shuffledQues = shuffleArray([...originalQuestions]);
-        quizQuestions = shuffledQues.map(q => {
-            let shuffledOptions = shuffleArray([...q.options]);
-            return {
-                question: q.question,
-                options: shuffledOptions,
-                correctAnswer: q.correctAnswer
-            };
+    let shuffledQues = shuffleArray([...originalQuestions]);
+    quizQuestions = shuffledQues.map(q => {
+        let shuffledOptions = shuffleArray([...q.options]);
+        
+        // 🌟 یہاں الفابیٹس سیٹ کر دیے تاکہ جمیل نوری فونٹ اسے الٹا نہ کرے
+        const alphabets = ["A", "B", "C", "D"];
+        let optionsWithLetters = shuffledOptions.map((opt, idx) => {
+            return `${opt} (${alphabets[idx]})`;
         });
-    }
+
+        // 🌟 اب صحیح جواب کو بھی اسی نئے بریکٹ فارمیٹ کے ساتھ میچ کر دیا
+        let finalCorrectAnswer = q.correctAnswer;
+        let correctIdx = q.options.indexOf(q.correctAnswer);
+        if (correctIdx !== -1) {
+            let currentShuffledIdx = shuffledOptions.indexOf(q.correctAnswer);
+            if (currentShuffledIdx !== -1) {
+                finalCorrectAnswer = `${q.correctAnswer} (${alphabets[currentShuffledIdx]})`;
+            }
+        }
+
+        return {
+            question: q.question,
+            options: optionsWithLetters, // اب آپشنز مکھن کی طرح سیدھے بریکٹ میں لوڈ ہوں گے
+            correctAnswer: finalCorrectAnswer
+        };
+    });
+}
+
 
     function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim();
