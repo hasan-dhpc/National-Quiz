@@ -915,7 +915,7 @@ function validateLogin() {
             statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
         }
 
-        fetch(GOOGLE_SCRIPT_URL, {
+        fetch(SUBMISSION_SCRIPT_URL,{
             method: "POST",
             mode: "no-cors", 
             body: formData
