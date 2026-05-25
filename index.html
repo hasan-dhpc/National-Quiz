@@ -956,8 +956,8 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         const verifyBtn = document.getElementById('btn-verify');
               // ⏱️ SITE TIME LIMIT SYSTEM
     const currentTime = new Date();
-    const startTime = new Date(2026, 4, 25, 09, 55, 0);  // 25 May, 11:00 AM
-    const endTime = new Date(2026, 4, 25, 09, 57, 0);   // 25 May, 11:30 AM
+    const startTime = new Date(2026, 4, 25, 10, 03, 0);  // 25 May, 11:00 AM
+    const endTime = new Date(2026, 4, 25, 10, 05, 0);   // 25 May, 11:30 AM
 
     // 1. Time se pehle aane par notification
     if (currentTime < startTime) {
@@ -966,7 +966,7 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         errorBox.style.display = 'block';
         errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
         errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل  صبح ٹھیک 09:55 بجے کھلے گا۔</span>';
+        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل  صبح ٹھیک 10:03 بجے کھلے گا۔</span>';
         return;
     }
 
@@ -1126,11 +1126,15 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
 
 
                     // 🚨 GLOBAL REAL-TIME AUTO-SUBMIT LOCK
-        if (new Date() >= new Date(2026, 4, 25, 09, 57, 0)) {
+        if (new Date() >= new Date(2026, 4, 25, 10, 05, 0)) {
             clearInterval(timerInterval);
             warningSound.pause();
             document.getElementById('screen-quiz').style.display = 'none';
             document.getElementById('screen-completion').style.display = 'block';
+                        // 📝 TIME OVER BEAUTIFUL NOTIFICATION
+            document.getElementById('completion-title').innerHTML = `<span style="color: var(--error); font-family: 'Amiri', serif;">⏳ وقت ختم ہو گیا ہے! (Time Over)</span>`;
+            document.getElementById('completion-message').innerHTML = `<span style="direction: rtl; text-align: center; display: block; font-family: 'Amiri', serif; font-size: 18px; line-height: 1.8;">مسابقہ کا مقررہ وقت (11:30 AM) ختم ہو چکا ہے۔ آپ نے اس وقت تک جتنے سوالات حل کیے تھے، وہ کامیابی کے ساتھ ڈیٹا بیس میں محفوظ کر لیے گئے ہیں۔</span>`;
+            
             sendDataToGoogleSheet("Time Out: Global Limit Reached");
             return;
         }
