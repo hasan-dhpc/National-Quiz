@@ -333,11 +333,11 @@
             <ul class="instructions-list">
                 <li>You will be evaluated on <b>50 random questions</b> drawn from a certified 100-question pool.</li>
                 <li>Each question has an individual countdown of <b>40 seconds</b>.</li>
-                <li><b>Single Attempt Lock:</b> Once started, re-entry from this or any other device is restricted.</li>
+                <li><b>Single Attempt Lock:</b> Once submitted, multiple attempts are strictly disallowed.</li>
                 <li><b>Integrity Shield:</b> Tab-switching, app switching, split-screen, or screenshot gestures will result in <b>instant disqualification</b>.</li>
                 <li>Total duration taken to complete the contest is monitored and logged.</li>
             </ul>
-            <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz </button>
+            <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz</button>
         </div>
 
         <!-- 3. ACTIVE QUIZ SCREEN -->
@@ -467,13 +467,8 @@
             return;
         }
 
-        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "tariq@gmail.com");
-
-        if (!isAdminEmail && localStorage.getItem("quiz_attempted_" + emailVal)) {
-            errorBox.style.display = 'block';
-            errorBox.innerHTML = `<b>Access Denied:</b> This account or device has already completed this quiz. Single-attempt rules are enforced.`;
-            return;
-        }
+        // 👑 Admin Emails with unrestricted testing access
+        const isAdminEmail = (emailVal === "hasan@gmail.com" || emailVal === "noor@gmail.com" || emailVal === "tariq@gmail.com");
 
         if (isAdminEmail) {
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
@@ -492,7 +487,7 @@
                 if (!resData.isRegistered) {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for this quiz contest. Contact organizers.`;
-                } else if (resData.exists) {
+                } else if (resData.hasSubmitted || resData.exists) {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Access Denied:</b> A submission has already been recorded for this candidate.`;
                 } else {
@@ -505,10 +500,8 @@
             .catch(err => {
                 console.error(err);
                 verifyBtn.disabled = false;
-                // Fallback allow on dispatcher error
-                verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-                document.getElementById('screen-login').style.display = 'none';
-                document.getElementById('screen-directions').style.display = 'block';
+                errorBox.style.display = 'block';
+                errorBox.innerText = "Connection error. Please try again.";
             });
     }
 
@@ -517,10 +510,6 @@
         if (!prepared) return;
 
         quizStartTimeStamp = Date.now(); // ⏱️ Capture exact starting timestamp
-
-        if (verifiedUser && verifiedUser.isAdmin !== true) {
-            localStorage.setItem("quiz_attempted_" + verifiedUser.email, "true");
-        }
 
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
@@ -736,7 +725,7 @@
                 • Expired / Timed Out: ${totalTimeouts}<br>
                 • <b>Time Taken:</b> ${timeTakenFormatted}<br>
                 • Audit Verification Token: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
-                <span style="font-size:13px; color: var(--text-muted);">*Final certified ranks will be compiled and published through official administrator registers.</span>
+                <span style="font-size:13px; color: var(--text-muted);">*Final certified ranks will be published through official administrator registers.</span>
             `;
 
             statusLabel.style.color = "var(--success)";
