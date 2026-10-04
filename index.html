@@ -335,9 +335,9 @@
                 <li>Each question has an individual countdown of <b>40 seconds</b>.</li>
                 <li><b>Single Attempt Lock:</b> Once started, re-entry from this or any other device is restricted.</li>
                 <li><b>Integrity Shield:</b> Tab-switching, app switching, split-screen, or screenshot gestures will result in <b>instant disqualification</b>.</li>
-                <li>Total duration taken to complete the examination is monitored and logged.</li>
+                <li>Total duration taken to complete the contest is monitored and logged.</li>
             </ul>
-            <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz Arena</button>
+            <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz </button>
         </div>
 
         <!-- 3. ACTIVE QUIZ SCREEN -->
@@ -471,7 +471,7 @@
 
         if (!isAdminEmail && localStorage.getItem("quiz_attempted_" + emailVal)) {
             errorBox.style.display = 'block';
-            errorBox.innerHTML = `<b>Access Denied:</b> This account or device has already completed this assessment. Single-attempt rules are enforced.`;
+            errorBox.innerHTML = `<b>Access Denied:</b> This account or device has already completed this quiz. Single-attempt rules are enforced.`;
             return;
         }
 
@@ -491,10 +491,10 @@
                 verifyBtn.disabled = false;
                 if (!resData.isRegistered) {
                     errorBox.style.display = 'block';
-                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for this examination. Contact administration.`;
+                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for this quiz contest. Contact organizers.`;
                 } else if (resData.exists) {
                     errorBox.style.display = 'block';
-                    errorBox.innerHTML = `<b>Access Denied:</b> An assessment submission has already been logged for this registered candidate.`;
+                    errorBox.innerHTML = `<b>Access Denied:</b> A submission has already been recorded for this candidate.`;
                 } else {
                     verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
                     errorBox.style.display = 'none';
