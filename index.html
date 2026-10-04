@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Islamic Quiz Arena</title>
+    <title>National Assessment Arena</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400..700&family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #6c5ce7;
@@ -17,10 +17,10 @@
             --text-muted: #9aa0a6;
             --accent: #fdcb6e;
             --error: #ea4335;
+            --success: #00b894;
             --border: rgba(255, 255, 255, 0.08);
         }
 
-        /* 🔒 ENHANCED ANTI-AI, ANTI-COPY & SCREENSHOT BLUR SHIELD */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -31,7 +31,6 @@
             -webkit-touch-callout: none;
         }
 
-        /* 🎬 SCREENSHOT BLACKOUT PARDA SCREEN */
         .screenshot-shield-active .container {
             filter: blur(40px) brightness(0.1) !important;
             pointer-events: none !important;
@@ -45,16 +44,14 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            position: relative;
-            overflow-x: hidden;
             font-family: 'Urbanist', sans-serif;
-            transition: filter 0.1s ease;
+            overflow-x: hidden;
         }
 
         .container {
             background: var(--surface);
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             border-radius: 20px;
             padding: 35px 30px;
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
@@ -70,28 +67,16 @@
             letter-spacing: -0.5px;
         }
 
-        .urdu-title {
-            font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
-            font-size: 24px;
-            line-height: 2.4;
-            text-align: center;
-            color: var(--accent);
-            margin-bottom: 25px;
-            text-shadow: 0 2px 10px rgba(253, 203, 110, 0.2);
-        }
-
-        .urdu-subtitle {
-            font-family: 'Amiri', serif;
+        .subtitle {
             color: var(--text-muted);
-            font-size: 19px;
+            font-size: 15px;
             text-align: center;
-            margin-bottom: 28px;
-            line-height: 1.8;
-            direction: rtl;
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
 
         .input-group {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         .input-group label {
@@ -111,7 +96,7 @@
             border: 2px solid var(--border);
             background: rgba(0, 0, 0, 0.2);
             color: white;
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             transition: all 0.2s ease;
             -webkit-user-select: text;
@@ -154,12 +139,12 @@
             background: rgba(234, 67, 53, 0.1);
             padding: 14px 18px;
             border-radius: 12px;
-            font-size: 14.5px;
+            font-size: 14px;
             text-align: center;
             margin-bottom: 20px;
             display: none;
             border: 1px solid rgba(234, 67, 53, 0.2);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .toast-notification {
@@ -169,19 +154,14 @@
             transform: translateX(-50%);
             background: var(--error);
             color: white;
-            padding: 14px 26px;
+            padding: 12px 24px;
             border-radius: 30px;
-            font-family: 'Amiri', serif;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             box-shadow: 0 8px 30px rgba(234, 67, 53, 0.4);
             z-index: 9999;
             transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            gap: 10px;
             white-space: nowrap;
-            direction: rtl;
         }
 
         .toast-notification.show {
@@ -189,33 +169,34 @@
         }
 
         .instructions-list {
-            text-align: right;
-            direction: rtl;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             background: rgba(255, 255, 255, 0.02);
             padding: 22px;
             border-radius: 14px;
             border: 1px solid var(--border);
+            list-style: none;
         }
 
         .instructions-list li {
-            margin-bottom: 16px;
-            font-family: 'Amiri', serif;
-            font-size: 19px;
+            margin-bottom: 14px;
+            font-size: 15px;
             color: #e8eaed;
-            line-height: 1.8;
-            list-style-type: none;
+            line-height: 1.6;
             position: relative;
-            padding-right: 24px;
+            padding-left: 24px;
+        }
+
+        .instructions-list li:last-child {
+            margin-bottom: 0;
         }
 
         .instructions-list li::before {
             content: "✦";
             color: var(--accent);
-            font-size: 16px;
+            font-size: 14px;
             position: absolute;
-            right: 0;
-            top: -2px;
+            left: 0;
+            top: 0;
         }
 
         .quiz-header {
@@ -230,7 +211,7 @@
             height: 6px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 3px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             overflow: hidden;
         }
 
@@ -265,37 +246,33 @@
         }
 
         .question-text {
-            font-family: 'Jameel Noori Nastaleeq Regular', 'Amiri', serif;
-            font-size: 20px;
-            line-height: 2.4;
-            font-weight: 450;
+            font-size: 18px;
+            line-height: 1.6;
+            font-weight: 600;
             margin-bottom: 25px;
             color: #f8f9fa;
-            text-align: right;
-            direction: rtl;
         }
 
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .option-btn {
             background: rgba(255, 255, 255, 0.03);
             border: 2px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 22px;
-            font-size: 18px;
+            border-radius: 12px;
+            padding: 16px 20px;
+            font-size: 15px;
             color: #e8eaed;
             cursor: pointer;
-            text-align: right;
+            text-align: left;
             transition: all 0.2s ease;
             outline: none;
-            font-family: 'Jameel Noori Nastaleeq Regular', 'Amiri', serif;
-            line-height: 2.2;
-            direction: rtl;
+            line-height: 1.5;
+            font-family: inherit;
         }
 
         .option-btn:hover {
@@ -310,17 +287,9 @@
             font-weight: 600;
         }
 
-        .success-icon {
-            font-size: 60px;
-            color: #00b894;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .disqualified-icon {
-            font-size: 60px;
-            color: var(--error);
-            margin-bottom: 20px;
+        .status-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
@@ -328,52 +297,53 @@
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 18px;
+            padding: 20px;
             margin: 20px 0;
             text-align: left;
             font-size: 15px;
-            line-height: 1.7;
+            line-height: 1.8;
         }
     </style>
 </head>
 <body>
 
-    <div id="premium-toast" class="toast-notification">⚠️ مہربانی کرے، آگے بڑھنے سے پہلے ایک آپشن منتخب کریں!</div>
+    <div id="premium-toast" class="toast-notification">⚠️ Please select an option before proceeding!</div>
 
     <div class="container">
+        <!-- 1. LOGIN SCREEN -->
         <div id="screen-login">
-            <div class="urdu-title">سنتِ ابراہیمی قومی علمی مسابقہ</div>
-            <div class="urdu-subtitle">اپنا رجسٹرڈ ای میل اور درست نام درج کریں۔</div>
+            <h2>National Assessment Arena</h2>
+            <p class="subtitle">Enter your registered credentials to proceed</p>
             <div class="error-box" id="login-error"></div>
             <div class="input-group">
                 <label>Full Name</label>
-                <input type="text" id="input-name" placeholder="E.g. Darul Huda">
+                <input type="text" id="input-name" placeholder="John Doe">
             </div>
             <div class="input-group">
-                <label>Gmail ID</label>
-                <input type="email" id="input-email" placeholder="E.g. darulhuda@gmail.com">
+                <label>Registered Email</label>
+                <input type="email" id="input-email" placeholder="john@example.com">
             </div>
-            <button class="btn" id="btn-verify" onclick="validateLogin()">Verify Data</button>
+            <button class="btn" id="btn-verify" onclick="validateLogin()">Verify & Proceed</button>
         </div>
 
-
-
-
-
-                <div id="screen-directions" style="display: none;">
-            <div class="urdu-title" style="font-size: 26px; margin-bottom: 25px;">ہدایات و ضوابط</div>
-            <div class="instructions-list">
-                <li>اس فقہی مسابقہ میں کل <b>پچاس (٥٠) سوالات</b> پوچھے جائیں گے۔</li>
-                <li>ہر شرعی سوال کا جواب دینے کے لیے آپ کو <b>٤٠ سیکنڈز</b> کا وقت دیا جائے گا۔</li>
-                <li><b>ممانعتِ نقل (Anti-Cheating):</b> اگر آپ نے کوئز کے دوران ٹیب بدلا، اسکرین شاٹ لیا، یا اسپلٹ اسکرین کھولی، تو آپ خود بخود خارج ہو جائیں گے۔</li>
-                <li><b>ملازمتِ واحد (Single Attempt):</b> ایک بار امتحان شروع ہونے کے بعد دوبارہ لاگ ان کرنے کی اجازت ہرگز نہیں ہوگی۔</li>
-            </div>
-            <button class="btn" onclick="startQuiz()">Start Quiz Arena</button>
+        <!-- 2. INSTRUCTIONS SCREEN -->
+        <div id="screen-directions" style="display: none;">
+            <h2>Rules & Guidelines</h2>
+            <p class="subtitle">Read carefully before entering the arena</p>
+            <ul class="instructions-list">
+                <li>You will be evaluated on <b>50 random questions</b> drawn from a certified 100-question pool.</li>
+                <li>Each question has an individual countdown of <b>40 seconds</b>.</li>
+                <li><b>Single Attempt Lock:</b> Once started, re-entry from this or any other device is restricted.</li>
+                <li><b>Integrity Shield:</b> Tab-switching, app switching, split-screen, or screenshot gestures will result in <b>instant disqualification</b>.</li>
+                <li>Total duration taken to complete the examination is monitored and logged.</li>
+            </ul>
+            <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz Arena</button>
         </div>
 
+        <!-- 3. ACTIVE QUIZ SCREEN -->
         <div id="screen-quiz" style="display: none;">
             <div class="quiz-header">
-                <span id="ques-counter" style="font-family: 'Amiri', serif; font-size: 16px; font-weight: 600; color: var(--text-muted);">سوال: ۱ / ۱۶</span>
+                <span id="ques-counter" style="font-size: 14px; font-weight: 600; color: var(--text-muted);">Question: 1 / 50</span>
                 <div class="timer" id="timer-badge">⏱️ <span id="time-left">40</span>s</div>
             </div>
             <div class="progress-container">
@@ -381,548 +351,65 @@
             </div>
             <div class="question-text" id="question-text">Loading question...</div>
             <div class="options-grid" id="options-container"></div>
-            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit Answer</button>
+            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit & Next</button>
         </div>
 
+        <!-- 4. COMPLETION / TERMINATION SCREEN -->
         <div id="screen-completion" style="display: none; text-align: center;">
-            <div id="status-icon" class="success-icon">🎉</div>
-            <h2 id="completion-title" style="font-family: 'Noto Nastaliq Urdu', 'Amiri', serif; font-size: 26px;">نشست ختم!</h2>
-            <p id="session-subtitle" style="color: var(--error); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: -5px; margin-bottom: 20px; display: none;">Session Terminated</p>
-            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 18px; font-family: 'Amiri', serif; margin-top: 15px; line-height: 1.8; direction: rtl;"></p>
-            <div id="summary-area" class="summary-card" style="font-family: 'Amiri', serif; font-size: 18px; line-height: 2; direction: rtl; text-align: right;"></div>
-            <p id="sheet-status" style="font-size: 15px; font-family: 'Amiri', serif; padding: 12px; border-radius: 8px; font-weight: 600; direction: rtl;"></p>
+            <div id="status-icon" class="status-icon">🎉</div>
+            <h2 id="completion-title">Session Completed</h2>
+            <p id="session-subtitle" style="color: var(--error); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: -5px; margin-bottom: 15px; display: none;">Session Terminated</p>
+            <p id="thank-you-msg" style="color: var(--text-muted); font-size: 15px; margin-top: 10px; line-height: 1.6;"></p>
+            <div id="summary-area" class="summary-card"></div>
+            <p id="sheet-status" style="font-size: 14px; padding: 12px; border-radius: 8px; font-weight: 600;"></p>
         </div>
     </div>
 
 <script>
-    // 🔗 LIVE BRAND NEW DISPATCHER ENDPOINT (CORS BLOCK FREE)
+    // 🔗 API ENDPOINTS
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmjsNpJjhu8CAsCoGMUSVE9JpJpSVbhEJZIqP5M4QvMvx0Y3Qe0tpSn-TQmnCdI42zYQ/exec";
-const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9kCPu-5U5bmsjctJRGQOrEXIMxQnOyjyMs7kHAoern6Mnjggda6BWAT0K5c/exec";
+    const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9kCPu-5U5bmsjctJRGQOrEXIMxQnOyjyMs7kHAoern6Mnjggda6BWAT0K5c/exec";
+
     const warningSound = new Audio("race.mp3"); 
     const buzzerSound = new Audio("https://assets.mixkit.co/active_storage/sfx/911/911-84.wav"); 
     warningSound.volume = 0.6;
     buzzerSound.volume = 0.6;
 
-    
+    // CONFIGURATION
+    const QUIZ_SIZE = 50;
+    const SECONDS_PER_QUESTION = 40;
 
-        const originalQuestions = [
-        {
-            question: " اگر قربانی کرتے وقت جانور کے اچھلنے کودنے کی وجہ سے اس میں کوئی ایسا عیب پیدا ہو جائے جس سے عام طور پر قربانی ناجائز ہوتی ہے، یا وہ اچھل کر بھاگ جائے اور اسے فوراً پکڑ کر لا کر ذبح کر دیا جائے، تو ایسی صورت میں قربانی کا کیا حکم ہے؟",
-            options: [
-                "قربانی صرف اس صورت میں ہوگی اگر جانور بھاگا نہ ہو، بھاگنے کی صورت میں قربانی باطل ہو جائے گی۔",
-                "قربانی تو ہو جائے گی لیکن جانور کی قیمت کا کچھ حصہ صدقہ کرنا لازم ہوگا۔",
-                "قربانی درست ہو جائے گی اور یہ عیب قربانی کے لیے مضر نہیں ہے۔",
-                "قربانی نہیں ہوگی اور نیا جانور خریدنا پڑے گا۔"
-            ],
-            correctAnswer: "قربانی درست ہو جائے گی اور یہ عیب قربانی کے لیے مضر نہیں ہے۔"
-        },
-        {
-            question: "  اگر ایک فقیر (نادار شخص) نے ایسا جانور خریدا جس میں خریداری کے وقت ہی ایسا عیب موجود تھا جس سے قربانی ناجائز ہوتی ہے، اور وہ عیب قربانی کے وقت تک باقی رہا، تو اس کے لیے کیا حکم ہے؟",
-            options: [
-                "اس کے لیے اسی جانور کی قربانی کرنا جائز ہے۔",
-                "اس کی قربانی مکروہِ تحریمی ہوگی اور اسے صدقہ کرنا پڑے گا۔",
-                "اس کے لیے اس جانور کی قربانی کرنا بالکل ناجائز ہے۔",
-                "اس پر لازم ہے کہ وہ اس جانور کو بیچ کر دوسرا تندرست جانور خریدے۔"
-            ],
-            correctAnswer: "اس کے لیے اسی جانور کی قربانی کرنا جائز ہے۔"
-        },
-        {
-            question: "  اگر قربانی منت (نذر) کی ہو، تو اس کے گوشت کے استعمال کا کیا شرعی حکم ہے؟",
-            options: [
-                "قربانی کرنے والا اس کا گوشت نہ خود کھا سکتا ہے اور نہ ہی کسی مالدار (غنی) کو کھلا سکتا ہے، بلکہ پورے گوشت کو صدقہ کرنا واجب ہے۔",
-                "اس کا گوشت مالداروں (اغنیا) کو کھلایا جا سکتا ہے لیکن غریبوں کو دینا منع ہے۔",
-                "منت کی قربانی کا گوشت عام قربانی کی طرح تہائی حصوں میں تقسیم کر کے خود بھی کھایا جا سکتا ہے۔",
-                "اگر منت ماننے والا فقیر (غریب) ہو تو وہ خود کھا سکتا ہے، لیکن اگر غنی ہو تو نہیں کھا سکتا۔"
-            ],
-            correctAnswer: "قربانی کرنے والا اس کا گوشت نہ خود کھا سکتا ہے اور نہ ہی کسی مالدار (غنی) کو کھلا سکتا ہے، بلکہ پورے گوشت کو صدقہ کرنا واجب ہے۔"
-        },
-        {
-            question: "  جب جانور شرعی طور پر ذبح ہو جائے تو اس کے بعد اس کے بال کاٹنے یا تھن سے دودھ نکالنے کا کیا حکم ہے؟",
-            options: [
-                "بال اور دودھ کو صرف صدقہ کرنا ضروری ہے، ذاتی استعمال میں نہیں لایا جا سکتا۔",
-                "ذبح کے بعد بال کاٹنا یا دودھ نکالنا مکروہ ہے اور اس سے پرہیز کرنا چاہیے۔",
-                "جانور ذبح ہونے کے بعد اس کا کوئی بھی حصہ جیسے بال یا دودھ استعمال کرنا حرام ہو جاتا ہے۔",
-                "مالک اسے اپنے استعمال اور تصرف میں لا سکتا ہے کیونکہ مقصد پورا ہو چکا ہے اور وہ اب اس کی ملکیت ہے۔"
-            ],
-            correctAnswer: "مالک اسے اپنے استعمال اور تصرف میں لا سکتا ہے کیونکہ مقصد پورا ہو چکا ہے اور وہ اب اس کی ملکیت ہے۔"
-        },
-        {
-            question: "  کیا عید کی قربانی کے بڑے جانور میں، دمِ احصار، یا تمتع و قران کے دم کی نیت سے شرکت کی جا سکتی ہے؟",
-            options: [
-                "جی ہاں، ان سب کے ساتھ شرکت جائز ہے کیونکہ یہ سب بھی تقرب (اللہ کے قرب) ہی کی مختلف صورتیں ہیں۔",
-                "صرف عقیقے کی شرکت جائز ہے، حج کے کسی بھی دم کی شرکت جائز نہیں ہے۔",
-                "شرکت تو جائز ہے مگر اس صورت میں قربانی کرنے والے کا ثواب آدھا ہو جاتا ہے۔",
-                "جی نہیں، عید کی قربانی کے جانور میں حج کے دم یا عقیقے کی نیت کرنا بالکل ناجائز ہے۔"
-            ],
-            correctAnswer: "جی ہاں، ان سب کے ساتھ شرکت جائز ہے کیونکہ یہ سب भी تقرب (اللہ کے قرب) ہی کی مختلف صورتیں ہیں۔"
-        },
-        {
-            question: "  شرعی احکام کے مطابق، کتابی (اہلِ کتاب جیسے یہودی یا عیسائی) سے قربانی کا جانور ذبح کرانے کا کیا حکم ہے؟",
-            options: [
-                "کتابی سے قربانی کا جانور ذبح کرانا مکروہ ہے۔",
-                "کتابی سے قربانی کرانا بالکل حرام اور ناجائز ہے۔",
-                "کتابی سے قربانی کرانا مستحب اور پسندیدہ عمل ہے۔",
-                "کتابی سے قربانی کرانے پر کوئی کراہت نہیں ہے، یہ عام مسلمان کی طرح جائز ہے۔"
-            ],
-            correctAnswer: "کتابی سے قربانی کا جانور ذبح کرانا مکروہ ہے۔"
-        },
-        {
-            question: "  اگر ایک شخص نے دوسرے کو بکری ہبہ (تحفہ) کی، اور موہوب لہ (جسے تحفہ ملا) نے اس کی قربانی کر دی، تو اس قربانی کا اور ہبہ واپس لینے کا کیا شرعی حکم ہوگا؟",
-            options: [
-                "قربانی درست نہیں ہوگی کیونکہ واہب اپنا ہبہ واپس لینا چاہتا ہے، اس لیے بکری زندہ واپس کرنی ہوگی۔",
-                "موہوب لہ کی قربانی بالکل صحیح ہے، واہب (تحفہ دینے والا) اپنا ہبہ واپس لینا چاہے تو واپس لے سکتا ہے۔",
-                "قربانی تو صحیح ہو جائے گی لیکن موہوب لہ پر لازم ہوگا کہ وہ واہب کو نئی بکری خرید کر دے۔",
-                "قربانی صحیح ہو جائے گی مگر موہوب لہ کو بکری کی پوری قیمت صدقہ کرنی پڑے گی۔"
-            ],
-            correctAnswer: "موہوب لہ کی قربانی بالکل صحیح ہے، واہب (تحفہ دینے والا) اپنا ہبہ واپس لینا چاہے تو واپس لے سکتا ہے۔"
-        },
-        {
-            question: "  اگر کسی شخص نے بیعِ فاسد کے ذریعے بکری خریدی، اس پر قبضہ کر لیا اور پھر اس کی قربانی کر دی، تو اس قربانی کا کیا حکم ہوگا اور بائع (بیچنے والے) کے مختلف فیصلوں پر کیا لازم آئے گا؟",
-            options: [
-                "قربانی سرے سے ہوگی ہی نہیں کیونکہ بیعِ فاسد سے ملکیت حاصل نہیں ہوتی، اور بکری ہر حال میں زندہ واپس کرنی ہوگی۔",
-                "قربانی ہو جائے گی لیکن بائع چاہے جو بھی فیصلہ کرے، مشتری کو ہر حال میں پوری بکری کی قیمت صدقہ کرنی پڑے گی۔",
-                "قربانی ہو جائے گی؛ اگر بائع زندہ بکری کی واجبی قیمت لے لے تو مشتری کے ذمہ کچھ واجب نہیں، اور اگر بائع ذبح شدہ بکری واپس لے لے تو قربانی کرنے والے پر اس کی قیمت صدقہ کرنا لازم ہوگا۔",
-                "قربانی فاسد ہو جائے گی اور مشتری پر لازم ہوگا کہ وہ بائع کو نئی زندہ بکری خرید کر دے۔"
-            ],
-            correctAnswer: "قربانی ہو جائے گی؛ اگر بائع زندہ بکری کی واجبی قیمت لے لے تو مشتری کے ذمہ کچھ واجب نہیں، اور اگر بائع ذبح شدہ بکری واپس لے لے تو قربانی کرنے والے پر اس کی قیمت صدقہ کرنا لازم ہوگا۔"
-        },
-        {
-            question: "  اگر ایک صاحبِ نصاب (مالدار) شخص قربانی کی منت مانتا ہے، تو شرعی طور پر اس کے ذمہ کل کتنی قربانیاں واجب ہوں گی؟",
-            options: [
-                "صرف ایک قربانی واجب ہوگی جو اس نے منت مانی ہے۔",
-                "کوئی بھی قربانی واجب نہیں ہوگی، دونوں نفل بن جائیں گی۔",
-                "دو قربانیاں واجب ہوں گی (ایک مالدار ہونے کی وجہ سے اور دوسری منت کی وجہ سے)۔",
-                "صرف ایک قربانی واجب ہوگی جو مالدار ہونے کی وجہ سے ہے۔"
-            ],
-            correctAnswer: "دو قربانیاں واجب ہوں گی (ایک مالدار ہونے کی وجہ سے اور دوسری منت کی وجہ سے)۔"
-        },
-        {
-            question: "  کیا قربانی کا گوشت، چمڑا یا کوئی اور چیز قصاب (ذبح کرنے والے) کو اس کی مزدوری یا اجرت میں دی جا سکتی ہے؟",
-            options: [
-                "جی ہاں، قصاب کی رضامندی ہو تو کچھ بھی اجرت میں دینا جائز ہے۔",
-                "جی ہاں، اگر قصاب غریب ہو تو اسے اجرت میں گوشت دیا جا سکتا ہے۔",
-                "جی نہیں، قربانی کی کوئی بھی چیز قصاب کو اجرت میں دینا جائز نہیں ہے کیونکہ یہ بیچنے کے معنی میں آتا ہے۔",
-                "جی ہاں، قصاب کو اجرت کے طور پر صرف چمڑا دیا جا سکتا ہے۔"
-            ],
-            correctAnswer: "جی نہیں، قربانی کی کوئی بھی چیز قصاب کو اجرت میں دینا جائز نہیں ہے کیونکہ یہ بیچنے کے معنی میں آتا ہے۔"
-        },
-        {
-            question: "  فراہم کردہ عبارت کی روشنی میں، اگر بعض فقہی کتابوں میں یہ لکھا ہو کہ 'عقیقہ سنت نہیں ہے'، تو اس کا فقہی مفہوم کیا لیا جائے گا؟",
-            options: [
-                "اس کا مطلب یہ ہے کہ حنفیہ کے نزدیک عقیقہ کرنا واجب ہے۔",
-                "اس سے مراد یہ ہے کہ عقیقہ سنتِ مؤکدہ نہیں ہے۔",
-                "عقیقہ کرنا شرعی طور پر ممنوع اور ناجائز قرار دیا گیا ہے۔",
-                "عقیقہ ایک بدعت ہے جس سے پرہیز کرنا ضروری ہے۔"
-            ],
-            correctAnswer: "اس سے مراد یہ ہے کہ عقیقہ سنتِ مؤکدہ نہیں ہے۔"
-        },
-        {
-            question: "  احناف کے نزدیک عقیقہ کرنے کا شرعی حکم اور درجہ کیا ہے؟",
-            options: [
-                "یہ مباح اور مستحب عمل ہے، یعنی کرنے پر ثواب ہے اور نہ کرنے پر کوئی گناہ نہیں۔",
-                "یہ شرعی طور پر فرضِ کفایہ کا درجہ رکھتا ہے۔",
-                "یہ محض ایک عربی رسم ہے جس کا شریعت سے کوئی تعلق نہیں ہے۔",
-                "یہ ایک ایسی سنت ہے جس کا تارک گناہگار ہوگا (سنتِ مؤکدہ)۔"
-            ],
-            correctAnswer: "یہ مباح اور مستحب عمل ہے، یعنی کرنے پر ثواب ہے اور نہ کرنے پر کوئی گناہ نہیں۔"
-        },
-        {
-            question: "  اگر ایک شخص پوری گائے کی قربانی کرتا ہے، تو اس قربانی کا شرعی حکم کیا ہوگا؟",
-            options: [
-                "پوری گائے نفل شمار ہوگی اور واجب الگ سے ادا کرنا ہوگا۔",
-                "صرف ساتواں حصہ واجب ادا ہوگا اور باقی چھ حصے نفل شمار ہوں گے۔",
-                "پوری گائے سے واجب ہی ادا ہوگا، یہ نہیں کہ ساتواں حصہ واجب ہو اور باقی نفل۔",
-                "آدھی گائے واجب اور آدھی نفل شمار ہوگی۔"
-            ],
-            correctAnswer: "پوری گائے سے واجب ہی ادا ہوگا، یہ نہیں کہ ساتواں حصہ واجب ہو اور باقی نفل۔"
-        },
-        {
-            question: "  قربانی کے مسائل کے بارے میں درج ذیل میں سے کون سا مجموعہ صحیح ہے؟\n[A]. قربانی کا جانور مر گیا تو غنی پر لازم ہے کہ دوسرے جانور کی قربانی کرے۔\n[B]. قربانی کا جانور مر گیا تو فقیر کے ذمہ دوسرے جانور کی قربانی واجب نہیں ہے۔\n[C]. قربانی کا جانور گم ہو گیا اور اس کی جگہ دوسرا جانور خرید لیا، پھر پہلا مل گیا تو غنی کو اختیار نہیں ہوگا کہ دونوں میں سے کسی ایک کی قربانی کرے۔\n[D]. مگر فقیر کو اختیار ہوگا کہ دونوں میں سے کسی کی بھی قربانی کرے۔",
-            options: [
-                "A اور B",
-                "B اور C",
-                "C اور D",
-                "A اور C"
-            ],
-            correctAnswer: "A اور B"
-        },
-        {
-            question: "  قربانی واجب ہوگی اگر:\n[A]. فقیر نے قربانی کی نیت سے جانور خریدا ۔\n[B]. خریدنے کے وقت قربانی کی نیت نہ تھی، بعد میں نیت کر لی۔\n[C]. حج کرنے والا جو مسافر ہو اس پر قربانی واجب ہے۔\n[D]. قربانی کے لیے جو وقت مقرر ہے، اس کے آخری حصے میں شرائط پائی جائیں۔",
-            options: [
-                "A اور B",
-                "B اور C",
-                "C اور D",
-                "D اور A"
-            ],
-            correctAnswer: "D اور A"
-        },
-        {
-            question: "  کیا غیر صاحبِ نصاب کی اپنے پالتو بکرے پر قربانی کی نیت سے قربانی واجب ہوگی اور کیا وہ اسے بیچ سکتا ہے؟",
-            options: [
-                "قربانی لازم ہوگی اور بیچنا گناہ ہے۔",
-                "قربانی لازم نہیں ہوگی اور بیچنا جائز ہے۔",
-                "قیمت کا صدقہ واجب ہوگا مگر بیچنا جائز ہے۔",
-                "بکرا وقف ہو جائے گا اور بیچنا ناجائز ہے۔"
-            ],
-            correctAnswer: "قربانی لازم نہیں ہوگی اور بیچنا جائز ہے۔"
-        },
-        {
-            question: "  بدائع الصنائع کے مطابق، خریدے ہوئے جانور پر بعد میں کی گئی نیت کا کیا حکم ہے؟",
-            options: [
-                "یہ نیت صرف غنی کے لیے معتبر ہے۔",
-                "خریداری کے وقت نیت نہ ہونے کی وجہ سے اس کا کوئی اعتبار نہیں ہے۔",
-                "یہ نیت جانور کو نذرِ معین بنا دیتی ہے۔",
-                "اس سے پانچ سال کی قربانی قضا کرنا واجب ہو جاتی ہے۔"
-            ],
-            correctAnswer: "خریداری کے وقت نیت نہ ہونے کی وجہ سے اس کا کوئی اعتبار نہیں ہے۔"
-        },
-        {
-            question: "  بیل کی دیکھ بھال کے بدلے اسی بیل میں قربانی کا حصہ دینا کیسا ہے؟",
-            options: [
-                "باہمی رضامندی کی وجہ سے جائز ہے۔",
-                "’قفیزِ طحان‘ کی ممانعت کی وجہ سے ناجائز ہے۔",
-                "اگر بیل کا وزن زیادہ ہو تو جائز ہے۔",
-                "جائز ہے مگر سارا گوشت صدقہ کرنا ہوگا۔"
-            ],
-            correctAnswer: "’قفیزِ طحان‘ کی ممانعت کی وجہ سے ناجائز ہے۔"
-        },
-        {
-            question: "  کیا ’مقابلہ‘ کی قربانی درست ہے؟",
-            options: [
-                "نہیں، صحیح نہیں ہے۔",
-                "جائز ہے، مگر نہ کرنا مستحب ہے۔",
-                "صحیح ہے، کوئی دقت نہیں۔",
-                "دوسرے جانور کی قربانی کرنی ہوگی۔"
-            ],
-            correctAnswer: "جائز ہے، مگر نہ کرنا مستحب ہے۔"
-        },
-        {
-            question: "  قربانی کے جانور مثلاً بیل کی دیکھ بھال کرنے والے کو اسی بیل سے حصہ دینے کی جائز صورت کیا ہے؟",
-            options: [
-                "شروع سے ہی آدھا بیل اجرت طے کرنا۔",
-                "پہلے نقد اجرت طے کرنا، پھر بعد میں اسی رقم سے حصہ خریدنا۔",
-                "اسے بیل کا مالک بنا کر خود اس کا ملازم بن جانا۔",
-                "اس کی کوئی بھی صورتِ جواز ممکن نہیں۔"
-            ],
-            correctAnswer: "پہلے نقد اجرت طے کرنا، پھر بعد میں اسی رقم سے حصہ خریدنا۔"
-        },
-        {
-            question: "  پیدائشی طور پر بغیر سینگ والے جانور کو کیا کہتے ہیں؟",
-            options: [
-                "جماء۔",
-                "عظماء۔",
-                "مدابرہ۔",
-                "شرقاء۔"
-            ],
-            correctAnswer: "جماء۔"
-        },
-        {
-            question: "  اگر بیل، بھینس کا ایک تھن خشک ہو جائے اور باقی تین تھن ٹھیک ہوں، تو قربانی کا کیا حکم ہے؟",
-            options: [
-                "باطل ہے۔",
-                "شرعاً جائز ہے۔",
-                "صرح تب جائز ہے جب وہ حاملہ نہ ہو۔",
-                "ناجائز ہے، چاروں تھنوں کا سلامت ہونا ضروری ہے۔"
-            ],
-            correctAnswer: "شرعاً جائز ہے۔"
-        },
-        {
-            question: "  اگر کسی جانور کا پیدائشی طور پر ایک خصیہ نہ ہو تو قربانی کا کیا حکم ہے؟",
-            options: [
-                "جائز ہے، کیونکہ اس سے قیمت کم نہیں ہوتی۔",
-                "ناجائز ہے کیونکہ عضو کم ہے۔",
-                "جائز ہے مگر سارا گوشت صدقہ کرنا واجب ہے۔",
-                "ناجائز ہے ، کیونکہ پیدائشی عیب ہے ۔"
-            ],
-            correctAnswer: "جائز ہے، کیونکہ اس سے قیمت کم نہیں ہوتی۔"
-        },
-        {
-            question: "  اگر سینگ جڑ سے ٹوٹنے کے بعد زخم بالکل ٹھیک ہو جائے، تو قربانی کا کیا حکم ہے؟",
-            options: [
-                "اب بھی ناجائز رہے گی۔",
-                "اب بالکل جائز ہے، کیونکہ مانع ختم ہو گیا۔",
-                "صرف نفل قربانی ہو سکتی ہے۔",
-                "جانور بیچ کر قیمت صدقہ کرنا واجب ہے۔"
-            ],
-            correctAnswer: "اب بالکل جائز ہے، کیونکہ مانع ختم ہو گیا۔"
-        },
-        {
-            question: "  کان، دم یا چکی کا کتنا حصہ کٹا ہو تو قربانی ناجائز ہو جاتی ہے؟",
-            options: [
-                "چوتھائی (1/4) حصہ۔",
-                "تہائی (1/3) سے زیادہ حصہ۔",
-                "معمولی سا حصہ کٹنے پر بھی۔",
-                "تہائی سے کم کٹا ہو۔"
-            ],
-            correctAnswer: "تہائی (1/3) سے زیادہ حصہ۔"
-        },
-        {
-            question: "  اگر جانور کے کچھ دانت ٹوٹ گئے لیکن وہ چارہ خود کھا سکتا ہو، تو قربانی کا کیا حکم ہے? ",
-            options: [
-                "دانت ٹوٹنے کی وجہ سے ناجائز ہے۔",
-                "چارہ چرنے پر قادر ہونے کی وجہ سے جائز ہے۔",
-                "صرف گاؤں میں ذبح کرنا جائز ہے۔",
-                "عیب ہونے کی وجہ سے بالکل ناجائز ہے۔"
-            ],
-            correctAnswer: "چارہ چرنے پر قادر ہونے کی وجہ سے جائز ہے۔"
-        },
-        {
-            question: "  فقہاء کے نزدیک ’مجبوب‘ سے کیا مراد ہے؟",
-            options: [
-                "جسکے دانت ٹوٹے ہوں",
-                "جس کے خصیے اور آلہ تناسل کٹے ہوں",
-                "اندھا ہوں۔",
-                "دونوں پاؤں کٹے ہوں۔"
-            ],
-            correctAnswer: "جس کے خصیے اور آلہ تناسل کٹے ہوں"
-        },
-        {
-            question: "  خصی جانور کی قربانی کرنا غیر خصی کے مقابلے میں کیسا ہے؟",
-            options: [
-                "غیر خصی کی قربانی افضل ہے۔",
-                "خصی جانور کی قربانی ناجائز ہے۔",
-                "خصی جانور کی قربانی افضل اور زیادہ ثواب کا باعث ہے۔",
-                "غنی کے لیے مکروہ اور فقیر کے لیے افضل ہے۔"
-            ],
-            correctAnswer: "خصی جانور کی قربانی افضل اور زیادہ ثواب کا باعث ہے۔"
-        },
-        {
-            question: "  درج ذیل میں سے کون سا قول صحیح ہے؟",
-            options: [
-                "بھیڑ یا دنبہ کی اون کاٹ لی گئی ہو تو اس کی قربانی جائز ہے۔",
-                "جس جانور کا ایک پاؤں کٹا ہوا ہو اس کی قربانی بھی جائز ہے۔",
-                "بھینس کی قربانی جائز۔۔",
-                "بکری کی قربانی جائز نہیں۔"
-            ],
-            correctAnswer: "بھیڑ یا دنبہ کی اون کاٹ لی گئی ہو تو اس کی قربانی جائز ہے۔"
-        },
-        {
-            question: " درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A]. اگر شہر میں متعدد جگہ عید کی نماز ہو تو پہلی جگہ نماز ہو جانے کے بعد قربانی جائز ہے۔\n[B]. دیہات میں طلوعِ فجر کے بعد قربانی ہو سکتی ہے۔\n[C]. ایامِ نحر میں قربانی کرنا اتنی قیمت کے صدقہ کرنے سے افضل نہیں ہے۔\n[D]. کسی مسجد میں نماز ہو گئی اور عیدگاہ میں نہ ہوئی ہو تو قربانی نہیں ہو سکتی۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A، B اور D"
-            ],
-            correctAnswer: "صرف A اور B"
-        },
-        {
-            question: "  قربانی کا وقت کب سے کب تک ہے؟",
-            options: [
-                "قربانی کا وقت دسویں ذوالحجہ کی طلوعِ صبحِ صادق سے بارہویں کے غروبِ آفتاب تک ہے۔",
-                "قربانی کا وقت دسویں ذوالحجہ کے طلوعِ آفتاب سے بارہویں کے غروبِ آفتاب تک ہے۔",
-                "قربانی کا وقت دسویں ذوالحجہ کے طلوعِ صبحِ صادق سے تیرہویں کے غروبِ آفتاب تک ہے۔",
-                "قربانی کا وقت دسویں ذو الحجہ کے طلوع صبح صادق سے بارہویں کی نمازِ عصر تک ہے۔"
-            ],
-            correctAnswer: "قربانی کا وقت دسویں ذوالحجہ کی طلوعِ صبحِ صادق سے بارہویں کے غروبِ آفتاب تک ہے۔"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] سات اشخاص نے پانچ گایوں کی قربانی کی، یہ جائز ہے۔\n[B] آٹھ اشخاص نے پانچ یا چھ گایوں میں برابر حصوں کے ساتھ شرکت کی، یہ ناجائز ہے۔\n[C] سات بکریوں میں سات اشخاص نے اس طرح شرکت کی کہ ہر ایک کا ہر بکری میں ساتواں حصہ ہو، تو اس سے استحساناً قربانی نہیں ہوگی۔\n[D] دو اشخاص نے دو بکریوں میں شرکت کرکے قربانی کی، تو بطورِ استحسان ہر ایک کی قربانی نہیں ہوگی۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "A اور D",
-                "C اور D"
-            ],
-            correctAnswer: "صرف A اور B"
-        },
-        {
-            question: "  اگر شوہر نے بیوی کی اجازت کے بغیر اس کی طرف سے قربانی کر دی تو اس قربانی کا کیا حکم ہوگا؟",
-            options: [
-                "واجب ادا نہ ہوا۔",
-                "واجب ادا ہو گیا۔",
-                "ایسا کرنا مستحب ہے۔",
-                "اجازت پر موقوف ہو گا۔"
-            ],
-            correctAnswer: "واجب ادا نہ ہوا۔"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] اندھے جانور کی قربانی جائز نہیں۔\n[B] کانا جانور جس کا کاناپن ظاہر ہو، اس کی قربانی جائز ہے۔\n[C] اتنا لاغر جانور جس کی ہڈیوں میں مغز نہ ہو، اس کی قربانی جائز ہے۔\n[D] اگر کسی جانور کا کان یا دُم تہائی سے کم کٹا ہو تو اس کی قربانی جائز ہے۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A اور D"
-            ],
-            correctAnswer: "A اور D"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] قربانی کے جانور کو عیب سے خالی ہونا چاہیے، اور اگر تھوڑا سا عیب ہو تو قربانی ہو جائے گی مگر مکروہ ہوگی۔\n[B] اگر زیادہ عیب ہو تو بھی قربانی ہو جائے گی۔\n[C] مجبوب جانور کی قربانی جائز نہیں۔\nD. خارشی جانور کی قربانی جائز ہے جبکہ وہ فربہ ہو۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A اور D"
-            ],
-            correctAnswer: "A اور D"
-        },
-        {
-            
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] فقیر نے جس وقت جانور خریدا تھا اسی وقت اس میں ایسا عیب تھا جس سے قربانی ناجائز ہوتی ہے، اور وہ عیب قربانی کے وقت تک باقی رہا، تو وہ اس کی قربانی کر سکتا ہے۔\n[B] غنی عیب دار جانور خریدے اور اسی عیب دار کی قربانی کرے تو ناجائز ہے۔\n[C] مسافر پر قربانی واجب نہیں، اگر مسافر نے قربانی کی تو یہ تطوع ہے۔\n[D] فقیر نے نہ منت مانی ہو اور نہ قربانی کی نیت سے جانور خریدا ہو، تو اس کا قربانی کرنا بھی تطوع ہے۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A، B، C اور D"
-            ],
-            correctAnswer: "A، B، C اور D"
-        },
-        {
-            question: "  قربانی واجب ہونے کے شرائط میں سے کون کون سے ہیں؟\n[A] ولی ہونا\n[B] مالکِ نصاب ہونا\n[C] مرد ہونا\n[D] حریت یعنی آزاد ہونا",
-            options: [
-                "A اور B",
-                "B اور C",
-                "C اور D",
-                "B اور D"
-            ],
-            correctAnswer: "B اور D"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] عورت کا مہر شوہر کے ذمہ باقی ہے اور شوہر مالدار ہے، تو اس مہر کی وجہ سے عورت کو مالکِ نصاب نہیں مانا جائے گا۔\n[B] ایک شخص کے پاس دو سو درہم تھے، سال پورا ہونے پر ان میں سے پانچ درہم زکوٰۃ میں دے دیے، ایک سو پچانوے باقی رہے۔ پھر قربانی کے دن آئے تو اس پر قربانی واجب نہیں ہے۔\n[C] ایک شخص پر دین ہے اور اس کے اموال میں سے دین کی مقدار نکالنے کے بعد نصاب باقی نہیں رہتا، تو اس پر قربانی واجب ہے۔\n[D] جو شخص دو سو درہم یا بیس دینار کا مالک ہو، اس پر قربانی واجب ہے۔",
-            options: [
-                "A اور B",
-                "B اور C",
-                "C اور D",
-                "A اور D"
-            ],
-            correctAnswer: "A اور D"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] کسی کے پاس دو سو درہم کی قیمت کا قرآنِ شریف ہے اور وہ دیکھ کر تلاوت کر سکتا ہے، تو اس پر قربانی واجب نہیں۔\n[B] ایک مکان جاڑے کے لیے اور ایک مکان گرمی کے لیے ہونا حاجتِ اصلیہ میں داخل ہے۔\n[C] غازی کے لیے دو گھوڑے حاجتِ اصلیہ میں داخل ہیں۔\n[D] زمین دار کے پاس دو گھوڑے حاجتِ اصلیہ میں داخل ہیں۔",
-            options: [
-                "A اور B",
-                "B اور C",
-                "A، B اور C",
-                "C اور D"
-            ],
-            correctAnswer: "A، B اور C"
-        },
-        {
-            question: "  درج ذیل میں سے کون سا قول صحیح ہے؟\n[A] مالکِ نصاب نے قربانی کے ایام میں قربانی نہیں کی تو قربانی ساقط ہو گئی۔\n[B] مالکِ نصاب بغیر قربانی کیے انہی دنوں میں مر گیا تو اس کی قربانی ساقط ہو گئی۔\n[C] قربانی کے دنوں میں قربانی نہ کرکے صدقہ دینا قربانی کے قائم مقام ہو سکتا ہے۔\n[D] قربانی میں نیابت جائز نہیں ہے۔",
-            options: [
-                "صرف A",
-                "صرف B",
-                "صرف C",
-                "صرف D"
-            ],
-            correctAnswer: "صرف B"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] رات میں قربانی کرنا مکروہ ہے۔\n[B] دسویں ذوالحجہ کو قربانی کرنا افضل ہے۔\n[C] قربانی کا وقت دسویں ذوالحجہ کی صبحِ صادق سے بارہویں کے غروبِ آفتاب تک ہے۔\n[D] گیارہ سے تیرہ ذوالحجہ تک کے تین دنوں کو ایامِ تشریق کہتے ہیں۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A، B، C اور D"
-            ],
-            correctAnswer: "A، B، C اور D"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] قربانی کی قضا ہو سکتی ہے۔\n[B] قربانی کی منت مانی اور یہ معین نہیں کیا کہ گائے کی قربانی کرے گا یا بکری کی، تو منت صحیح ہے۔\n[C] کسی کو وکیل کیا کہ میری طرف سے قربانی کر دینا، اور گائے یا بکری کا تعیین نہ کیا اور قیمت بھی بیان نہیں کی، تو یہ توکیل صحیح نہیں۔\n[D] امام نے نماز پڑھا دی، اس کے بعد قربانی ہوئی، پھر معلوم ہوا کہ امام نے بغیر وضو نماز پڑھائی تھی، تو نماز اور قربانی دونوں کا اعادہ کیا جائے۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "صرف C اور D",
-                "A، B اور D"
-            ],
-            correctAnswer: "صرف B اور C"
-        },
-        {
-            question: "  درج ذیل میں سے کون سے اقوال صحیح ہیں؟\n[A] دیہات میں بہتر یہ ہے کہ بعدِ طلوعِ آفتاب قربانی کی جائے۔\n[B] شہر میں خطبہ سے پہلے قربانی کرنا مکروہ ہے۔\n[C] منیٰ میں قربانی کرنے کا حکم وہی ہے جو دیہات کا ہے۔\n[D] امام قعدہ میں ہو اور بقدرِ تشہد بیٹھ چکا ہو مگر ابھی سلام نہ پھیرا ہو تو قربانی ہو جائے گی۔",
-            options: [
-                "صرف A اور B",
-                "صرف B اور C",
-                "A، B اور C",
-                "C اور D"
-            ],
-            correctAnswer: "صرف B اور C"
-        },
-        {
-            question: "  اگر کسی شخص پر بیوی کا مہرِ مؤجل باقی ہو، تو کیا یہ مہر شوہر پر قربانی واجب ہونے سے مانع بنے گا؟",
-            options: [
-                "جی ہاں، مہر کی وجہ سے شوہر پر قربانی واجب نہیں ہوگی جب تک وہ اسے ادا نہ کر دے‌۔",
-                "نہیں، مہرِ مؤجل شوہر پر وجوبِ قربانی سے مانع نہیں ہے، لہذا نصاب ہونے پر شوہر پر قربانی واجب ہوگی۔",
-                "شوہر پر قربانی تبھی واجب ہوگی جب بیوی اپنا مہر تحریری طور پر معاف کر دے۔",
-                "ان میں سے کوئی نہیں۔"
-            ],
-            correctAnswer: "نہیں، مہرِ مؤجل شوہر پر وجوبِ قربانی سے مانع نہیں ہے، لہذا نصاب ہونے پر شوہر پر قربانی واجب ہوگی۔"
-        },
-        {
-            question: "  زید کو وراثت میں ملی غیر منقسم (مشترکہ) زمین کے حصے کی قیمت چاندی کے نصاب سے زیادہ ہے، لیکن وہ زمین غیر آباد ہے اور اس سے کوئی آمدنی نہیں ہوتی۔ کیا زید پر قربانی واجب ہے؟",
-            options: [
-                "نہیں، کیونکہ جب تک زمین سے آمدنی نہ ہو قربانی واجب نہیں ہوتی۔",
-                "نہیں، کیونکہ غیر منقسم زمین کو نصاب میں شامل نہیں کیا جا سکتا۔",
-                "ہاں، کیونکہ یہ زمین اس کی حاجتِ اصلیہ سے زائد مال ہے اور اس کی قیمت نصاب کو پہنچتی ہے۔",
-                "ہاں، لیکن صرف اس صورت میں اگر وہ اس زمین کو بیچنے کا ارادہ رکھتا ہو۔"
-            ],
-            correctAnswer: "ہاں، کیونکہ یہ زمین اس کی حاجتِ اصلیہ سے زائد مال ہے اور اس کی قیمت نصاب کو پہنچتی ہے۔"
-        },
-        {
-            question: "  کیا قربانی کے دنوں میں عقیقہ کرنے کے لیے عید کی قربانی کرنا بھی لازمی (شرط) ہے، اور اگر کوئی قربانی نہ کرے تو کیا عقیقہ ادا نہیں ہوگا؟",
-            options: [
-                "جی ہاں، عید کے دنوں میں عقیقہ کرنے کے لیے ساتھ میں قربانی کرنا شرط ہے، ورنہ عقیقہ باطل ہو جائے گا۔",
-                "یہ بات درست نہیں ہے؛ عقیقہ اور قربانی دو مستقل جدا چیزیں ہیں، اور ایک کی ادائیگی دوسرے پر ہرگز موقوف نہیں ہے۔",
-                "عید کے دنوں میں عقیقہ کرنا سرے سے ناجائز اور بدعت ہے۔",
-                "اگر شوہر صاحبِ نصاب ہو تو عقیقہ خود بخود قربانی میں تبدیل ہو جاتا ہے۔"
-            ],
-            correctAnswer: "یہ بات درست نہیں ہے؛ عقیقہ اور قربانی دو مستقل جدا چیزیں ہیں، اور ایک کی ادائیگی دوسرے پر ہرگز موقوف نہیں ہے۔"
-        },
-        {
-            question: "  اگر چار افراد برابر رقم ملا کر قربانی کے لیے ایک بڑا جانور (جیسے بیل، بھینس) خریدتے ہیں، تو شرعی طور پر ان کی قربانی کا کیا حکم ہے؟",
-            options: [
-                "قربانی نہیں ہوگی کیونکہ بڑے جانور میں لازمی طور پر پورے سات افراد کا ہونا شرط ہے۔",
-                "ان چاروں افراد کی قربانی بالکل ہو جائے گی، کیونکہ بڑے جانور میں ہر شخص کا کم از کم ساتواں حصہ ہونا ضروری ہے اور یہاں ہر ایک کا حصہ ساتویں سے زیادہ ہے۔",
-                "قربانی تو ہو جائے گی لیکن گوشت آپس میں تقسیم کرنا ناجائز ہوگا۔",
-                "یہ عمل درست نہیں ہے، پورا گوشت صدقہ کرنا ہوگا۔"
-            ],
-            correctAnswer: "ان چاروں افراد کی قربانی بالکل ہو جائے گی، کیونکہ بڑے جانور میں ہر شخص کا کم از کم ساتواں حصہ ہونا ضروری ہے اور یہاں ہر ایک کا حصہ ساتویں سے زیادہ ہے۔"
-        },
-        {
-            question: "  فتویٰ عالمگیری اور بہارِ شریعت کے اصولوں کی روشنی میں، اگر گھر کے 5 افراد مجموعی طور پر 5 بکریاں خریدتے ہیں اور ذبح کرتے وقت یہ طے نہیں کرتے کہ کون سی بکری کس کی طرف سے ہے، تو اس قربانی کا کیا حکم ہوگا؟",
-            options: [
-                "یہ قربانی صرف اس صورت میں جائز ہوگی جب ذبح کرنے کے بعد گوشت کا وزن کیے بغیر اسے برابر حصوں میں بانٹ دیا جائے۔",
-                "چونکہ ہر فرد کے لیے الگ سے جانور معین نہیں کیا گیا، اس لیے ابہام کی وجہ سے کسی کی بھی قربانی درست نہیں مانی جائے گی۔",
-                "یہ قربانی شرعاً بالاتفاق جائز ہے، کیونکہ بکریاں اور افراد کی تعداد برابر ہونے کی وجہ سے مجموعی نیت ہی ہر فرد کی طرف سے ایک بکری کے لیے کافی ہے۔",
-                "قربانی تو ہو جائے گی، لیکن تعیین نہ کرنے کی وجہ سے یہ عمل مکروہِ تنزیہی کہلائے گا اور ہر فرد پر الگ سے صدقہ کرنا لازم ہوگا۔"
-            ],
-            correctAnswer: "یہ قربانی شرعاً بالاتفاق جائز ہے، کیونکہ بکریاں اور افراد کی تعداد برابر ہونے کی وجہ سے مجموعی نیت ہی ہر فرد کی طرف سے ایک بکری کے لیے کافی ہے۔"
-        },
-        {
-            question: " زید شرعی طور پر غنی (صاحبِ نصاب) ہے اور بکر فقیر (صاحبِ نصاب نہیں ہے)۔ دونوں نے قربانی کے لیے ایک ایک جانور خریدا، لیکن عید سے پہلے دونوں کے جانور گم ہو گئے۔ دونوں نے مجبوراً ایک ایک نیا جانور اور خرید لیا۔ قربانی کے دنوں میں ان کے پہلے (گمشدہ) جانور بھی واپس مل گئے، ان دونوں کے لیے اب قربانی کا کیا حکم ہوگا؟",
-            options: [
-                "چونکہ دونوں کے گمشدہ جانور واپس مل گئے ہیں، اس لیے غنی اور فقیر دونوں پر اب لازمی طور پر اپنے دونوں جانوروں (یعنی کل چاروں جانوروں) کی قربانی کرنا واجب ہوگا۔",
-                "بکر (فقیر) کو اختیار ہے کہ وہ دونوں میں سے کسی ایک کی قربانی کرے، جبکہ زید (غنی) پر لازم ہے کہ وہ اپنے دونوں جانور ذبح کرے۔",
-                "زید (غنی) کو اختیار ہے کہ وہ دونوں میں سے کسی ایک کی قربانی کرے، جبکہ بکر (فقیر) پر ان دونوں جانوروں کی قربانی واجب ہے۔",
-                "دونوں کو نئے خریدے ہوئے جانور کی قربانی کرنا کافی ہے۔"
-            ],
-            correctAnswer: "زید (غنی) کو اختیار ہے کہ وہ دونوں میں سے کسی ایک کی قربانی کرے، جبکہ بکر (فقیر) پر ان دونوں جانوروں کی قربانی واجب ہے۔"
-        },
-        {
-            question: "  زید قربانی کے لیے ایک ایسا بکرا خریدتا ہے جس کی عمر میں ایک یا دو دن کم ہیں، لیکن وہ بکرا غیر معمولی طور پر اتنا بڑا، صحت مند اور فربہ ہے کہ دور سے دیکھنے پر پکا ایک سال یا اس سے بھی زیادہ کا معلوم ہوتا ہے۔ صحیح مسلم کی حدیث اور فقہ حنفی کے اصولوں کی روشنی میں اس بکرے کی قربانی کا کیا حکم ہے؟",
-            options: [
-                "یہ قربانی بالکل جائز اور درست ہے، کیونکہ شریعت میں اصل اعتبار جانور کی ظاہری جسامت اور صحت کا ہے، اگر وہ دیکھنے میں سال بھر کا لگے تو قربانی ہو جاتی ہے۔",
-                "یہ قربانی سراسر جائز نہیں ہوگی، کیونکہ بھیڑ یا دنبے کے برعکس، بکرے/بکری کی عمر پورے ایک سال ہونا ضروری ہے؛ اگر ایک دن بھی کم ہو تو قربانی ادا نہیں ہوگی۔",
-                "یہ قربانی اس صورت میں جائز ہوگی جب مارکیٹ میں کوئی دوسرا ایک سال کا بکرا دستیاب نہ ہو۔",
-                "چونکہ بکرے کی عمر میں صرف ایک دو دن کا فرق ہے، اس لیے قربانی تو ہو جائے گی لیکن گوشت کا صدقہ کرنا واجب ہوگا۔"
-            ],
-            correctAnswer: "یہ قربانی سراسر جائز نہیں ہوگی، کیونکہ بھیڑ یا دنبے کے برعکس، بکرے/بکری کی عمر پورے ایک سال ہونا ضروری ہے؛ اگر ایک دن भी کم ہو تو قربانی ادا نہیں ہوگی۔"
-        }
-    ];
-
-
-
-
-        let quizQuestions = []; 
+    let questionPool = [];
+    let quizQuestions = [];
+    let userResponses = []; // Logs detailed responses for Sheet 2
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
-    let timeLeft = 30;
+    let timeLeft = SECONDS_PER_QUESTION;
     let selectedOptionIdx = null;
     let finalScore = 0;
-    let isQuizOver = false; 
+    let isQuizOver = false;
     let totalAttempted = 0;
     let totalTimeouts = 0;
-    let generatedTokenGlobal = ""; 
+    let generatedTokenGlobal = "";
+    let quizStartTimeStamp = null;
+
+    // Fetch the 100-question pool dynamically from questions.json
+    fetch('questions.json')
+        .then(res => {
+            if (!res.ok) throw new Error("Could not load questions.json");
+            return res.json();
+        })
+        .then(data => {
+            questionPool = data;
+            console.log(`Loaded ${questionPool.length} questions from question pool.`);
+        })
+        .catch(err => {
+            console.error("Failed to load question bank:", err);
+            const errBox = document.getElementById('login-error');
+            errBox.style.display = 'block';
+            errBox.innerText = "Error: Question bank failed to load. Ensure questions.json is present in the repository.";
+        });
 
     function showToastNotification() {
         const toast = document.getElementById('premium-toast');
@@ -939,86 +426,57 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
     }
 
     function prepareShuffledQuiz() {
-        let shuffledQues = shuffleArray([...originalQuestions]);
-        quizQuestions = shuffledQues.map(q => {
-            let shuffledOptions = shuffleArray([...q.options]);
-            return {
-                question: q.question,
-                options: shuffledOptions,
-                correctAnswer: q.correctAnswer
-            };
-        });
+        if (!questionPool || questionPool.length === 0) {
+            alert("Questions are still loading or missing. Please refresh.");
+            return false;
+        }
+
+        // 1. Shuffle all questions in pool
+        const shuffledPool = shuffleArray([...questionPool]);
+
+        // 2. Select only 50 questions
+        const selectedQuestions = shuffledPool.slice(0, Math.min(QUIZ_SIZE, shuffledPool.length));
+
+        // 3. Shuffle options for each chosen question
+        quizQuestions = selectedQuestions.map(q => ({
+            question: q.question,
+            options: shuffleArray([...q.options]),
+            correctAnswer: q.correctAnswer
+        }));
+
+        return true;
     }
-      function validateLogin() {
+
+    function getQuizDuration() {
+        if (!quizStartTimeStamp) return "N/A";
+        const totalSeconds = Math.floor((Date.now() - quizStartTimeStamp) / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}m ${seconds}s`;
+    }
+
+    function validateLogin() {
         const nameVal = document.getElementById('input-name').value.trim();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
         const verifyBtn = document.getElementById('btn-verify');
-              // ⏱️ SITE TIME LIMIT SYSTEM
-    const currentTime = new Date();
-    const startTime = new Date(2026, 4, 25, 10, 17, 0);  // 25 May, 11:00 AM
-    const endTime = new Date(2027, 4, 25, 23, 00, 0);   // 25 May, 11:30 AM
 
-    // 1. Time se pehle aane par notification
-    if (currentTime < startTime) {
-        errorBox.style.color = 'var(--accent)';
-        errorBox.style.background = 'rgba(212, 175, 55, 0.08)';
-        errorBox.style.display = 'block';
-        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
-        errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">⏳ یہ مسابقہ ابھی شروع نہیں ہوا ہے۔ پورٹل صبح ٹھیک 10:17 بجے کھلے گا۔</span>';
-        return;
-    }
-
-    // 2. Time khatam hone ke baad ka notification
-    if (currentTime > endTime) {
-        errorBox.style.color = 'var(--error)';
-        errorBox.style.background = 'rgba(214, 48, 49, 0.08)';
-        errorBox.style.display = 'block';
-        errorBox.style.fontFamily = "'Noto Sans Arabic', 'Amiri', serif";
-        errorBox.style.fontSize = "16px";
-        errorBox.innerHTML = '<span style="display:block; direction:rtl; text-align:center;">🔒 معذرت! اس مسابقہ میں لاگ ان کرنے کا مقررہ وقت ختم ہو چکا ہے۔</span>';
-        return;
-    }
-          
-
-        if(!nameVal || !emailVal) {
-            errorBox.style.color = 'var(--error)';
-            errorBox.style.background = 'rgba(234,67,53,0.1)';
+        if (!nameVal || !emailVal) {
             errorBox.style.display = 'block';
-            errorBox.style.fontFamily = "'Amiri', serif";
-            errorBox.style.fontSize = "16px";
-            errorBox.innerHTML = `<span style="display:block; direction:rtl; text-align:center;">⚠️ براہِ کرم اپنا نام اور ای میل دونوں درست درج کریں۔</span>`;
+            errorBox.innerText = "Please provide both your full name and registered email address.";
             return;
         }
 
-        // 👑 ADMIN STATUS CORE CHECK (Admin ko block nahi kiya jayega)
-        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "mdashrafraza4@gmail.com");
-        
-        // 🚨 BROWSER LEVEL SECOND ATTEMPT LOCK (Sirf bacho ke liye)
+        const isAdminEmail = (emailVal === "noor@gmail.com" || emailVal === "admin@example.com");
+
         if (!isAdminEmail && localStorage.getItem("quiz_attempted_" + emailVal)) {
-            errorBox.style.color = 'var(--error)';
-            errorBox.style.background = 'rgba(234,67,53,0.1)';
             errorBox.style.display = 'block';
-            errorBox.style.fontFamily = "'Amiri', serif";
-            errorBox.style.fontSize = "17px";
-            errorBox.innerHTML = `<b>🚫 Access Denied! </b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔ ایک فون سے دوبارہ شرکت کی اجازت نہیں ہے۔</span>`;
+            errorBox.innerHTML = `<b>Access Denied:</b> This account or device has already completed this assessment. Single-attempt rules are enforced.`;
             return;
         }
-
-        // 🎫 SPECIAL STUDENT PORTAL BYPASS
-        const isSpecialStudent = (emailVal === "tariqueatahar03@gmail.com" || emailVal === "fsyed4765@gmail.com");
 
         if (isAdminEmail) {
             verifiedUser = { name: nameVal, email: emailVal, isAdmin: true };
-            errorBox.style.display = 'none';
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'block';
-            return; 
-        }
-
-        if (isSpecialStudent) {
-            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
             errorBox.style.display = 'none';
             document.getElementById('screen-login').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'block';
@@ -1028,81 +486,69 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         verifyBtn.disabled = true;
 
         fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
-        .then(res => res.json())
-        .then(resData => {
-            verifyBtn.disabled = false;
-            
-            if (!resData.isRegistered) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(234,67,53,0.1)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Amiri', serif";
-                errorBox.style.fontSize = "16px";
-                errorBox.style.lineHeight = "1.8";
-                errorBox.innerHTML = `<b>⚠️ Access Denied! </b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">یہ ای میل آئی ڈی مسابقہ کے لیے رجسٹرڈ نہیں ہے۔ براہِ کرم اپنا درست رجسٹرڈ ای میل استعمال کریں یا انتظامیہ سے رابطہ کریں۔</span>`;
-            } else if (resData.exists) {
-                errorBox.style.color = 'var(--error)';
-                errorBox.style.background = 'rgba(234,67,53,0.1)';
-                errorBox.style.display = 'block';
-                errorBox.style.fontFamily = "'Amiri', serif";
-                errorBox.style.fontSize = "17px";
-                errorBox.innerHTML = `<b>🚫 Access Denied!</b><br><span style="display:block; margin-top:5px; direction:rtl; text-align:center;">آپ اس نشست میں پہلے ہی شامل ہو چکے ہیں۔</span>`;
-            } else {
+            .then(res => res.json())
+            .then(resData => {
+                verifyBtn.disabled = false;
+                if (!resData.isRegistered) {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for this examination. Contact administration.`;
+                } else if (resData.exists) {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<b>Access Denied:</b> An assessment submission has already been logged for this registered candidate.`;
+                } else {
+                    verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
+                    errorBox.style.display = 'none';
+                    document.getElementById('screen-login').style.display = 'none';
+                    document.getElementById('screen-directions').style.display = 'block';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                verifyBtn.disabled = false;
+                // Fallback allow on dispatcher error
                 verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-                errorBox.style.display = 'none';
                 document.getElementById('screen-login').style.display = 'none';
                 document.getElementById('screen-directions').style.display = 'block';
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            verifyBtn.disabled = false;
-            verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
-            document.getElementById('screen-login').style.display = 'none';
-            document.getElementById('screen-directions').style.display = 'block';
-        });
+            });
     }
 
+    function startQuiz() {
+        const prepared = prepareShuffledQuiz();
+        if (!prepared) return;
 
+        quizStartTimeStamp = Date.now(); // ⏱️ Capture exact starting timestamp
 
-
-    
-
-        function startQuiz() {
-        // 🔒 Jaise hi quiz shuru ho, browser me lock laga do (Agar admin na ho)
         if (verifiedUser && verifiedUser.isAdmin !== true) {
             localStorage.setItem("quiz_attempted_" + verifiedUser.email, "true");
         }
 
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
-        prepareShuffledQuiz();
+
         currentQuesIdx = 0;
         finalScore = 0;
         totalAttempted = 0;
         totalTimeouts = 0;
+        userResponses = [];
         isQuizOver = false;
-        generatedTokenGlobal = "NQ-" + Math.floor(100000 + Math.random() * 900000);
+        generatedTokenGlobal = "EA-" + Math.floor(100000 + Math.random() * 900000);
+
         loadQuestion();
         setupAntiCheating();
     }
 
-
     function loadQuestion() {
-        if(isQuizOver) return;
+        if (isQuizOver) return;
         clearInterval(timerInterval);
         warningSound.pause();
         warningSound.currentTime = 0;
 
-        timeLeft = 40;
+        timeLeft = SECONDS_PER_QUESTION;
         selectedOptionIdx = null;
         document.getElementById('timer-badge').classList.remove('danger');
         document.getElementById('time-left').innerText = timeLeft;
 
-        const arabicDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹', '۱۰', '۱۱', '۱۲', '۱۳', '۱۴', '۱۵', '۱۶'];
-        const currentUrduIndex = arabicDigits[currentQuesIdx + 1] || (currentQuesIdx + 1);
-        document.getElementById('ques-counter').innerText = `سوال: ${currentUrduIndex} / ${quizQuestions.length}`;
-        
+        document.getElementById('ques-counter').innerText = `Question: ${currentQuesIdx + 1} / ${quizQuestions.length}`;
         const progressPercent = (currentQuesIdx / quizQuestions.length) * 100;
         document.getElementById('quiz-progress').style.width = `${progressPercent}%`;
 
@@ -1115,31 +561,12 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
         currentQ.options.forEach((option, idx) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
-            btn.style.textAlign = 'right'; 
-            btn.style.direction = 'rtl';
             btn.innerText = option;
             btn.onclick = () => selectOption(idx, btn);
             optionsBox.appendChild(btn);
         });
 
         timerInterval = setInterval(() => {
-
-
-                    // 🚨 GLOBAL REAL-TIME AUTO-SUBMIT LOCK
-        if (new Date() >= new Date(2026, 4, 25, 11, 00, 0)) {
-            clearInterval(timerInterval);
-            warningSound.pause();
-            document.getElementById('screen-quiz').style.display = 'none';
-            document.getElementById('screen-completion').style.display = 'block';
-                        // 📝 TIME OVER BEAUTIFUL NOTIFICATION
-            document.getElementById('completion-title').innerHTML = `<span style="color: var(--error); font-family: 'Amiri', serif;">⏳  !وقت ختم ہو گیا ہے </span>`;
-            document.getElementById('completion-message').innerHTML = `<span style="direction: rtl; text-align: center; display: block; font-family: 'Amiri', serif; font-size: 18px; line-height: 1.8;">مسابقہ کا مقررہ وقت (11:00 AM) ختم ہو چکا ہے۔ آپ نے اس وقت تک جتنے سوالات حل کیے تھے، وہ کامیابی کے ساتھ ڈیٹا بیس میں محفوظ کر لیے گئے ہیں۔</span>`;
-            
-            sendDataToGoogleSheet("Time Out: Global Limit Reached");
-            return;
-        }
-
-
             timeLeft--;
             document.getElementById('time-left').innerText = timeLeft;
 
@@ -1154,19 +581,30 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
 
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
-                warningSound.pause(); 
+                warningSound.pause();
                 buzzerSound.currentTime = 0;
                 buzzerSound.play().catch(e => console.log("Buzzer fired"));
-                
+
                 if (navigator.vibrate) { navigator.vibrate(300); }
-                totalTimeouts++; 
-                saveResponseAndNext(false); 
+                totalTimeouts++;
+
+                // Record timeout in responses
+                const activeQ = quizQuestions[currentQuesIdx];
+                userResponses.push({
+                    qIndex: currentQuesIdx + 1,
+                    question: activeQ.question,
+                    selectedOption: "TIMED OUT",
+                    correctAnswer: activeQ.correctAnswer,
+                    isCorrect: false
+                });
+
+                saveResponseAndNext(false);
             }
         }, 1000);
     }
 
     function selectOption(idx, btnElement) {
-        if(isQuizOver) return;
+        if (isQuizOver) return;
         selectedOptionIdx = idx;
         const allBtns = document.querySelectorAll('.option-btn');
         allBtns.forEach(btn => btn.classList.remove('selected'));
@@ -1178,21 +616,33 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             showToastNotification();
             return;
         }
+
         clearInterval(timerInterval);
-        warningSound.pause(); 
-        totalAttempted++; 
-        
+        warningSound.pause();
+        totalAttempted++;
+
         const activeQ = quizQuestions[currentQuesIdx];
         const selectedValue = activeQ.options[selectedOptionIdx];
-        
-        if (selectedValue === activeQ.correctAnswer) {
+        const isAnswerCorrect = (selectedValue === activeQ.correctAnswer);
+
+        if (isAnswerCorrect) {
             finalScore++;
         }
+
+        // 📝 Record detailed candidate response
+        userResponses.push({
+            qIndex: currentQuesIdx + 1,
+            question: activeQ.question,
+            selectedOption: selectedValue,
+            correctAnswer: activeQ.correctAnswer,
+            isCorrect: isAnswerCorrect
+        });
+
         saveResponseAndNext(true);
     }
 
     function saveResponseAndNext(answered) {
-        if(isQuizOver) return;
+        if (isQuizOver) return;
         currentQuesIdx++;
         if (currentQuesIdx < quizQuestions.length) {
             loadQuestion();
@@ -1206,27 +656,27 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
     function setupAntiCheating() {
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // SCREENSHOT SHIELD GESTURE
+        // Multi-touch screenshot guard
         window.addEventListener('touchstart', (e) => {
-            if (e.touches.length >= 2 && !isQuizOver) { 
-                if (verifiedUser && verifiedUser.isAdmin === true) return; 
+            if (e.touches.length >= 2 && !isQuizOver) {
+                if (verifiedUser && verifiedUser.isAdmin === true) return;
                 document.body.classList.add('screenshot-shield-active');
                 setTimeout(() => { document.body.classList.remove('screenshot-shield-active'); }, 1500);
             }
         }, { passive: true });
 
-        // TAB SWITCH DETECTION
+        // Tab-switch watchdog
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && !isQuizOver) {
                 handleCriticalCheating("Tab Switching Detected");
             }
         });
-        
-        // SPLIT SCREEN, APP SWITCHING, AND SIDEBAR INTERCEPTOR
+
+        // App-switch / Split-screen watchdog
         window.addEventListener("blur", () => {
             if (!isQuizOver) {
-                if (verifiedUser && verifiedUser.isAdmin === true) return; 
-                handleCriticalCheating("Split-Screen, App Switch or AI Sidebar Detected");
+                if (verifiedUser && verifiedUser.isAdmin === true) return;
+                handleCriticalCheating("Split-Screen or App Switch Detected");
             }
         });
 
@@ -1234,79 +684,76 @@ const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtI-f-9k
             isQuizOver = true;
             clearInterval(timerInterval);
             warningSound.pause();
-            
-            document.body.classList.remove('screenshot-shield-active'); 
+
+            document.body.classList.remove('screenshot-shield-active');
             document.getElementById('screen-quiz').style.display = 'none';
             document.getElementById('screen-directions').style.display = 'none';
             document.getElementById('screen-completion').style.display = 'block';
-            
-            document.getElementById('status-icon').className = 'disqualified-icon';
+
             document.getElementById('status-icon').innerText = '🚫';
-            
-            document.getElementById('completion-title').innerText = "نشست ختم!";
+            document.getElementById('completion-title').innerText = "Session Terminated";
             document.getElementById('completion-title').style.color = "var(--error)";
             document.getElementById('session-subtitle').style.display = "block";
-            
-            const displayName = verifiedUser.name ? verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "User";
-            document.getElementById('thank-you-msg').innerText = `معذرت، ${displayName}! آپ کو اسکرین شیئرنگ، اسپلٹ اسکرین، ٹیب تبدیل کرنے یا سیشن چھوڑنے کی وجہ سے خارج کر دیا گیا ہے۔`;
-            
+
+            const displayName = verifiedUser.name || "Candidate";
+            document.getElementById('thank-you-msg').innerText = `Notice: ${displayName}, your examination session has been terminated due to policy violations (leaving the browser or active window blur).`;
+
             document.getElementById('summary-area').innerHTML = `
-                • <b>حالت:</b> موقوف<br>
-                • <b>وجہ:</b> کوئز کے دوران اسپلٹ اسکرین، ٹیب یا ایپ تبدیل کرنے کی غیر قانونی سرگرمی پائی گئی ہے۔<br>
-                • <b>کارروائی:</b> آپ کا کوئز لاک کر کے مین پورٹل پر بھیج دیا گیا ہے۔
+                • <b>Status:</b> Terminated / Disqualified<br>
+                • <b>Reason:</b> ${reasonLabel}<br>
+                • <b>Action:</b> Audit record and current marks dispatched to the central register.
             `;
+
             sendDataToGoogleSheet("DQ: " + reasonLabel);
         }
     }
 
     function sendDataToGoogleSheet(remarksValue = "Clean Attempt") {
-        isQuizOver = true; 
+        isQuizOver = true;
         clearInterval(timerInterval);
-        
+
+        const timeTakenFormatted = getQuizDuration(); // ⏱️ Exact elapsed time
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/${quizQuestions.length})`;
-        
+
         const formData = new FormData();
         formData.append("name", verifiedUser.name || "N/A");
         formData.append("email", verifiedUser.email || "N/A");
         formData.append("score", scoreText);
         formData.append("remarks", remarksValue);
         formData.append("token", generatedTokenGlobal);
+        formData.append("time_taken", timeTakenFormatted);
+        formData.append("detailed_answers", JSON.stringify(userResponses)); // 📋 Detailed responses payload
 
-        const displayName = verifiedUser.name ? verifiedUser.name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : "User";
+        const displayName = verifiedUser.name || "Candidate";
         const statusLabel = document.getElementById('sheet-status');
-        
-        if(remarksValue === "Clean Attempt") {
-            document.getElementById('thank-you-msg').innerText = `شکریہ، ${displayName}! آپ کا کوئز کامیابی کے ساتھ مکمل ہو چکا ہے۔`;
-            
+
+        if (remarksValue === "Clean Attempt") {
+            document.getElementById('thank-you-msg').innerText = `Thank you, ${displayName}! Your assessment has been completed successfully.`;
             document.getElementById('summary-area').innerHTML = `
-                📌 <b>کوئز کی تفصیلات:</b><br>
-                • کل سوالات: ${quizQuestions.length}<br>
-                • جوابات دیے گئے: ${totalAttempted}<br>
-                • خالی چھوڑے گئے: ${totalTimeouts}<br>
-                • تصدیقی ٹوکن آئی ڈی: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
-                <span style="font-size:14px; color: var(--text-muted);">*نوٹ: مسابقہ کے نتائج اور کامیاب امیدواروں کی فائنل لسٹ جلد ہی آفیشل پورٹل پر اپڈیٹ کی جائے گی۔</span>
+                📌 <b>Assessment Summary:</b><br>
+                • Total Questions Evaluated: ${quizQuestions.length}<br>
+                • Answered Questions: ${totalAttempted}<br>
+                • Expired / Timed Out: ${totalTimeouts}<br>
+                • <b>Time Taken:</b> ${timeTakenFormatted}<br>
+                • Audit Verification Token: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
+                <span style="font-size:13px; color: var(--text-muted);">*Final certified ranks will be compiled and published through official administrator registers.</span>
             `;
-            
-            statusLabel.style.color = "#00b894";
-            statusLabel.style.background = "rgba(0,184,148,0.05)";
-            statusLabel.style.border = "1px solid rgba(0,184,148,0.15)";
-            statusLabel.innerText = "✓ آپ کا کوئز ڈاٹا ایڈمن پینل پر کامیابی کے ساتھ درج کر دیا گیا ہے۔";
+
+            statusLabel.style.color = "var(--success)";
+            statusLabel.style.background = "rgba(0,184,148,0.08)";
+            statusLabel.innerText = "✓ Examination verified and synced with administrative database.";
         } else {
             statusLabel.style.color = "var(--error)";
-            statusLabel.style.background = "rgba(234,67,53,0.05)";
-            statusLabel.style.border = "1px solid rgba(234,67,53,0.15)";
-            statusLabel.innerText = "⚠️ کارروائی مکمل۔ آپ کا بیان ایڈمن شیٹ پر بھیج دیا گیا ہے۔";
+            statusLabel.style.background = "rgba(234,67,53,0.08)";
+            statusLabel.innerText = "⚠️ Disqualification log dispatched to administrative records.";
         }
 
-        fetch(SUBMISSION_SCRIPT_URL,{
+        fetch(SUBMISSION_SCRIPT_URL, {
             method: "POST",
-            mode: "no-cors", 
+            mode: "no-cors",
             body: formData
-        })
-        .then(() => console.log("Payload sent directly to Google Sheet!"));
+        }).then(() => console.log("Telemetry payload transmitted successfully."));
     }
 </script>
 </body>
 </html>
-
-    
