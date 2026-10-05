@@ -472,7 +472,7 @@
 
         verifyBtn.disabled = true;
 
-        fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}`)
+        fetch(`${GOOGLE_SCRIPT_URL}?email=${encodeURIComponent(emailVal)}&name=${encodeURIComponent(nameVal)}`)
             .then(res => res.json())
             .then(resData => {
                 verifyBtn.disabled = false;
