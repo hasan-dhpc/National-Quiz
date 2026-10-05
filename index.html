@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Kerala Ala Hazrat Quiz  - Imam Ahmad Raza</title>
+    <title>All Kerala Ala Hazrat Quiz Contest - Imam Ahmad Raza</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -312,7 +312,7 @@
     <div class="container">
         <!-- 1. LOGIN SCREEN -->
         <div id="screen-login">
-            <h2>All Kerala Ala Hazrat Quiz Contest </h2>
+            <h2>All Kerala Ala Hazrat Quiz Contest</h2>
             <p class="subtitle">Enter your registered details to begin</p>
             <div class="error-box" id="login-error"></div>
             <div class="input-group">
@@ -476,17 +476,25 @@
             .then(res => res.json())
             .then(resData => {
                 verifyBtn.disabled = false;
-                if (!resData.isRegistered) {
+                
+                // Specific error categorization
+                if (resData.status === "EMAIL_NOT_FOUND") {
                     errorBox.style.display = 'block';
-                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for the contest. Contact the organizers.`;
+                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for the contest. Please contact the organizers.`;
+                } else if (resData.status === "NAME_MISMATCH") {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<b>Name Mismatch:</b> The entered name does not match the registered name for this email. Please check your spelling.`;
                 } else if (resData.hasSubmitted || resData.exists) {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Entry Found:</b> A submission has already been registered for this candidate.`;
-                } else {
+                } else if (resData.isRegistered) {
                     verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
                     errorBox.style.display = 'none';
                     document.getElementById('screen-login').style.display = 'none';
                     document.getElementById('screen-directions').style.display = 'block';
+                } else {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for the contest. Contact the organizers.`;
                 }
             })
             .catch(err => {
