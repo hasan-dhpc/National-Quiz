@@ -334,7 +334,7 @@
                 <li>You will receive <b>50 questions</b> randomly selected from the certified 100-question pool.</li>
                 <li>Each question has a countdown timer of <b>40 seconds</b>.</li>
                 <li><b>Single Submission Policy:</b> Once completed and submitted, duplicate entries are disallowed.</li>
-                <li><b>Fair Play System:</b> Switching tabs, leaving the window, or using split-screen will cause <b>immediate disqualification</b>.</li>
+                <li><b>Fair Play System:</b> Switching tabs, leaving fullscreen, app-switching, or screenshots will cause <b>immediate disqualification</b>.</li>
                 <li>Your total time taken to finish the quiz is recorded for leaderboard evaluation.</li>
             </ul>
             <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz</button>
@@ -503,6 +503,13 @@
 
         quizStartTimeStamp = Date.now();
 
+        // 🖥️ Request Fullscreen to prevent side-by-side splitting
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log("Fullscreen request was prevented or not supported.");
+            });
+        }
+
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
 
@@ -635,6 +642,7 @@
     function setupAntiCheating() {
         document.addEventListener('contextmenu', event => event.preventDefault());
 
+        // 1. Mobile Multi-Touch Screenshot Guard
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length >= 2 && !isQuizOver) {
                 if (verifiedUser && verifiedUser.isAdmin === true) return;
@@ -643,12 +651,15 @@
             }
         }, { passive: true });
 
+        // 2. Tab-Switch Watchdog
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && !isQuizOver) {
+                if (verifiedUser && verifiedUser.isAdmin === true) return;
                 handleCriticalCheating("Tab Switching Detected");
             }
         });
 
+        // 3. Window Blur (Leaving window or clicking another window)
         window.addEventListener("blur", () => {
             if (!isQuizOver) {
                 if (verifiedUser && verifiedUser.isAdmin === true) return;
@@ -656,10 +667,34 @@
             }
         });
 
+        // 4. Desktop Fullscreen Exit Watchdog
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement && !isQuizOver) {
+                if (verifiedUser && verifiedUser.isAdmin === true) return;
+                handleCriticalCheating("Exited Fullscreen Mode");
+            }
+        });
+
+        // 5. PrintScreen Key Guard (Desktop Screenshot)
+        window.addEventListener("keyup", (e) => {
+            if (e.key === "PrintScreen") {
+                if (verifiedUser && verifiedUser.isAdmin === true) return;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText("").catch(() => {});
+                }
+                handleCriticalCheating("Screenshot Attempt Detected");
+            }
+        });
+
         function handleCriticalCheating(reasonLabel = "Disqualified") {
             isQuizOver = true;
             clearInterval(timerInterval);
             warningSound.pause();
+
+            // Exit fullscreen if still active
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(e => console.log(e));
+            }
 
             document.body.classList.remove('screenshot-shield-active');
             document.getElementById('screen-quiz').style.display = 'none';
@@ -672,7 +707,7 @@
             document.getElementById('session-subtitle').style.display = "block";
 
             const displayName = verifiedUser.name || "Participant";
-            document.getElementById('thank-you-msg').innerText = `Notice: ${displayName}, your session was halted due to a fair play alert (tab switch or screen blur detected).`;
+            document.getElementById('thank-you-msg').innerText = `Notice: ${displayName}, your session was halted due to a fair play alert (${reasonLabel}).`;
 
             document.getElementById('summary-area').innerHTML = `
                 • <b>Status:</b> Disqualified<br>
