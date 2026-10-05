@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imam Ahmad Raza Quiz</title>
+    <title>All Kerala Seerat Quiz Contest - Imam Ahmad Raza</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -312,30 +312,30 @@
     <div class="container">
         <!-- 1. LOGIN SCREEN -->
         <div id="screen-login">
-            <h2>Imam Ahmad Raza Quiz</h2>
-            <p class="subtitle">Enter your registered credentials to proceed</p>
+            <h2>All Kerala Seerat Quiz Contest</h2>
+            <p class="subtitle">Enter your registered details to begin</p>
             <div class="error-box" id="login-error"></div>
             <div class="input-group">
                 <label>Full Name</label>
-                <input type="text" id="input-name" placeholder="Ahmad Raza">
+                <input type="text" id="input-name" placeholder="E.g. Ahmad Raza">
             </div>
             <div class="input-group">
                 <label>Registered Email</label>
-                <input type="email" id="input-email" placeholder="darulhuda@gmail.com">
+                <input type="email" id="input-email" placeholder="E.g. candidate@gmail.com">
             </div>
-            <button class="btn" id="btn-verify" onclick="validateLogin()">Verify & Proceed</button>
+            <button class="btn" id="btn-verify" onclick="validateLogin()">Enter Quiz</button>
         </div>
 
         <!-- 2. INSTRUCTIONS SCREEN -->
         <div id="screen-directions" style="display: none;">
             <h2>Rules & Guidelines</h2>
-            <p class="subtitle">Read carefully before entering the arena</p>
+            <p class="subtitle">Please read the instructions carefully before starting</p>
             <ul class="instructions-list">
-                <li>You will be evaluated on <b>50 random questions</b> drawn from a certified 100-question pool.</li>
-                <li>Each question has an individual countdown of <b>40 seconds</b>.</li>
-                <li><b>Single Attempt Lock:</b> Once submitted, multiple attempts are strictly disallowed.</li>
-                <li><b>Integrity Shield:</b> Tab-switching, app switching, split-screen, or screenshot gestures will result in <b>instant disqualification</b>.</li>
-                <li>Total duration taken to complete the contest is monitored and logged.</li>
+                <li>You will receive <b>50 questions</b> randomly selected from the certified 100-question pool.</li>
+                <li>Each question has a countdown timer of <b>40 seconds</b>.</li>
+                <li><b>Single Submission Policy:</b> Once completed and submitted, duplicate entries are disallowed.</li>
+                <li><b>Fair Play System:</b> Switching tabs, leaving the window, or using split-screen will cause <b>immediate disqualification</b>.</li>
+                <li>Your total time taken to finish the quiz is recorded for leaderboard evaluation.</li>
             </ul>
             <button class="btn" id="btn-start" onclick="startQuiz()">Start Quiz</button>
         </div>
@@ -351,13 +351,13 @@
             </div>
             <div class="question-text" id="question-text">Loading question...</div>
             <div class="options-grid" id="options-container"></div>
-            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Submit & Next</button>
+            <button class="btn" id="btn-submit-answer" onclick="submitAnswer()" style="margin-top: 15px;">Lock Answer & Next</button>
         </div>
 
-        <!-- 4. COMPLETION / TERMINATION SCREEN -->
+        <!-- 4. COMPLETION SCREEN -->
         <div id="screen-completion" style="display: none; text-align: center;">
             <div id="status-icon" class="status-icon">🎉</div>
-            <h2 id="completion-title">Session Completed</h2>
+            <h2 id="completion-title">Quiz Completed</h2>
             <p id="session-subtitle" style="color: var(--error); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-top: -5px; margin-bottom: 15px; display: none;">Session Terminated</p>
             <p id="thank-you-msg" style="color: var(--text-muted); font-size: 15px; margin-top: 10px; line-height: 1.6;"></p>
             <div id="summary-area" class="summary-card"></div>
@@ -375,13 +375,12 @@
     warningSound.volume = 0.6;
     buzzerSound.volume = 0.6;
 
-    // CONFIGURATION
     const QUIZ_SIZE = 50;
     const SECONDS_PER_QUESTION = 40;
 
     let questionPool = [];
     let quizQuestions = [];
-    let userResponses = []; // Logs detailed responses for Sheet 2
+    let userResponses = [];
     let verifiedUser = { name: "", email: "" };
     let currentQuesIdx = 0;
     let timerInterval = null;
@@ -394,7 +393,6 @@
     let generatedTokenGlobal = "";
     let quizStartTimeStamp = null;
 
-    // Fetch the 100-question pool dynamically from questions.json
     fetch('questions.json')
         .then(res => {
             if (!res.ok) throw new Error("Could not load questions.json");
@@ -402,13 +400,12 @@
         })
         .then(data => {
             questionPool = data;
-            console.log(`Loaded ${questionPool.length} questions from question pool.`);
         })
         .catch(err => {
-            console.error("Failed to load question bank:", err);
+            console.error("Failed to load questions:", err);
             const errBox = document.getElementById('login-error');
             errBox.style.display = 'block';
-            errBox.innerText = "Error: Question bank failed to load. Ensure questions.json is present in the repository.";
+            errBox.innerText = "Error: Question pool failed to load. Please check questions.json.";
         });
 
     function showToastNotification() {
@@ -427,17 +424,13 @@
 
     function prepareShuffledQuiz() {
         if (!questionPool || questionPool.length === 0) {
-            alert("Questions are still loading or missing. Please refresh.");
+            alert("Questions are still loading. Please refresh the page.");
             return false;
         }
 
-        // 1. Shuffle all questions in pool
         const shuffledPool = shuffleArray([...questionPool]);
-
-        // 2. Select only 50 questions
         const selectedQuestions = shuffledPool.slice(0, Math.min(QUIZ_SIZE, shuffledPool.length));
 
-        // 3. Shuffle options for each chosen question
         quizQuestions = selectedQuestions.map(q => ({
             question: q.question,
             options: shuffleArray([...q.options]),
@@ -463,11 +456,10 @@
 
         if (!nameVal || !emailVal) {
             errorBox.style.display = 'block';
-            errorBox.innerText = "Please provide both your full name and registered email address.";
+            errorBox.innerText = "Please provide both your name and email address.";
             return;
         }
 
-        // 👑 Admin Emails with unrestricted testing access
         const isAdminEmail = (emailVal === "hasan@gmail.com" || emailVal === "noor@gmail.com" || emailVal === "tariq@gmail.com");
 
         if (isAdminEmail) {
@@ -486,10 +478,10 @@
                 verifyBtn.disabled = false;
                 if (!resData.isRegistered) {
                     errorBox.style.display = 'block';
-                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for this quiz contest. Contact organizers.`;
+                    errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for the contest. Contact the organizers.`;
                 } else if (resData.hasSubmitted || resData.exists) {
                     errorBox.style.display = 'block';
-                    errorBox.innerHTML = `<b>Access Denied:</b> A submission has already been recorded for this candidate.`;
+                    errorBox.innerHTML = `<b>Entry Found:</b> A submission has already been registered for this candidate.`;
                 } else {
                     verifiedUser = { name: nameVal, email: emailVal, isAdmin: false };
                     errorBox.style.display = 'none';
@@ -501,7 +493,7 @@
                 console.error(err);
                 verifyBtn.disabled = false;
                 errorBox.style.display = 'block';
-                errorBox.innerText = "Connection error. Please try again.";
+                errorBox.innerText = "Network error. Please try again.";
             });
     }
 
@@ -509,7 +501,7 @@
         const prepared = prepareShuffledQuiz();
         if (!prepared) return;
 
-        quizStartTimeStamp = Date.now(); // ⏱️ Capture exact starting timestamp
+        quizStartTimeStamp = Date.now();
 
         document.getElementById('screen-directions').style.display = 'none';
         document.getElementById('screen-quiz').style.display = 'block';
@@ -520,7 +512,7 @@
         totalTimeouts = 0;
         userResponses = [];
         isQuizOver = false;
-        generatedTokenGlobal = "EA-" + Math.floor(100000 + Math.random() * 900000);
+        generatedTokenGlobal = "KL-" + Math.floor(100000 + Math.random() * 900000);
 
         loadQuestion();
         setupAntiCheating();
@@ -577,7 +569,6 @@
                 if (navigator.vibrate) { navigator.vibrate(300); }
                 totalTimeouts++;
 
-                // Record timeout in responses
                 const activeQ = quizQuestions[currentQuesIdx];
                 userResponses.push({
                     qIndex: currentQuesIdx + 1,
@@ -618,7 +609,6 @@
             finalScore++;
         }
 
-        // 📝 Record detailed candidate response
         userResponses.push({
             qIndex: currentQuesIdx + 1,
             question: activeQ.question,
@@ -645,7 +635,6 @@
     function setupAntiCheating() {
         document.addEventListener('contextmenu', event => event.preventDefault());
 
-        // Multi-touch screenshot guard
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length >= 2 && !isQuizOver) {
                 if (verifiedUser && verifiedUser.isAdmin === true) return;
@@ -654,14 +643,12 @@
             }
         }, { passive: true });
 
-        // Tab-switch watchdog
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && !isQuizOver) {
                 handleCriticalCheating("Tab Switching Detected");
             }
         });
 
-        // App-switch / Split-screen watchdog
         window.addEventListener("blur", () => {
             if (!isQuizOver) {
                 if (verifiedUser && verifiedUser.isAdmin === true) return;
@@ -680,17 +667,17 @@
             document.getElementById('screen-completion').style.display = 'block';
 
             document.getElementById('status-icon').innerText = '🚫';
-            document.getElementById('completion-title').innerText = "Session Terminated";
+            document.getElementById('completion-title').innerText = "Participation Terminated";
             document.getElementById('completion-title').style.color = "var(--error)";
             document.getElementById('session-subtitle').style.display = "block";
 
-            const displayName = verifiedUser.name || "Candidate";
-            document.getElementById('thank-you-msg').innerText = `Notice: ${displayName}, your examination session has been terminated due to policy violations (leaving the browser or active window blur).`;
+            const displayName = verifiedUser.name || "Participant";
+            document.getElementById('thank-you-msg').innerText = `Notice: ${displayName}, your session was halted due to a fair play alert (tab switch or screen blur detected).`;
 
             document.getElementById('summary-area').innerHTML = `
-                • <b>Status:</b> Terminated / Disqualified<br>
+                • <b>Status:</b> Disqualified<br>
                 • <b>Reason:</b> ${reasonLabel}<br>
-                • <b>Action:</b> Audit record and current marks dispatched to the central register.
+                • <b>Notice:</b> Disqualification incident recorded in the central database.
             `;
 
             sendDataToGoogleSheet("DQ: " + reasonLabel);
@@ -701,7 +688,7 @@
         isQuizOver = true;
         clearInterval(timerInterval);
 
-        const timeTakenFormatted = getQuizDuration(); // ⏱️ Exact elapsed time
+        const timeTakenFormatted = getQuizDuration();
         const scoreText = (remarksValue === "Clean Attempt") ? `${finalScore} / ${quizQuestions.length}` : `DQ (${finalScore}/${quizQuestions.length})`;
 
         const formData = new FormData();
@@ -711,26 +698,26 @@
         formData.append("remarks", remarksValue);
         formData.append("token", generatedTokenGlobal);
         formData.append("time_taken", timeTakenFormatted);
-        formData.append("detailed_answers", JSON.stringify(userResponses)); // 📋 Detailed responses payload
+        formData.append("detailed_answers", JSON.stringify(userResponses));
 
-        const displayName = verifiedUser.name || "Candidate";
+        const displayName = verifiedUser.name || "Participant";
         const statusLabel = document.getElementById('sheet-status');
 
         if (remarksValue === "Clean Attempt") {
-            document.getElementById('thank-you-msg').innerText = `Thank you, ${displayName}! Your assessment has been completed successfully.`;
+            document.getElementById('thank-you-msg').innerText = `Great effort, ${displayName}! Your responses have been submitted successfully.`;
             document.getElementById('summary-area').innerHTML = `
-                📌 <b>Assessment Summary:</b><br>
+                📌 <b>Contest Summary:</b><br>
                 • Total Questions Evaluated: ${quizQuestions.length}<br>
-                • Answered Questions: ${totalAttempted}<br>
-                • Expired / Timed Out: ${totalTimeouts}<br>
-                • <b>Time Taken:</b> ${timeTakenFormatted}<br>
-                • Audit Verification Token: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
-                <span style="font-size:13px; color: var(--text-muted);">*Final certified ranks will be published through official administrator registers.</span>
+                • Questions Answered: ${totalAttempted}<br>
+                • Questions Skipped / Timed Out: ${totalTimeouts}<br>
+                • <b>Total Time Taken:</b> ${timeTakenFormatted}<br>
+                • Verification Token: <b style="color: var(--accent);">${generatedTokenGlobal}</b><br><br>
+                <span style="font-size:13px; color: var(--text-muted);">*The final results and ranks will be announced by the organizing committee.</span>
             `;
 
             statusLabel.style.color = "var(--success)";
             statusLabel.style.background = "rgba(0,184,148,0.08)";
-            statusLabel.innerText = "✓ Examination verified and synced with administrative database.";
+            statusLabel.innerText = "✓ Responses successfully recorded in the contest register.";
         } else {
             statusLabel.style.color = "var(--error)";
             statusLabel.style.background = "rgba(234,67,53,0.08)";
@@ -741,7 +728,7 @@
             method: "POST",
             mode: "no-cors",
             body: formData
-        }).then(() => console.log("Telemetry payload transmitted successfully."));
+        }).then(() => console.log("Data transmitted successfully."));
     }
 </script>
 </body>
