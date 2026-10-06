@@ -366,6 +366,10 @@
     </div>
 
 <script>
+    // ⏱️ CONTEST DEADLINE / EXPIRY SETTING (IST Format: YYYY-MM-DDTHH:MM:SS+05:30)
+    // Example: 6 October 2026 at 10:30 PM IST. Adjust this time as needed.
+    const CONTEST_EXPIRY_TIME = new Date("2026-10-06T22:30:00+05:30");
+
     // 🔗 API ENDPOINTS
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwsG5w6eov88ix7x3HdY8p9Ec7WdByEUtim-2zlh1KR-dnwnmWc6MWfj6QX-XVs539bQ/exec";
     const SUBMISSION_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwwsG5w6eov88ix7x3HdY8p9Ec7WdByEUtim-2zlh1KR-dnwnmWc6MWfj6QX-XVs539bQ/exec";
@@ -392,6 +396,32 @@
     let totalTimeouts = 0;
     let generatedTokenGlobal = "";
     let quizStartTimeStamp = null;
+
+    // Check if contest deadline has passed and lock the UI
+    function checkPortalExpiry() {
+        const now = new Date();
+        if (now > CONTEST_EXPIRY_TIME) {
+            const loginScreen = document.getElementById('screen-login');
+            if (loginScreen) {
+                loginScreen.innerHTML = `
+                    <div style="text-align: center; padding: 15px 0;">
+                        <div style="font-size: 55px; margin-bottom: 15px;">⏳</div>
+                        <h2 style="color: var(--error);">Portal Closed</h2>
+                        <p class="subtitle" style="margin-top: 10px; margin-bottom: 20px;">The contest window has officially closed.</p>
+                        <div class="summary-card" style="text-align: center; font-size: 14px; color: var(--text-muted); line-height: 1.8;">
+                            Submissions are no longer accepted for this event.<br>
+                            The evaluation committee will announce official results soon.
+                        </div>
+                    </div>
+                `;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    // Run check on page load
+    checkPortalExpiry();
 
     fetch('questions.json')
         .then(res => {
@@ -449,6 +479,9 @@
     }
 
     function validateLogin() {
+        // Enforce expiry check on button click
+        if (checkPortalExpiry()) return;
+
         const nameVal = document.getElementById('input-name').value.trim();
         const emailVal = document.getElementById('input-email').value.trim().toLowerCase();
         const errorBox = document.getElementById('login-error');
@@ -477,14 +510,14 @@
             .then(resData => {
                 verifyBtn.disabled = false;
                 
-                // Specific error categorization
+                // Specific categorization of errors
                 if (resData.status === "EMAIL_NOT_FOUND") {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Access Denied:</b> This email is not registered for the contest. Please contact the organizers.`;
                 } else if (resData.status === "NAME_MISMATCH") {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Name Mismatch:</b> The entered name does not match the registered name for this email. Please check your spelling.`;
-                } else if (resData.hasSubmitted || resData.exists) {
+                } else if (resData.hasSubmitted || resData.exists || resData.status === "ALREADY_SUBMITTED") {
                     errorBox.style.display = 'block';
                     errorBox.innerHTML = `<b>Entry Found:</b> A submission has already been registered for this candidate.`;
                 } else if (resData.isRegistered) {
@@ -511,7 +544,7 @@
 
         quizStartTimeStamp = Date.now();
 
-        // 🖥️ Request Fullscreen to prevent side-by-side splitting
+        // 🖥️ Request Fullscreen
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen().catch(err => {
                 console.log("Fullscreen request was prevented or not supported.");
